@@ -1,18 +1,19 @@
 doctype html
 
-html(lang='fr')
+html(lang='en')
   head
     meta(charset="utf-8")
-    title #{title} - sideffects
+    title #{title} - rockfall
     link(type='text/css', rel='stylesheet', href='/stylesheets/style.css')
     script(type="text/javascript" src="http://www.google.com/jsapi")
     script(src='/js/script.js')
 
   body
-    div#header
-      include includes/header
-    div#container
-      block content
-    div#footer
-      include includes/footer
-    script google.load('jquery', '1')
+    div#body
+      div#header
+        include includes/header
+      div#container
+        block content
+      div#footer
+        include includes/footer
+      script google.load('jquery', '1')

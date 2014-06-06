@@ -7,5 +7,5 @@ A Web Connect Four Game
 [Node.js](http://nodejs.org/)
 
 #devs
-* Manu
-* Jerem
+* [Emmanuel Elisa](man_y_c@hotmail.fr)
+* [Jérémie Corpinot](jeremiecorpinot@outlook.com)

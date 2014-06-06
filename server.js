@@ -1,3 +1,6 @@
+// MAIN JAVASCRIPT FILE
+// by
+
 var express = require('express'),	// web dev framework
 	stylus = require('stylus'),		// css pre-compiler
 	morgan = require('morgan'),		// loggin middleware
@@ -9,7 +12,6 @@ var fs = require('fs');				// file stream
 
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
-//var port = process.env.port || 8080;
 
 
 
@@ -49,7 +51,7 @@ app.get('/', function(req, res) {
 })
 
 .use(function(req, res, next) {
-	res.render('pages.404', {title: '404'});
+	res.render('pages/404', {title: '404'});
 });
 
 // listen port => server start
