@@ -3,15 +3,20 @@
 //- ----------
 //- ----------
 
+//- extends layout.jade
 extend layout
 
+//- page content
 block content
+  //- main user interface
   div#main-ui
+    //- side panel with user info, score, settings
     div#side-panel
       div.user-avatar
         div.user-avatar-img
-        span.user-avatar-name
+        span.user-avatar-name Jonh Doe
 
+      //- power-up are stored here
       div.power-up-panel
         span.title Power-Up
         div
@@ -20,14 +25,19 @@ block content
           div.power-up
           div.power-up
 
+      //- user score
       div.user-score
         p 1,280
-        
+
+      //- settings, message, leadderboard
       div.user-panel
         img.user-panel-icon(src='../icons/icon_settings.png' action='settings')
         img.user-panel-icon(src='../icons/icon_message.png' action='message')
         img.user-panel-icon(src='../icons/icon_trophy.png' action='trophy')
 
+    //- the game
     div#game-ui
+      //- board is here
       div#game Active Javascript to PLAY!
+      //- bottom board's panel
       div#game-panel

@@ -39,6 +39,7 @@ body {
   padding: 10px;
   padding-bottom: 130px;
 /* Height of the footer */
+  background: #fff;
 }
 #body #container #main-ui {
   width: 80%;
@@ -68,14 +69,25 @@ body {
   transition: 1s;
 }
 #body #container #main-ui #side-panel .user-avatar {
-  display: inline-block;
+  width: 100px;
+  margin: auto;
+  cursor: pointer;
 }
 #body #container #main-ui #side-panel .user-avatar .user-avatar-img {
   height: 90px;
   width: 90px;
-  margin: auto;
   border-radius: 60px;
   background: rgba(0,0,0,0.5);
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .user-avatar .user-avatar-img:hover {
+  height: 95px;
+  width: 95px;
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .user-avatar .user-avatar-name {
+  margin: 10px;
+  display: inline-block;
 }
 #body #container #main-ui #side-panel .power-up-panel {
   margin-top: 30px;
@@ -85,12 +97,19 @@ body {
   font-weight: bolder;
 }
 #body #container #main-ui #side-panel .power-up-panel .power-up {
-  display: inline-block;
   height: 50px;
   width: 50px;
-  background: rgba(0,0,0,0.5);
-  border-radius: 40px;
   margin: 5px;
+  border-radius: 40px;
+  background: rgba(0,0,0,0.5);
+  display: inline-block;
+  cursor: pointer;
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .power-up-panel .power-up:hover {
+  height: 55px;
+  width: 55px;
+  transition: 0.5s;
 }
 #body #container #main-ui #side-panel div.user-score {
   text-align: center;
@@ -115,9 +134,52 @@ body {
   opacity: 1;
   transition: 0.5s;
 }
+#body #container #main-ui #side-panel .settings h1 {
+  margin: auto;
+  display: block;
+  font-size: 2.5em;
+}
+#body #container #main-ui #side-panel .settings h2 {
+  display: block;
+}
+#body #container #main-ui #side-panel .settings .background-color {
+  height: 40px;
+  width: 40px;
+  margin: 10px;
+  margin-top: 0;
+  cursor: pointer;
+  border-radius: 20px;
+  display: inline-block;
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .settings .background-color:hover {
+  height: 45px;
+  width: 45px;
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .icon-back {
+  height: 60px;
+  width: 60px;
+  margin: auto;
+  cursor: pointer;
+  opacity: 0.5;
+  bottom: 30px;
+  left: 110px;
+  position: absolute;
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .icon-back:hover {
+  opacity: 1;
+  transition: 0.5s;
+}
 #body #container #main-ui #game-ui {
   top: 0;
-  left: 326px;
+  left: 328px;
   position: absolute;
   width: 800px;
   height: 500px;

@@ -70,6 +70,7 @@ html, body{
     #container {
         padding: 10px;
         padding-bottom: 130px; /* Height of the footer */
+        background: white;
 
         #main-ui {
             width: 80%;
@@ -107,19 +108,28 @@ html, body{
                 }
 
                 .user-avatar {
-                    display: inline-block;
+                    width: 100px;
+                    margin: auto;
+                    cursor: pointer;
 
                     .user-avatar-img {
                         height: 90px;
                         width: 90px;
-                        margin: auto;
 
                         border-radius: 60px;
                         background: rgba(0,0,0,.5);
+                        transition: 0.5s;
+
+                        &:hover {
+                            height: 95px;
+                            width: 95px;
+                            transition: 0.5s;
+                        }
                     }
 
                     .user-avatar-name {
-
+                        margin: 10px;
+                        display: inline-block;
                     }
                 }
 
@@ -131,13 +141,22 @@ html, body{
                         font-weight: bolder;
                     }
                     .power-up {
-                        display: inline-block;
                         height: 50px;
                         width: 50px;
-                        background: rgba(0,0,0,.5);
-                        border-radius: 40px;
 
                         margin: 5px;
+                        border-radius: 40px;
+                        background: rgba(0,0,0,.5);
+                        display: inline-block;
+
+                        cursor: pointer;
+                        transition: 0.5s;
+
+                        &:hover {
+                            height: 55px;
+                            width: 55px;
+                            transition: 0.5s;
+                        }
                     }
                 }
 
@@ -169,12 +188,75 @@ html, body{
                         }
                     }
                 }
+
+                .settings {
+                    // Title
+                    h1 {
+                        margin: auto;
+                        display: block;
+
+                        font-size: 2.5em;
+                    }
+
+                    h2 {
+                        display: block;
+                    }
+
+                    // Choose the background color
+                    .background-color {
+                        height: 40px;
+                        width: 40px;
+
+                        margin: 10px;
+                        margin-top: 0;
+
+                        cursor: pointer;
+                        border-radius: 20px;
+                        display: inline-block;
+
+                        transition: 0.5s;
+
+                        &:hover {
+                            height: 45px;
+                            width: 45px;
+
+                            transition: 0.5s;
+                        }
+                    }
+                }
+
+                // Back to the main user panel
+                .icon-back {
+                    height: 60px;
+                    width: 60px;
+                    margin: auto;
+
+                    cursor: pointer;
+
+                    opacity: 0.5;
+
+                    bottom: 30px;
+                    left: 110px;
+                    position: absolute;
+
+                    -webkit-transform: rotate(180deg);
+                    -moz-transform: rotate(180deg);
+                    -ms-transform: rotate(180deg);
+                    -o-transform: rotate(180deg);
+                    transform: rotate(180deg);
+                    transition: 0.5s;
+
+                    &:hover {
+                        opacity: 1;
+                        transition: 0.5s;
+                    }
+                }
             }
 
 
             #game-ui {
                 top: 0;
-                left: 326px;
+                left: 328px;
                 position: absolute;
 
                 width: 800px;
@@ -285,9 +367,6 @@ html, body{
 
 }
 
-
-
-
 @font-face {
     font-family: 'quicksandlight_italic';
     src: url('../fonts/quicksand-lightitalic-webfont.eot');
@@ -299,9 +378,6 @@ html, body{
     font-style: normal;
 
 }
-
-
-
 
 @font-face {
     font-family: 'quicksandregular';
