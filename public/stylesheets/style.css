@@ -28,7 +28,7 @@ body {
   transition: 0.5s;
 }
 #body #header h1 {
-  font-size: 3.5em;
+  font-size: 4em;
   cursor: pointer;
 }
 #body #header:hover {
@@ -39,6 +39,99 @@ body {
   padding: 10px;
   padding-bottom: 130px;
 /* Height of the footer */
+}
+#body #container #main-ui {
+  width: 80%;
+  height: 600px;
+  min-widgth: 450px;
+  position: relative;
+  margin: auto;
+  padding: 20px;
+  margin-top: 100px;
+  background: transparent;
+  color: #fff;
+}
+#body #container #main-ui #side-panel {
+  width: 250px;
+  height: 500px;
+  top: 0;
+  position: absolute;
+  padding: 20px;
+  background: #e74c3c;
+  border-radius: 10px;
+  display: inline-block;
+  border: 10px solid rgba(0,0,0,0.01);
+  transition: 1s;
+}
+#body #container #main-ui #side-panel:hover {
+  border: 10px solid rgba(0,0,0,0.3);
+  transition: 1s;
+}
+#body #container #main-ui #side-panel .user-avatar {
+  display: inline-block;
+}
+#body #container #main-ui #side-panel .user-avatar .user-avatar-img {
+  height: 90px;
+  width: 90px;
+  margin: auto;
+  border-radius: 60px;
+  background: rgba(0,0,0,0.5);
+}
+#body #container #main-ui #side-panel .power-up-panel {
+  margin-top: 30px;
+}
+#body #container #main-ui #side-panel .power-up-panel .title {
+  font-size: 2em;
+  font-weight: bolder;
+}
+#body #container #main-ui #side-panel .power-up-panel .power-up {
+  display: inline-block;
+  height: 50px;
+  width: 50px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 40px;
+  margin: 5px;
+}
+#body #container #main-ui #side-panel div.user-score {
+  text-align: center;
+  font-size: 3em;
+  font-family: exoregular;
+}
+#body #container #main-ui #side-panel div.user-panel {
+  width: 60%;
+  margin: auto;
+}
+#body #container #main-ui #side-panel div.user-panel .user-panel-icon {
+  height: 30px;
+  width: 30px;
+  opacity: 0.5;
+  margin: 10px;
+  margin-bottom: -20px;
+  display: inline-block;
+  cursor: pointer;
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel div.user-panel .user-panel-icon:hover {
+  opacity: 1;
+  transition: 0.5s;
+}
+#body #container #main-ui #game-ui {
+  top: 0;
+  left: 326px;
+  position: absolute;
+  width: 800px;
+  height: 500px;
+  padding: 20px;
+  margin-left: 2px;
+  background: #3498db;
+  border: 10px solid rgba(0,0,0,0.01);
+  border-radius: 10px;
+  display: inline-block;
+  transition: 1s;
+}
+#body #container #main-ui #game-ui:hover {
+  border: 10px solid rgba(0,0,0,0.3);
+  transition: 1s;
 }
 #body #footer {
   width: 100%;
@@ -56,6 +149,7 @@ body {
 #body #footer ul a {
   color: #000;
   text-decoration: none;
+  font-size: 2em;
   transition: 0.5s;
 }
 #body #footer ul a:hover {

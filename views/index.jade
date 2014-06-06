@@ -1,3 +1,8 @@
+//- ROCKFALL
+//- INDEX FILE
+//- ----------
+//- ----------
+
 extend layout
 
 block content
@@ -5,15 +10,24 @@ block content
     div#side-panel
       div.user-avatar
         div.user-avatar-img
-        span.user-name
+        span.user-avatar-name
 
-      div.power-up
-        span.subtitle Power-Up
-        span No Power-Up
+      div.power-up-panel
+        span.title Power-Up
+        div
+          p.subtitle No Power-Up
+          div.power-up
+          div.power-up
+          div.power-up
 
       div.user-score
+        p 1,280
+        
       div.user-panel
+        img.user-panel-icon(src='../icons/icon_settings.png' action='settings')
+        img.user-panel-icon(src='../icons/icon_message.png' action='message')
+        img.user-panel-icon(src='../icons/icon_trophy.png' action='trophy')
 
     div#game-ui
-      div#game
+      div#game Active Javascript to PLAY!
       div#game-panel

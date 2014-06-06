@@ -1,23 +1,31 @@
+// --------------------
+// ROCKFALL
 // MAIN JAVASCRIPT FILE
-// by
+// --------------------
+// --------------------
 
-var express = require('express'),	// web dev framework
-	stylus = require('stylus'),		// css pre-compiler
-	morgan = require('morgan'),		// loggin middleware
-	nib = require('nib'),           // Stylus utilities
+
+// -----------------------------
+// -----------------------------
+// ------- REQUIRES ------------
+// -----------------------------
+var express = require('express'),  // web dev framework
+	stylus = require('stylus'),	// css pre-compiler
+	morgan = require('morgan'),	// loggin middleware
+	nib = require('nib'),		  // Stylus utilities
     http = require('http'),
     path = require('path');
 
-var fs = require('fs');				// file stream
+// var fs = require('fs');		// file stream
 
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 
 
 
-// ---------------
+// ----------------
 // APP - CREATION
-// ---------------
+// ----------------
 var app = express();
 // ----------------
 function compile(str, path) {
@@ -27,11 +35,11 @@ function compile(str, path) {
 };
 
 
-// ---------------------------------------------------
+// ---------------------------------------
 // set the default views folder
 // containing templates
 // and the static folder
-// ---------------------------------------------------
+// ---------------------------------------
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');	// folder templates
 app.set('view engine', 'jade');			// template engine
@@ -59,6 +67,8 @@ app.get('/', function(req, res) {
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
+
+
 
 
 // PROTOTYPES
