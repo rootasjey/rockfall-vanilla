@@ -25,8 +25,8 @@ function Table(size_x,size_y, start_x, start_y, space){
 	this.color = "#CCCCCC";
 	
 	/* Dimension des cases du plateau */
-	this.width = 50;
-	this.height = 50;
+	this.width = 70;
+	this.height = 70;
 	
 	/* Les données de départ qui serviront pour la représentation graphique */
 	this.start_x = start_x;

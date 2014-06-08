@@ -1,6 +1,6 @@
 window.onload = function () {
 
-  var plateau = new Table(5, 5, 10, 10, 5);
+  var plateau = new Table(5, 5, 40, 40, 10);
   
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
