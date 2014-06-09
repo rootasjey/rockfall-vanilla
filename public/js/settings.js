@@ -31,7 +31,7 @@ function click_settings() {
     // ----------------------
     var form = make_settings_form();
     $('.settings').append(form);
-
+    $('.settings').append("<br>");
 
     // add sounds/music options
     // ----------
@@ -79,7 +79,7 @@ function click_settings() {
 
     // add events on labels
     // to edit information
-    $('.edit-info').click(function() {
+    $('span.edit-info').click(function() {
         // get labels and compare inputs' style
         var label = $(this)[0];
         var input = label.nextElementSibling;
@@ -92,7 +92,6 @@ function click_settings() {
     $('.toggle').click(function() {
         var toggle = $(this);
         toggle.html(toggle.html().toggleStr('on', 'off'));
-        // toggle.html().toggleStr('on', 'off');
     });
 
 
@@ -129,8 +128,9 @@ function make_settings_form() {
     form.title = 'form_settings';
     form.id = 'form_settings';
 
-    var label_formTitle = document.createElement('span');
-    label_formTitle.innerHTML = '<h2>user info</h2>';
+    var title_edit_ids = document.createElement('h2');
+    title_edit_ids.className ='edit-info';
+    title_edit_ids.innerHTML = "user info <span class='edit-button'>edit</span> <br>";
 
 
     // labels
@@ -230,7 +230,8 @@ function make_settings_form() {
 
     // add elements to the form
     // form's title
-    form.appendChild(label_formTitle);
+    form.appendChild(title_edit_ids);
+
     // labels + inputs
     form.appendChild(label_name);
     form.appendChild(input_name);
@@ -257,13 +258,15 @@ function make_settings_form() {
 // ----------------------------
 function update_color_visualiser(number) {
     // get the color value
-    var color = $('#color'+ number).attr('value');
-
+    // -----------------------------------------
+    var color = $('#color'+ number)[0].value;
     var n = (number % 2) + 1; // find the other #color(1/2) number
 
-    // test that the two prefered colors
+    // test if the two prefered colors
     // are diffrents
-    if(color == $('#color'+ n).attr('value')) {
+    // ---------------------------------------
+    if(color == $('#color'+ n)[0].value) {
+        // console.log('same color');
         // if the two colors are the same
         // we select the next color in the list
         var select_color = $('#color' + number)[0];
@@ -271,13 +274,16 @@ function update_color_visualiser(number) {
         // get the selected index, and go to the next one
         var index  = select_color.selectedIndex;
         index += 1;
-        select_color.selectedIndex = index % 12;
+        index = index % 12;
+        select_color.selectedIndex = index;
 
-        // noew update the color visualiser
-        $(".color-visualiser[name='color_visualiser" + number + "']")
-            .css('background', $('#color'+ number).attr('value'));
+        // now update the color visualiser
+        var color_visualiser = $(".color-visualiser[name='color_visualiser" + number + "']");
+        color_visualiser.css('background-color', select_color[index].value);
     }
-    else $(".color-visualiser[name='color_visualiser" + number + "']").css('background', color);
+    else {
+        $(".color-visualiser[name='color_visualiser" + number + "']").css('background-color', color);
+    }
 }
 
 

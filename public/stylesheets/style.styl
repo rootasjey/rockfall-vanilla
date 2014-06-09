@@ -47,7 +47,7 @@ html, body{
     // HEADER
     // ------
     #header {
-        min-height: 150px;
+        height: 150px;
         background: #eee;
 
         padding-top: 10px;
@@ -68,7 +68,7 @@ html, body{
     // BODY
     // ----
     #container {
-        padding: 10px;
+        padding-top: 40px;
         padding-bottom: 130px; /* Height of the footer */
         background: white;
 		transition: 1s;
@@ -100,8 +100,9 @@ html, body{
                 border-radius: 10px;
                 display: inline-block;
 
-				overflow-y: auto;
-				// overflow-x: hidden;
+				overflow-y: hidden;
+				overflow-x: hidden;
+
                 border: 10px solid rgba(0, 0, 0, 0.01);
                 transition: 1s;
 
@@ -230,9 +231,28 @@ html, body{
                             transition: 0.5s;
                         }
                     }
-					.edit-info {
+					span.edit-info {
 						cursor: pointer;
-						// transition: 0.5s;
+						display: none;
+
+						.edit-button {
+							background: black;
+							padding: 5px;
+							opacity: 0;
+						}
+
+						&:hover {
+							font-weight: bolder;
+							transition: 0.5s;
+
+							.edit-button {
+								opacity: 0.5;
+							}
+						}
+					}
+
+					h2.edit-info {
+						cursor: pointer;
 
 						.edit-button {
 							background: black;
@@ -291,7 +311,7 @@ html, body{
 					display: block;
 					cursor: pointer;
 					opacity: 0.5;
-					font-size: 1.2em;
+					font-size: 2em;
 
 					&:hover {
 						opacity: 1;
