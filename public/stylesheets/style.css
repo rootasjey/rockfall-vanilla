@@ -62,7 +62,7 @@ body {
   background: #e74c3c;
   border-radius: 10px;
   display: inline-block;
-  overflow: auto;
+  overflow-y: auto;
   border: 10px solid rgba(0,0,0,0.01);
   transition: 1s;
 }
@@ -116,10 +116,9 @@ body {
 #body #container #main-ui #side-panel div.user-score {
   text-align: center;
   font-size: 3em;
-  font-family: exoregular;
 }
 #body #container #main-ui #side-panel div.user-panel {
-  width: 60%;
+  width: 160px;
   margin: auto;
 }
 #body #container #main-ui #side-panel div.user-panel .user-panel-icon {
@@ -195,6 +194,17 @@ body {
   border-radius: 20px;
   display: inline-block;
 }
+#body #container #main-ui #side-panel .notifications {
+  opacity: 0;
+}
+#body #container #main-ui #side-panel .notifications h1 {
+  margin: auto;
+  display: block;
+  font-size: 2.5em;
+}
+#body #container #main-ui #side-panel .notifications h2 {
+  display: block;
+}
 #body #container #main-ui #side-panel .toggle {
   display: block;
   cursor: pointer;
@@ -265,46 +275,4 @@ body {
 #body #footer ul a:hover {
   color: #e74c3c;
   transition: 0.5s;
-}
-@font-face {
-  font-family: 'exoregular';
-  src: url("../fonts/exo-regular-webfont.eot");
-  src: url("../fonts/exo-regular-webfont.eot?#iefix") format('embedded-opentype'), url("../fonts/exo-regular-webfont.woff") format('woff'), url("../fonts/exo-regular-webfont.ttf") format('truetype'), url("../fonts/exo-regular-webfont.svg#exoregular") format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'exothin';
-  src: url("../fonts/exo-thin-webfont.eot");
-  src: url("../fonts/exo-thin-webfont.eot?#iefix") format('embedded-opentype'), url("../fonts/exo-thin-webfont.woff") format('woff'), url("../fonts/exo-thin-webfont.ttf") format('truetype'), url("../fonts/exo-thin-webfont.svg#exothin") format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'exothinitalic';
-  src: url("../fonts/exo-thinitalic-webfont.eot");
-  src: url("../fonts/exo-thinitalic-webfont.eot?#iefix") format('embedded-opentype'), url("../fonts/exo-thinitalic-webfont.woff") format('woff'), url("../fonts/exo-thinitalic-webfont.ttf") format('truetype'), url("../fonts/exo-thinitalic-webfont.svg#exothinitalic") format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'quicksandlight';
-  src: url("../fonts/quicksand-light-webfont.eot");
-  src: url("../fonts/quicksand-light-webfont.eot?#iefix") format('embedded-opentype'), url("../fonts/quicksand-light-webfont.woff") format('woff'), url("../fonts/quicksand-light-webfont.ttf") format('truetype'), url("../fonts/quicksand-light-webfont.svg#quicksandlight") format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'quicksandlight_italic';
-  src: url("../fonts/quicksand-lightitalic-webfont.eot");
-  src: url("../fonts/quicksand-lightitalic-webfont.eot?#iefix") format('embedded-opentype'), url("../fonts/quicksand-lightitalic-webfont.woff") format('woff'), url("../fonts/quicksand-lightitalic-webfont.ttf") format('truetype'), url("../fonts/quicksand-lightitalic-webfont.svg#quicksandlight_italic") format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'quicksandregular';
-  src: url("../fonts/quicksand-regular-webfont.eot");
-  src: url("../fonts/quicksand-regular-webfont.eot?#iefix") format('embedded-opentype'), url("../fonts/quicksand-regular-webfont.woff") format('woff'), url("../fonts/quicksand-regular-webfont.ttf") format('truetype'), url("../fonts/quicksand-regular-webfont.svg#quicksandregular") format('svg');
-  font-weight: normal;
-  font-style: normal;
 }

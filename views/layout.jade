@@ -4,13 +4,20 @@ html(lang='en')
   head
     meta(charset="utf-8")
     title RockFall - #{title}
+
     link(type='text/css', rel='stylesheet', href='/stylesheets/style.css')
+    link(type='text/css', rel='stylesheet', href='/stylesheets/fonts.css')
+
+    script(type='text/javascript' src='/js/jquery-2.1.1.min.js')
     script(type='text/javascript' src='/js/script.js')
+    script(type='text/javascript' src='/js/sidepanel.js')
     script(type='text/javascript' src='/js/settings.js')
-    script(type="text/javascript" src="http://www.google.com/jsapi")
+    script(type='text/javascript' src='/js/notifications.js')
+
     script(type='text/javascript' src='/game/js/plateau.js')
     script(type='text/javascript' src='/game/js/piece.js')
     script(type='text/javascript' src='/game/js/main.js')
+
 
   body
     div#body
@@ -20,4 +27,3 @@ html(lang='en')
         block content
       div#footer
         include includes/footer
-      script google.load('jquery', '1')

@@ -8,7 +8,8 @@
 // --------------------------
 window.onload = function () {
     // load settings function
-    events_sidePanelIcons();
+    load_side_panel();
+
     // load the board
     load_board();
 };
