@@ -62,7 +62,7 @@ body {
   background: #e74c3c;
   border-radius: 10px;
   display: inline-block;
-  overflow: auto;
+  overflow-y: auto;
   border: 10px solid rgba(0,0,0,0.01);
   transition: 1s;
 }

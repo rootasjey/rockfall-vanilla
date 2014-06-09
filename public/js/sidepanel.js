@@ -8,6 +8,9 @@
 // ---------------------------
 var sidePanelMainContent = '';
 
+function load_side_panel() {
+    events_sidePanelIcons();
+}
 
 // Add click events on icons' side-panel
 // -------------------------------
