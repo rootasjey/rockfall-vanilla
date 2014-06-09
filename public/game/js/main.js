@@ -1,37 +1,249 @@
 function load_board() {
-  var plateau = new Table(5, 5, 40, 40, 10);
 
-  var canvas = document.getElementById("canvas");
-  var ctx = canvas.getContext("2d");
-  var valid = true;
-  plateau.draw(ctx);
-
-  var interval = 30;
-  setInterval(function() { if(!valid){ plateau.clear(ctx); plateau.draw(ctx); valid = true;} }, interval);
-
-  $("#canvas").on("mousemove",function(e){
-
-	var canvas = document.getElementById("canvas");
-	var mouse = getMouse(e,canvas);
-	var mx = mouse.x, my = mouse.y;
-
-	for (var i = 0; i < plateau.graphique.length; i++) {
-		if (plateau.graphique[i].contains(mx, my)) {
-
-			plateau.graphique[i].selected = true;
-			valid = false;
-
-		}else{
-
-			plateau.graphique[i].selected = false;
-			valid = false;
-		}
-	}
-
-  });
+   var game = new CanvasState();
+    
+    
 }
 
 
+function CanvasState (){
+ 
+      /* On définit le plateau de jeu avec les différents arguments détaillés dans plateau.js*/
+    this.plateau = new Table(4, 6, 140, 40, 10);
+
+    this.canvas = document.getElementById("canvas");
+    this.ctx = canvas.getContext("2d");
+  
+    //this.selection_graphique = -1;
+    this.selection_piece = null;
+    
+    this.text_color = "rgba(25, 23, 23, 0.49)";
+    
+    this.dragoffx = 0;
+    this.dragoffy = 0;
+    
+    this.shape_cinq = new Shape(280, 410, 70, 70, 5);
+    this.shape_dix = new Shape(450, 410, 70, 70, 10);
+    this.shape_quinze = new Shape(620, 410, 70, 70, 15);
+
+    this.quantite_cinq = 5;
+    this.quantite_dix = 5;
+    this.quantite_quinze = 5;
+    
+    this.valid = true;
+    
+    this.plateau.draw(this.ctx);
+  
+    this.pieces = new Pieces(this.text_color);
+    
+   
+    this.pieces.add(this.shape_cinq);
+   
+    this.pieces.add(this.shape_dix);
+    
+    this.pieces.add(this.shape_quinze);
+    
+    
+    this.valid = false; 
+    myState = this;
+  /* fonction qui permet de redessiner le canvas si besoin */
+  var interval = 30;
+  setInterval(function() { if(!myState.valid){ clear(myState.ctx,myState.canvas); myState.plateau.draw(myState.ctx);draw_info(myState.ctx, myState.canvas, myState.text_color, myState.quantite_cinq, myState.quantite_dix, myState.quantite_quinze);myState.pieces.draw(myState.ctx); myState.valid = true;} }, interval);
+
+    
+    
+    /* Dans la fonction mousemove on récupère la position de la souris et on vérifie qu'elle ne passe pas sur une case du plateau sinon on affiche cette case en propriété selected */
+  $(canvas).mousemove(function(e){
+
+	var canvas = myState.canvas;
+	var mouse = getMouse(e,canvas);
+	var mx = mouse.x, my = mouse.y;
+
+	for (var i = 0; i < myState.plateau.graphique.length; i++) {
+        if(myState.selection_piece != null){
+            if (myState.plateau.graphique[i].contains(mx, my)) {
+
+                myState.plateau.graphique[i].selected = true;
+                //myState.selection_graphique = i;
+                //myState.
+                myState.valid = false;
+
+            }else{
+
+                myState.plateau.graphique[i].selected = false;
+                //myState.selection_graphique = null
+                myState.valid = false;
+            }
+        }
+	}
+      
+    if(myState.selection_piece != null){
+        myState.selection_piece.x = mouse.x - myState.dragoffx;
+        myState.selection_piece.y = mouse.y - myState.dragoffy;
+        myState.valid = false;
+    }
+
+  });
+
+
+
+$(canvas).mousedown(function(e) {
+  
+    var mouse = getMouse(e,canvas);
+    var mx = mouse.x;
+    var my = mouse.y;
+    
+    for (var i = 0; i < myState.pieces.shapes.length; i++) {
+		if(typeof(myState.pieces.shapes[i]) != "undefined"){
+		  if (myState.pieces.shapes[i].contains(mx, my)) {
+			var mySel = myState.pieces.shapes[i];
+			
+			myState.dragoffx = mx - mySel.x;
+			myState.dragoffy = my - mySel.y;
+			if(myState.pieces.shapes[i].weight == 5 && myState.quantite_cinq != 0){
+              
+                myState.selection_piece = myState.pieces.shapes[i];
+                myState.selection_piece.select = true;
+                
+            }else if(myState.pieces.shapes[i].weight == 10 && myState.quantite_dix != 0){
+                myState.selection_piece = myState.pieces.shapes[i];
+                myState.selection_piece.select = true;
+                
+            }else if(myState.pieces.shapes[i].weight == 15 && myState.quantite_quinze != 0){
+                myState.selection_piece = myState.pieces.shapes[i];
+                myState.selection_piece.select = true; 
+            }
+            myState.valid = false;
+            //return;
+	       }
+        }
+    }
+    
+  });
+
+
+$(canvas).mouseup(function(e) {
+  
+    
+       if(myState.selection_piece != null){
+        
+		  var mouse = getMouse(e,myState.canvas);
+		  var mx = mouse.x;
+		  var my = mouse.y;
+		  //var shapes = myState.shapes;
+		  //var l = shapes.length;
+        
+		  for (var i = 0; i < myState.plateau.graphique.length; i++) {
+            if(typeof(myState.plateau.graphique[i]) != "undefined"){
+				//if(shapes[i].grille == true){
+				 if (myState.plateau.graphique[i].contains(mx, my) && myState.plateau.matrice[myState.plateau.graphique[i].matrice_x][myState.plateau.graphique[i].matrice_y] == 0) {
+                     
+                     
+				      var shape = new Shape(myState.plateau.graphique[i].x, myState.plateau.graphique[i].y, myState.selection_piece.width, myState.selection_piece.height, myState.selection_piece.weight, myState.selection_piece.fill);
+                      myState.plateau.add(myState.plateau.graphique[i].matrice_x, myState.plateau.graphique[i].matrice_y, shape);
+                    
+                     switch(myState.selection_piece.weight){
+                             case 5 :   if(myState.quantite_cinq>0){myState.quantite_cinq--};
+                                        break;
+                             
+                             case 10 :  if(myState.quantite_dix>0){myState.quantite_dix--};
+                                        break;
+                             
+                             case 15:   if(myState.quantite_quinze>0){myState.quantite_quinze--};
+                                        break;
+                             
+                             default : break;
+                     }
+                     
+                     
+                      for(var j = 0;j < myState.plateau.size_x;j++){
+                          var ligne = "";
+		                  for(var k = 0;k < myState.plateau.size_y;k++){
+			                 if(myState.plateau.matrice[j][k] != 0){
+                                 ligne += "1 ";
+                             }else{
+                                 ligne += "0 ";
+                             }
+		                  }
+                            console.log(ligne);
+                            console.log(" ");
+                        }
+                     
+					
+					//delete myState.shapes[myState.indice_selection];
+					//myState.selection = null;
+					//myState.indice_selection = -1;
+					//console.log("indice_over : "+myState.indice_over);
+					//myState.shapes[myState.indice_over].passage = false; 
+					//myState.indice_over = -1;
+                    myState.selection_piece.init();
+                    //myState.selection_piece.select = false;
+                    //myState.selection_piece = null;
+					//myState.valid = false;
+					//alert(" x = "+shapes[i].tab_x +" ||  y = "+shapes[i].tab_y);
+				  }
+				//}
+			}
+		}
+	}
+    
+    
+    if(myState.selection_piece != null){
+        myState.selection_piece.select = false;
+        myState.selection_piece = null;
+        myState.valid = false;
+    }
+	
+
+ });
+    
+}
+
+
+function clear(ctx,canvas){
+    
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+
+
+
+
+function draw_info(ctx, canvas, text_color, quantite_cinq, quantite_dix, quantite_quinze){
+    
+    /* Ligne de séparation entre le plateau de jeu et les pieces */
+  
+    ctx.beginPath();
+    ctx.rect(0, 380, canvas.width, 5);
+    ctx.closePath();
+    ctx.fillStyle = text_color;
+    ctx.fill();
+
+    /* Le texte qui permet d'afficher le temps du tour. */
+    
+    ctx.font = 'italic 40pt Calibri';
+    ctx.fillStyle = text_color;
+    ctx.fillText('00 : 00', 35, 460);
+    
+    ctx.fillStyle = text_color;
+    ctx.font = 'italic 40pt Calibri';
+
+    ctx.fillText('x'+quantite_cinq, 354, 480);
+
+    ctx.fillText('x'+quantite_dix, 524, 480);
+
+    ctx.fillText('x'+quantite_quinze, 694, 480);
+}
+
+
+
+
+
+
+
+
+
+/*La fonction getMouse retourne la position en x et en y de la souris sur l'élément canvas en fesant attention aux propriétées tel que le border, margin, etc. */
 function getMouse(e,canvas) {
 
 	// This complicates things a little but but fixes mouse co-ordinate problems
@@ -50,7 +262,7 @@ function getMouse(e,canvas) {
   htmlLeft = html.offsetLeft;
 
 
-  var element = this.canvas, offsetX = 0, offsetY = 0, mx, my;
+  var element = canvas, offsetX = 0, offsetY = 0, mx, my;
 
   // Compute the total offset
   if (element.offsetParent !== undefined) {

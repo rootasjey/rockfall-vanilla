@@ -1,7 +1,7 @@
 /*
 	Le Table représente le plateau de jeu il est modulable en x et en y. Nous avons différentes méthodes qui nous permette d'ajouter ou de supprimer les éléments de la matrice. les 0 représente une case vide, sinon l'élément contiendra l'objet de type shape.
 	
-	Les deux arguments représentent la taille de la matrice en x et en y.
+	Les deux arguments représentent la taille de la matrice en x et en y, ensuite nous avons start_x et start_y qui sont les coordonnées qui indique ou le plateau commencera à être dessiné et le dernier space représente l'écart qu'il existe entre deux cases du plateau.
 */
 
 
@@ -52,10 +52,10 @@ function Table(size_x,size_y, start_x, start_y, space){
 			
 			x = this.start_x + i *(this.width+this.space);
 			tab_x.push(0);
-			this.graphique.push(new Cell(x,y,this.width,this.height,j+1,i+1));
+			this.graphique.push(new Cell(x,y,this.width,this.height,j,i));
 		}
 
-		this.matrice.push(tab_x.push);	
+		this.matrice.push(tab_x);	
 	} 	
 }
 
@@ -78,21 +78,26 @@ function Cell(x, y, w, h, matrice_x, matrice_y){
 
 /* remet la cellule à l'état initial*/
 Table.prototype.remove = function(x,y){
-	this.matrice[y][x] = 0;
+	this.matrice[x][y] = 0;
 }
 
 /* ajoute un element à la cellule de type shape */
 Table.prototype.add = function(x,y,shape){
-	this.matrice[y][x] = shape;
+	this.matrice[x][y] = shape;
 }
 
 /* dessine les cellules ssur le context canvas donné avec comme argument la position x et y de depart, ainsi que l'espacement entre les cellules. */
 Table.prototype.draw = function(ctx){
 
 	for(var i = 0;i < this.graphique.length;i++){	
-		
-		var cell = this.graphique[i];
-		cell.draw(ctx);
+		 var cell = this.graphique[i];
+		if(this.matrice[cell.matrice_x][cell.matrice_y] == 0){
+		  cell.draw(ctx);
+        }else{
+            this.matrice[cell.matrice_x][cell.matrice_y].draw(ctx);
+        }
+		//var cell = this.graphique[i];
+		//cell.draw(ctx);
 	}
 }
 
