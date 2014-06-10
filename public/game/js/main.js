@@ -14,7 +14,7 @@ function CanvasState (){
     this.canvas = document.getElementById("canvas");
     this.ctx = canvas.getContext("2d");
   
-    //this.selection_graphique = -1;
+    this.selection_graphique = null;
     this.selection_piece = null;
     
     this.text_color = "rgba(25, 23, 23, 0.49)";
@@ -48,7 +48,7 @@ function CanvasState (){
     myState = this;
   /* fonction qui permet de redessiner le canvas si besoin */
   var interval = 30;
-  setInterval(function() { if(!myState.valid){ clear(myState.ctx,myState.canvas); myState.plateau.draw(myState.ctx);draw_info(myState.ctx, myState.canvas, myState.text_color, myState.quantite_cinq, myState.quantite_dix, myState.quantite_quinze);myState.pieces.draw(myState.ctx); myState.valid = true;} }, interval);
+  setInterval(function() { if(!myState.valid){ clear(myState.ctx,myState.canvas); myState.plateau.draw(myState.ctx);draw_info(myState.ctx, myState.canvas, myState.text_color, myState.quantite_cinq, myState.quantite_dix, myState.quantite_quinze);myState.pieces.draw(myState.ctx);myState.valid = true;} }, interval);
 
     
     
@@ -64,14 +64,14 @@ function CanvasState (){
             if (myState.plateau.graphique[i].contains(mx, my)) {
 
                 myState.plateau.graphique[i].selected = true;
-                //myState.selection_graphique = i;
+                myState.selection_graphique = myState.plateau.graphique[i];
                 //myState.
                 myState.valid = false;
 
             }else{
 
                 myState.plateau.graphique[i].selected = false;
-                //myState.selection_graphique = null
+                //myState.selection_graphique = myState.plateau.graphique[i];
                 myState.valid = false;
             }
         }
@@ -94,7 +94,7 @@ $(canvas).mousedown(function(e) {
     var my = mouse.y;
     
     for (var i = 0; i < myState.pieces.shapes.length; i++) {
-		if(typeof(myState.pieces.shapes[i]) != "undefined"){
+		if(typeof(myState.pieces.shapes[i]) != "undefined" &&  !myState.plateau.verification_gravity){
 		  if (myState.pieces.shapes[i].contains(mx, my)) {
 			var mySel = myState.pieces.shapes[i];
 			
@@ -124,20 +124,23 @@ $(canvas).mousedown(function(e) {
 
 $(canvas).mouseup(function(e) {
   
-    
-       if(myState.selection_piece != null){
+        var success = false;
+       
+        if(myState.selection_piece != null){
         
 		  var mouse = getMouse(e,myState.canvas);
 		  var mx = mouse.x;
 		  var my = mouse.y;
 		  //var shapes = myState.shapes;
 		  //var l = shapes.length;
-        
+           
+           
 		  for (var i = 0; i < myState.plateau.graphique.length; i++) {
             if(typeof(myState.plateau.graphique[i]) != "undefined"){
 				//if(shapes[i].grille == true){
 				 if (myState.plateau.graphique[i].contains(mx, my) && myState.plateau.matrice[myState.plateau.graphique[i].matrice_x][myState.plateau.graphique[i].matrice_y] == 0) {
                      
+                     success = true;
                      
 				      var shape = new Shape(myState.plateau.graphique[i].x, myState.plateau.graphique[i].y, myState.selection_piece.width, myState.selection_piece.height, myState.selection_piece.weight, myState.selection_piece.fill);
                       myState.plateau.add(myState.plateau.graphique[i].matrice_x, myState.plateau.graphique[i].matrice_y, shape);
@@ -155,7 +158,73 @@ $(canvas).mouseup(function(e) {
                              default : break;
                      }
                      
+                     var nb_chute = 0;
+                     myState.plateau.verification_gravity = true;
+                     setInterval(function(){
+                         if(nb_chute<myState.plateau.size_x+1){
+                            myState.plateau.verification_gravity = myState.plateau.gravity();
+                             //console.log(myState.plateau.verification_gravity);
+                             myState.valid=false;
+                             nb_chute++;
+                         }else{
+                             clearInterval(this);
+                         }
+                     },250);
                      
+                     var detonation = 0;
+                     var impact = 0;
+                     setInterval(function(){
+                         if(myState.plateau.verification_gravity == true){
+                            detonation++;
+                            //myState.plateau.verification_gravity = myState.plateau.gravity();
+                             //console.log(myState.plateau.verification_gravity);
+                             //myState.valid=false;
+                             
+                         }else{
+                             if(detonation>0){
+                                
+                                 impact++;
+                                 if(impact == 1){
+                                 
+                                     for(var e = 0;e<myState.plateau.graphique.length;e++){
+                                         myState.plateau.graphique[e].y += 2;
+                                     }
+                                     
+                                     for(var g = 0;g < myState.plateau.size_x;g++){
+                                         
+                                        for(var h = 0;h < myState.plateau.size_y;h++){
+                                             if(myState.plateau.matrice[g][h] != 0){
+                                                myState.plateau.matrice[g][h].y += 2;
+                                             }
+                                        } 	
+                                    }
+                                     
+                                     myState.valid = false;
+                                 }else if(impact == 2){
+                                     
+                                     for(var e = 0;e<myState.plateau.graphique.length;e++){
+                                         myState.plateau.graphique[e].y -= 2;
+                                     }
+                                     
+                                     for(var g = 0;g < myState.plateau.size_x;g++){
+                                         
+                                        for(var h = 0;h < myState.plateau.size_y;h++){
+                                             if(myState.plateau.matrice[g][h] != 0){
+                                                myState.plateau.matrice[g][h].y -= 2;
+                                             }
+                                        } 	
+                                    }
+                                     console.log("apres");
+                                     impact = 0;
+                                     detonation = 0;
+                                     clearInterval(this);
+                                        
+                                }
+                             }
+                         }
+                         
+                     },200);
+                     /*
                       for(var j = 0;j < myState.plateau.size_x;j++){
                           var ligne = "";
 		                  for(var k = 0;k < myState.plateau.size_y;k++){
@@ -167,7 +236,7 @@ $(canvas).mouseup(function(e) {
 		                  }
                             console.log(ligne);
                             console.log(" ");
-                        }
+                        }*/
                      
 					
 					//delete myState.shapes[myState.indice_selection];
@@ -188,9 +257,19 @@ $(canvas).mouseup(function(e) {
 	}
     
     
+    
     if(myState.selection_piece != null){
+        if(!success){
+            myState.selection_piece.init();
+        }
         myState.selection_piece.select = false;
         myState.selection_piece = null;
+        myState.valid = false;
+    }
+    
+    if(myState.selection_graphique != null){
+        myState.selection_graphique.selected = false;
+         myState.selection_graphique = null;
         myState.valid = false;
     }
 	
@@ -206,7 +285,14 @@ function clear(ctx,canvas){
 }
 
 
-
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
 
 
 function draw_info(ctx, canvas, text_color, quantite_cinq, quantite_dix, quantite_quinze){
@@ -228,10 +314,22 @@ function draw_info(ctx, canvas, text_color, quantite_cinq, quantite_dix, quantit
     ctx.fillStyle = text_color;
     ctx.font = 'italic 40pt Calibri';
 
+    if(quantite_cinq == 0){
+         ctx.fillStyle ="red";
+    }
+    
     ctx.fillText('x'+quantite_cinq, 354, 480);
 
+    ctx.fillStyle = text_color;
+    if(quantite_dix == 0){
+         ctx.fillStyle ="red";
+    }
     ctx.fillText('x'+quantite_dix, 524, 480);
 
+    ctx.fillStyle = text_color;
+    if(quantite_quinze == 0){
+         ctx.fillStyle ="red";
+    }
     ctx.fillText('x'+quantite_quinze, 694, 480);
 }
 

@@ -56,7 +56,9 @@ function Table(size_x,size_y, start_x, start_y, space){
 		}
 
 		this.matrice.push(tab_x);	
-	} 	
+	}
+    
+    this.verification_gravity = false;
 }
 
 /* La cellule est l'objet contenant les informations sur une case du plateau */
@@ -101,6 +103,56 @@ Table.prototype.draw = function(ctx){
 	}
 }
 
+Table.prototype.search = function(matrice_x,matrice_y){
+ 
+    var resultat = null;
+    for(var i = 0;i < this.graphique.length;i++){	
+		 var cell = this.graphique[i];
+        if(cell.matrice_x == matrice_x && cell.matrice_y == matrice_y){
+            resultat = cell;
+        }
+    }
+    return resultat;
+}
+
+
+Table.prototype.gravity = function(){
+
+    fini = false;
+	for(var i = 0;i < this.size_y;i++){	
+        
+		for(var j = this.size_x-1;j >= 0;j--){
+            if(this.matrice[j][i] != 0){
+                var end = true;
+                //this.matrice[j][i];
+                var k = j
+                while(end){
+                    if(k == this.size_x-1){
+                        end = false;
+                    }else{
+                        if(this.matrice[k+1][i] == 0){
+                            
+                            
+                           
+                            this.matrice[k+1][i] = this.matrice[k][i];
+                            var objet = this.search(k+1,i);
+                            if(objet != null){
+                                this.matrice[k+1][i].x = objet.x;
+                                this.matrice[k+1][i].y = objet.y;
+                            }
+                            this.matrice[k][i]= 0;
+                            fini =  true;
+                            end = false;
+                        }
+                    }
+                    k++;
+                }
+            }
+        }
+   
+	}
+    return fini;
+}
 
 Table.prototype.clear = function(ctx){
 
