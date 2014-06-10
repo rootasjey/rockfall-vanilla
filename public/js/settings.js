@@ -3,14 +3,28 @@
 // --------------------------
 // --------------------------
 
+// global var : user
+// --------
+var _user = {
+    'name': 'visitor',
+    'password' : 'none',
+    'email' : 'none',
+};
+
 
 // Fire when settings icon is clicked
-// ------------------------
-function click_settings() {
+// remember(arg) = save the previous content
+// --------------------------------
+function click_settings(remember, name, password, email) {
 
     // save side panel's content
     var sidePanel = $('#side-panel');
-    sidePanelMainContent = sidePanel.html();
+
+    if(remember) {
+        // if the variable is true,
+        // it saves the content of the side-panel
+        sidePanelMainContent = sidePanel.html();
+    }
 
     // empty side panel
     sidePanel.html('');
@@ -18,20 +32,26 @@ function click_settings() {
     // create & show settings
     $('<div>', {
         class: 'settings',
-        html: "<h1>settings</h1>" +
-              "<div> <h2>background color</h2>" +
-              "<div class='background-color' style='background-color: white;'></div>"+
-              "<div class='background-color' style='background-color: #2c3e50;'></div>"+
-              "</div>",
+        html: "<h1>settings</h1>",
 
     }).appendTo('#side-panel');
 
 
     // create a settings form
     // ----------------------
-    var form = make_settings_form();
+    var form = null;
+    if(name || password || email) {
+        form = make_settings_form(name, password, email);
+    }
+    else form = make_settings_form();
+
     $('.settings').append(form);
     $('.settings').append("<br>");
+
+    $('.settings').append("<div class='background-color-section'> <h2>background color</h2>" +
+    "<div class='background-color' style='background-color: white;'></div>"+
+    "<div class='background-color' style='background-color: #2c3e50;'></div>"+
+    "</div>");
 
     // add sounds/music options
     // ----------
@@ -78,7 +98,51 @@ function click_settings() {
 
 
     // add events on labels
-    // to edit information
+    // to edit informations
+    // --------------------
+    $('h2.edit-info').click(function() {
+            var children = $('.settings').children();
+
+            for (var i = 1; i < children.length; i++) {
+                children[i].style.display = 'none';
+            }
+
+            // hide others form's contents
+            $('#form_settings').css('display', 'block');
+            $('span.edit-info').css('display', 'block');
+            $('.color-visualiser').css('display', 'none');
+
+            $('.label').css('display', 'none');
+            $('#color1').css('display', 'none');
+            $('#color2').css('display', 'none');
+
+            // save button
+            $('<div>', {
+                class: 'button-rectangle',
+                html: 'save'
+            }).appendTo('.settings');
+            // cancel button
+            $('<div>', {
+                class: 'button-rectangle',
+                html: 'cancel'
+            }).appendTo('.settings');
+
+            $('.button-rectangle').click(function() {
+                if($(this).html() === 'save') {
+                    // save the content
+                    var new_name = $("input[name='name']")[0].value;
+                    var new_password = $("input[name='password']")[0].value;
+                    var new_email = $("input[name='email']")[0].value;
+                }
+
+                click_settings(false, new_name, new_password, new_email);
+
+            })
+        });
+
+
+    // Edit single info
+    // (name, password, email)
     $('span.edit-info').click(function() {
         // get labels and compare inputs' style
         var label = $(this)[0];
@@ -86,7 +150,22 @@ function click_settings() {
 
         if(getComputedStyle(input, null).display != 'block') {
             input.style.display = 'block';
-        } else input.style.display = 'none';
+
+            if(input.name === 'old_password') {
+                // show 2 fieds for passwords
+                $("input[name='password']").css('display', 'block');
+            }
+        }
+        else {
+            // this input is already displayed
+            // so we hide it
+            input.style.display = 'none';
+            if(input.name === 'old_password') {
+                $("input[name='password']").css('display', 'none');
+            }
+        }
+
+
     });
 
     $('.toggle').click(function() {
@@ -123,34 +202,39 @@ function click_settings() {
 
 // Create a settings form
 // ----------------------------
-function make_settings_form() {
+function make_settings_form(name, password, email) {
     var form = document.createElement('form');
     form.title = 'form_settings';
     form.id = 'form_settings';
 
     var title_edit_ids = document.createElement('h2');
     title_edit_ids.className ='edit-info';
-    title_edit_ids.innerHTML = "user info <span class='edit-button'>edit</span> <br>";
+    title_edit_ids.innerHTML = "user info <span class='edit-button'>edit</span>";
 
 
     // labels
     // ------
     var label_name = document.createElement('span');
     label_name.className = 'edit-info';
-    label_name.innerHTML = "Name <span class='edit-button'>edit</span> <br>";
+    label_name.name = 'name-title';
+    label_name.innerHTML = "<br> Name <span class='edit-button'>edit</span> <br>";
 
     var label_password = document.createElement('span');
     label_password.className = 'edit-info';
+    label_password.name = 'password-title';
     label_password.innerHTML = "Password <span class='edit-button'>edit</span> <br>";
 
     var label_email = document.createElement('span');
     label_email.className = 'edit-info';
+    label_email.name = 'email-title';
     label_email.innerHTML = "Email <span class='edit-button'>edit</span> <br>";
 
     var label_color1 = document.createElement('span');
+    label_color1.className = 'label';
     label_color1.innerHTML = "<br>First class color<br>";
 
     var label_color2 = document.createElement('span');
+    label_color2.className = 'label';
     label_color2.innerHTML = "<br>Second class color<br>";
 
 
@@ -159,17 +243,22 @@ function make_settings_form() {
     var input_name = document.createElement('input');
     input_name.type = 'text';
     input_name.name = 'name';
-    input_name.placeholder = '';
+    input_name.placeholder = 'Enter your new name';
+
+    var input_password_old = document.createElement('input');
+    input_password_old.type = 'text';
+    input_password_old.name = 'old_password';
+    input_password_old.placeholder = 'Enter your old password';
 
     var input_password = document.createElement('input');
     input_password.type = 'text';
     input_password.name = 'password';
-    input_password.placeholder = '';
+    input_password.placeholder = 'Enter your new password';
 
     var input_email = document.createElement('input');
     input_email.type = 'text';
     input_email.name = 'email';
-    input_email.placeholder = '';
+    input_email.placeholder = 'Enter your new mail';
 
 
     // selects
@@ -235,8 +324,11 @@ function make_settings_form() {
     // labels + inputs
     form.appendChild(label_name);
     form.appendChild(input_name);
+
     form.appendChild(label_password);
+    form.appendChild(input_password_old);
     form.appendChild(input_password);
+
     form.appendChild(label_email);
     form.appendChild(input_email);
 
@@ -248,6 +340,11 @@ function make_settings_form() {
     form.appendChild(select_color2);
     form.appendChild(color_visualiser2);
 
+    // fill name, email, password
+    // if available
+    if(name) label_name.innerHTML = label_name.innerHTML.replace('Name', name);
+    if(password) label_password.innerHTML = label_password.innerHTML.replace('Password', password);
+    if(email) label_email.innerHTML = label_email.innerHTML.replace('Email', email);
 
     // return the form
     return form;

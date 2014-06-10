@@ -115,6 +115,8 @@ body {
   transition: 0.5s;
 }
 #body #container #main-ui #side-panel div.user-score {
+  margin-top: -10px;
+  margin-bottom: -10px;
   text-align: center;
   font-size: 3em;
 }
@@ -143,16 +145,19 @@ body {
 #body #container #main-ui #side-panel .settings h1 {
   margin: auto;
   display: block;
-  font-size: 2.5em;
+  font-size: 3em;
 }
 #body #container #main-ui #side-panel .settings h2 {
   display: block;
 }
+#body #container #main-ui #side-panel .settings .background-color-section {
+  margin-top: -20px;
+  margin-bottom: 10px;
+}
 #body #container #main-ui #side-panel .settings .background-color {
   height: 40px;
   width: 40px;
-  margin: 10px;
-  margin-top: 0;
+  margin-right: 10px;
   cursor: pointer;
   border-radius: 20px;
   display: inline-block;
@@ -166,6 +171,8 @@ body {
 #body #container #main-ui #side-panel .settings span.edit-info {
   cursor: pointer;
   display: none;
+  font-size: 1.5em;
+  margin-bottom: 5px;
 }
 #body #container #main-ui #side-panel .settings span.edit-info .edit-button {
   background: #000;
@@ -180,6 +187,8 @@ body {
   opacity: 0.5;
 }
 #body #container #main-ui #side-panel .settings h2.edit-info {
+  margin: 0;
+  margin-top: 10px;
   cursor: pointer;
 }
 #body #container #main-ui #side-panel .settings h2.edit-info .edit-button {
@@ -198,6 +207,21 @@ body {
   display: none;
   margin-top: 5px;
   margin-bottom: 15px;
+  width: 200px;
+  height: 20px;
+  opacity: 0.5;
+  border: 1px solid #e74c3c;
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .settings input:hover {
+  opacity: 0.5;
+  border: 5px solid #000;
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .settings input:focus {
+  opacity: 1;
+  border: 10px solid #e74c3c;
+  transition: 0.5s;
 }
 #body #container #main-ui #side-panel .settings select {
   margin-bottom: 10px;
@@ -211,6 +235,22 @@ body {
   border-radius: 20px;
   display: inline-block;
 }
+#body #container #main-ui #side-panel .settings .button-rectangle {
+  cursor: pointer;
+  width: 90px;
+  padding: 10px;
+  opacity: 0.5;
+  display: inline-block;
+  background-color: #000;
+  margin-top: 10px;
+  margin-right: 10px;
+  text-align: center;
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .settings .button-rectangle:hover {
+  opacity: 1;
+  transition: 0.5s;
+}
 #body #container #main-ui #side-panel .notifications {
   opacity: 0;
 }
@@ -221,6 +261,53 @@ body {
 }
 #body #container #main-ui #side-panel .notifications h2 {
   display: block;
+  margin-top: 0;
+}
+#body #container #main-ui #side-panel .notifications .informations {
+  height: 160px;
+  overflow-y: auto;
+}
+#body #container #main-ui #side-panel .notifications .messages {
+  height: 160px;
+  overflow-y: auto;
+}
+#body #container #main-ui #side-panel .notifications .box-message {
+  color: #fff;
+  padding: 5px;
+  margin-bottom: 5px;
+  opacity: 0.5;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: rgba(0,0,0,0.3);
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .notifications .box-message:hover {
+  opacity: 1;
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .notifications .box-message .ok-button {
+  opacity: 0.5;
+  padding: 5px;
+  margin: auto;
+  margin-top: 5px;
+  text-align: center;
+  border-radius: 5px;
+  width: 60px;
+  background-color: #000;
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .notifications .box-message .ok-button:hover {
+  opacity: 1;
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .notifications .add-dummy-message {
+  font-size: 1em;
+  cursor: pointer;
+  transition: 0.5s;
+}
+#body #container #main-ui #side-panel .notifications .add-dummy-message:hover {
+  font-size: 1.2em;
+  transition: 0.5s;
 }
 #body #container #main-ui #side-panel .toggle {
   display: block;

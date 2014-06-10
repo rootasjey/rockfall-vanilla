@@ -20,7 +20,7 @@ function events_sidePanelIcons() {
             var action = $(this).attr('action');
 
             if (action === 'settings') {
-                click_settings();
+                click_settings(true);
             }
 
             else if (action === 'message') {
