@@ -19,6 +19,8 @@ function CanvasState (){
     
     this.text_color = "rgba(25, 23, 23, 0.49)";
     
+    
+    
     this.dragoffx = 0;
     this.dragoffy = 0;
     
@@ -35,7 +37,6 @@ function CanvasState (){
     this.plateau.draw(this.ctx);
   
     this.pieces = new Pieces(this.text_color);
-    
    
     this.pieces.add(this.shape_cinq);
    
@@ -43,9 +44,15 @@ function CanvasState (){
     
     this.pieces.add(this.shape_quinze);
     
+    this.launch_gravity = null;
+    this.active_force = true;
     
     this.valid = false; 
     myState = this;
+    
+    /* id container */
+    this.plateau.initialiseScore("user-sore-points",myState,0);
+    
   /* fonction qui permet de redessiner le canvas si besoin */
   var interval = 30;
   setInterval(function() { if(!myState.valid){ clear(myState.ctx,myState.canvas); myState.plateau.draw(myState.ctx);draw_info(myState.ctx, myState.canvas, myState.text_color, myState.quantite_cinq, myState.quantite_dix, myState.quantite_quinze);myState.pieces.draw(myState.ctx);myState.valid = true;} }, interval);
@@ -131,14 +138,12 @@ $(canvas).mouseup(function(e) {
 		  var mouse = getMouse(e,myState.canvas);
 		  var mx = mouse.x;
 		  var my = mouse.y;
-		  //var shapes = myState.shapes;
-		  //var l = shapes.length;
            
            
 		  for (var i = 0; i < myState.plateau.graphique.length; i++) {
             if(typeof(myState.plateau.graphique[i]) != "undefined"){
-				//if(shapes[i].grille == true){
-				 if (myState.plateau.graphique[i].contains(mx, my) && myState.plateau.matrice[myState.plateau.graphique[i].matrice_x][myState.plateau.graphique[i].matrice_y] == 0) {
+
+                if (myState.plateau.graphique[i].contains(mx, my) && myState.plateau.matrice[myState.plateau.graphique[i].matrice_x][myState.plateau.graphique[i].matrice_y] == 0) {
                      
                      success = true;
                      
@@ -158,100 +163,12 @@ $(canvas).mouseup(function(e) {
                              default : break;
                      }
                      
-                     var nb_chute = 0;
-                     myState.plateau.verification_gravity = true;
-                     setInterval(function(){
-                         if(nb_chute<myState.plateau.size_x+1){
-                            myState.plateau.verification_gravity = myState.plateau.gravity();
-                             //console.log(myState.plateau.verification_gravity);
-                             myState.valid=false;
-                             nb_chute++;
-                         }else{
-                             clearInterval(this);
-                         }
-                     },250);
+                    gravity_launch(myState);
                      
-                     var detonation = 0;
-                     var impact = 0;
-                     setInterval(function(){
-                         if(myState.plateau.verification_gravity == true){
-                            detonation++;
-                            //myState.plateau.verification_gravity = myState.plateau.gravity();
-                             //console.log(myState.plateau.verification_gravity);
-                             //myState.valid=false;
-                             
-                         }else{
-                             if(detonation>0){
-                                
-                                 impact++;
-                                 if(impact == 1){
-                                 
-                                     for(var e = 0;e<myState.plateau.graphique.length;e++){
-                                         myState.plateau.graphique[e].y += 2;
-                                     }
-                                     
-                                     for(var g = 0;g < myState.plateau.size_x;g++){
-                                         
-                                        for(var h = 0;h < myState.plateau.size_y;h++){
-                                             if(myState.plateau.matrice[g][h] != 0){
-                                                myState.plateau.matrice[g][h].y += 2;
-                                             }
-                                        } 	
-                                    }
-                                     
-                                     myState.valid = false;
-                                 }else if(impact == 2){
-                                     
-                                     for(var e = 0;e<myState.plateau.graphique.length;e++){
-                                         myState.plateau.graphique[e].y -= 2;
-                                     }
-                                     
-                                     for(var g = 0;g < myState.plateau.size_x;g++){
-                                         
-                                        for(var h = 0;h < myState.plateau.size_y;h++){
-                                             if(myState.plateau.matrice[g][h] != 0){
-                                                myState.plateau.matrice[g][h].y -= 2;
-                                             }
-                                        } 	
-                                    }
-                                     console.log("apres");
-                                     impact = 0;
-                                     detonation = 0;
-                                     clearInterval(this);
-                                        
-                                }
-                             }
-                         }
-                         
-                     },200);
-                     /*
-                      for(var j = 0;j < myState.plateau.size_x;j++){
-                          var ligne = "";
-		                  for(var k = 0;k < myState.plateau.size_y;k++){
-			                 if(myState.plateau.matrice[j][k] != 0){
-                                 ligne += "1 ";
-                             }else{
-                                 ligne += "0 ";
-                             }
-		                  }
-                            console.log(ligne);
-                            console.log(" ");
-                        }*/
+                    fall_effect_and_force(myState);
                      
-					
-					//delete myState.shapes[myState.indice_selection];
-					//myState.selection = null;
-					//myState.indice_selection = -1;
-					//console.log("indice_over : "+myState.indice_over);
-					//myState.shapes[myState.indice_over].passage = false; 
-					//myState.indice_over = -1;
                     myState.selection_piece.init();
-                    //myState.selection_piece.select = false;
-                    //myState.selection_piece = null;
-					//myState.valid = false;
-					//alert(" x = "+shapes[i].tab_x +" ||  y = "+shapes[i].tab_y);
 				  }
-				//}
 			}
 		}
 	}
