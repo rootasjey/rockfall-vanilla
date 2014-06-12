@@ -9,6 +9,7 @@ var _user = {
     'name': 'visitor',
     'password' : 'none',
     'email' : 'none',
+    'logged' : false,
 };
 
 

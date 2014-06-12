@@ -480,6 +480,73 @@ html, body{
 
                     transition: 1s;
                 }
+
+				#game-panel {
+					// z-index: 2;
+					display: none;
+				}
+
+				.login-ui {
+					width: 50%;
+					height: 90%;
+					margin: auto;
+
+					text-align: center;
+					font-size: 1.7em;
+
+					.button {
+						padding: 10px;
+						margin: 10px;
+						font-size: 0.8em;
+
+						cursor: pointer;
+						display: inline-block;
+						background-color: rgba(0, 0, 0, 0.30);
+						transition: 0.5s;
+
+						&:hover {
+							background-color: rgba(0, 0, 0, 0.60);
+							transition: 0.5s;
+						}
+					}
+
+					.form {
+						width: 200px;
+						display: block;
+						margin: auto;
+						margin-bottom: 0;
+					}
+
+					.edit-info {
+						text-align: left;
+						display: block;
+						margin-top: 5px;
+					}
+
+					input {
+						display: block;
+						margin-top: 10px;
+						// margin-bottom: 15px;
+
+						width: 200px;
+						height: 20px;
+
+						opacity: 0.5;
+						transition: 0.5s;
+
+						&:hover {
+							opacity: 0.5;
+							border: 5px solid black;
+							transition: 0.5s;
+						}
+						&:focus {
+							opacity: 1;
+							height: 25px;
+							border: 10px solid color-peter-river;
+							transition: 0.5s;
+						}
+					}
+				}
             }
         }
     }
