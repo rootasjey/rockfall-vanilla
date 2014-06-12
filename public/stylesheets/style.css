@@ -357,6 +357,59 @@ body {
   border: 10px solid rgba(0,0,0,0.3);
   transition: 1s;
 }
+#body #container #main-ui #game-ui #game-panel {
+  display: none;
+}
+#body #container #main-ui #game-ui .login-ui {
+  width: 50%;
+  height: 90%;
+  margin: auto;
+  text-align: center;
+  font-size: 1.7em;
+}
+#body #container #main-ui #game-ui .login-ui .button {
+  padding: 10px;
+  margin: 10px;
+  font-size: 0.8em;
+  cursor: pointer;
+  display: inline-block;
+  background-color: rgba(0,0,0,0.3);
+  transition: 0.5s;
+}
+#body #container #main-ui #game-ui .login-ui .button:hover {
+  background-color: rgba(0,0,0,0.6);
+  transition: 0.5s;
+}
+#body #container #main-ui #game-ui .login-ui .form {
+  width: 200px;
+  display: block;
+  margin: auto;
+  margin-bottom: 0;
+}
+#body #container #main-ui #game-ui .login-ui .edit-info {
+  text-align: left;
+  display: block;
+  margin-top: 5px;
+}
+#body #container #main-ui #game-ui .login-ui input {
+  display: block;
+  margin-top: 10px;
+  width: 200px;
+  height: 20px;
+  opacity: 0.5;
+  transition: 0.5s;
+}
+#body #container #main-ui #game-ui .login-ui input:hover {
+  opacity: 0.5;
+  border: 5px solid #000;
+  transition: 0.5s;
+}
+#body #container #main-ui #game-ui .login-ui input:focus {
+  opacity: 1;
+  height: 25px;
+  border: 10px solid #3498db;
+  transition: 0.5s;
+}
 #body #footer {
   width: 100%;
   height: 120px;
