@@ -19,7 +19,7 @@ function CanvasState (){
     
     this.text_color = "rgba(25, 23, 23, 0.49)";
     
-    
+    this.evenement_effet_fall = null;
     
     this.dragoffx = 0;
     this.dragoffy = 0;
@@ -60,7 +60,7 @@ function CanvasState (){
     
     
     /* Dans la fonction mousemove on récupère la position de la souris et on vérifie qu'elle ne passe pas sur une case du plateau sinon on affiche cette case en propriété selected */
-  $(canvas).mousemove(function(e){
+  $(canvas).on("mousemove",function(e){
 
 	var canvas = myState.canvas;
 	var mouse = getMouse(e,canvas);
@@ -94,7 +94,7 @@ function CanvasState (){
 
 
 
-$(canvas).mousedown(function(e) {
+$(canvas).on("mousedown",function(e) {
   
     var mouse = getMouse(e,canvas);
     var mx = mouse.x;
@@ -129,7 +129,7 @@ $(canvas).mousedown(function(e) {
   });
 
 
-$(canvas).mouseup(function(e) {
+$(canvas).on("mouseup",function(e) {
   
         var success = false;
        
@@ -164,7 +164,7 @@ $(canvas).mouseup(function(e) {
                      }
                      
                     gravity_launch(myState);
-                     
+                    
                     fall_effect_and_force(myState);
                      
                     myState.selection_piece.init();

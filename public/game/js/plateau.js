@@ -59,6 +59,8 @@ function Table(size_x,size_y, start_x, start_y, space){
 	}
     
     this.verification_gravity = false;
+    this.just_add = false;
+    this.evenement_score = null;
 }
 
 /* La cellule est l'objet contenant les informations sur une case du plateau */
@@ -86,6 +88,7 @@ Table.prototype.remove = function(x,y){
 /* ajoute un element à la cellule de type shape */
 Table.prototype.add = function(x,y,shape){
 	this.matrice[x][y] = shape;
+    this.just_add = true;
 }
 
 /* dessine les cellules ssur le context canvas donné avec comme argument la position x et y de depart, ainsi que l'espacement entre les cellules. */
@@ -151,6 +154,10 @@ Table.prototype.gravity = function(){
         }
    
 	}
+    if(fini == false && this.just_add == true){
+        fini = true;
+    }
+    this.just_add = false;
     return fini;
 }
 
@@ -161,32 +168,37 @@ Table.prototype.force = function(state_game){
     
     for(var i = 0;i < this.size_y;i++){	
         
-		if(this.matrice[this.size_x-1][i] != 0){
-            
-            var item_wheight = this.matrice[this.size_x-1][i].weight;
-            var indice = this.size_x-1;
-            
-            var somme = 0;
-            for(var j = this.size_x-1;j >=0;j--){
-               
-                if(j-1 >= 0){
-                   
-                    if(this.matrice[j-1][i] != 0){
-                       
-                        somme += this.matrice[j-1][i].weight;
+        for(var k = this.size_x-1; k>=0 ;k--){
+
+            if(this.matrice[k][i] != 0){
+
+                var item_wheight = this.matrice[k][i].weight;
+
+                var somme = 0;
+                for(var j = k;j >=0;j--){
+
+                    if(j-1 >= 0){
+
+                        if(this.matrice[j-1][i] != 0){
+
+                            somme += this.matrice[j-1][i].weight;
+                       }
+
                    }
+
+                }
+                //console.log("la somme  au dessus = "+somme);
+                if((item_wheight+item_wheight) < somme ){
                     
-               }
-                
-            }
-            
-            if((item_wheight+item_wheight) < somme ){
-                point_gagne = this.matrice[this.size_x-1][i].weight * 2;
-                write_score(state_game,"+"+point_gagne,this.matrice[this.size_x-1][i].x,this.matrice[this.size_x-1][i].y);//ctx.fillText("+"point_gagne,this.matrice[this.size_x-1][i].x,this.matrice[this.size_x-1][i].y);
-                this.matrice[this.size_x-1][i] = 0;
-            }
-            
-        }
+                    point_gagne = this.matrice[k][i].weight * 2;
+                     console.log("point gagne = "+point_gagne);
+                    this.addScore("user-sore-points",state_game,point_gagne);
+                    write_score(state_game,"+"+point_gagne,this.matrice[k][i].x,this.matrice[k][i].y);
+                     console.log("other");
+                    this.matrice[k][i] = 0;
+                }
+            }   
+        }    
         
     }
     return {"points":point_gagne};
@@ -217,19 +229,24 @@ function write_score(state_game, message, x, y){
 Table.prototype.addScore = function(id_container, state_game, points){
     
     var score = state_game.score;
-    
-    var score_a_atteindre = score + points;
-    state_game.score = score_a_atteindre;
-    
-    setInterval(function(){
-            score = parseInt($("#"+id_container).html());
-            if(score<score_a_atteindre){
-                score++;
-                $("#"+id_container).html(score);
-            }else{
-                clearInterval(this);
-            }
-    },50);
+   
+    state_game.score = score + points;
+    //var score_a_atteindre = score + points;
+    //state_game.score = score_a_atteindre;
+    //console.log("score a atteindre : "+state_game.score);
+    if(this.evenement_score == null){
+         
+       this.evenement_score = setInterval(function(){
+                score = parseInt($("#"+id_container).html());
+          
+                if(score<state_game.score){
+                    score++;
+                    $("#"+id_container).html(score);
+                }else{
+                    clearInterval(this);
+                }
+        },50);
+    }
 }
 
 
