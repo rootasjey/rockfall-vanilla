@@ -6,16 +6,16 @@
 
 // initial side-panel's content
 // ---------------------------
-var sidePanelMainContent = '';
+var side_panel_main_content = '';
 
 function load_side_panel() {
-    events_sidePanelIcons();
+    events_side_panel_icons();
     show_login_ui();
 }
 
 // Add click events on icons' side-panel
 // -------------------------------
-function events_sidePanelIcons() {
+function events_side_panel_icons() {
     $('.user-panel-icon').each(function() {
         $(this).click(function() {
             var action = $(this).attr('action');
@@ -73,6 +73,8 @@ function show_login_ui() {
             // $('#game-ui').html('');
             $('#game-panel').append(login_ui);
         }
+
+
         $('#game-panel').css('display', 'block');
         $('#canvas').css('display', 'none');
 
@@ -91,7 +93,8 @@ function show_login_ui() {
             var form = make_form('login');
             $('.login-ui').append(form);
 
-            // events on form's button
+            // events on login/signup form's button
+            // >action: back to login/signup ui
             $(".button[function='cancel']").click(function () {
                 $(this).off('click');
                 // show connexion/cancel/signup buttons
@@ -100,17 +103,65 @@ function show_login_ui() {
             });
         });
 
+        $(".button[function='signup']").click(function () {
+            // hide connexion/cancel/signup buttons
+            $(".button").css('display', 'none');
 
+            // create login form
+            var form = make_form('signup');
+            $('.login-ui').append(form);
+
+            // // change the style of edit-info
+            $('.edit-info').css('display', 'inline-block');
+            $('input').css('display', 'inline-block');
+
+            // add events on select
+            // to update colors visualisers
+            // when a different color is selected
+            $('#color1').change(function() {
+                update_color_visualiser(1);
+            });
+            $('#color2').change(function() {
+                update_color_visualiser(2);
+            });
+
+            // events on login/signup form's button
+            // >action: back to login/signup ui
+            $(".button[function='cancel']").click(function () {
+                $(this).off('click');
+                // show connexion/cancel/signup buttons
+                $(".button").css('display', 'inline-block');
+                $('.form').remove();
+
+
+                // set the default layout
+                // (cause we changed it -> signup form)
+                $('.login-ui').css({
+                    width: '50%',
+                    margin: 'auto',
+                    textAlign: 'center',
+                });
+                $('.form').css({
+                    width: '200px',
+                    margin: 'auto',
+                });
+
+                // change the style of edit-info
+                $('.edit-info').css('display', 'block');
+                $('input').css('display', 'block');
+            });
+        });
+
+
+        // event on login/signup ui
+        // >action: back to the game
         $(".button[function='cancel']").click(function () {
             $('#game-panel').css('display', 'none');
             $('#canvas').css('display', 'block');
             $(this).off('click');
 
             $(".button[function='login']").off('click');
-        });
-
-        $(".button[function='signup']").click(function () {
-            $(this).off('click');
+            $(".button[function='signup']").off('click');
         });
     });
 }
@@ -123,8 +174,10 @@ function make_form(type) {
     form.id = 'form_' + type;
 
     var title_edit_ids = document.createElement('h2');
-    // title_edit_ids.className ='edit-info';
-    title_edit_ids.innerHTML = "LOGGIN";
+    if(type === 'login')
+        title_edit_ids.innerHTML = "LOGGIN";
+    else
+        title_edit_ids.innerHTML = "SIGNUP";
 
 
     // labels
@@ -149,8 +202,8 @@ function make_form(type) {
 
     var input_password1 = document.createElement('input');
     input_password1.type = 'text';
-    input_password1.name = 'old_password';
-    input_password1.placeholder = 'Enter your old password';
+    input_password1.name = 'password1';
+    input_password1.placeholder = 'Enter your password';
 
 
 
@@ -169,28 +222,26 @@ function make_form(type) {
     // Add these extra inputs
     // if signup,
     if(type === 'signup') {
-        var label_email = document.createElement('span');
-        label_email.className = 'edit-info';
-        label_email.name = 'email-title';
-        label_email.innerHTML = "Email <span class='edit-button'>edit</span> <br>";
-
-        var label_color1 = document.createElement('span');
-        label_color1.className = 'label';
-        label_color1.innerHTML = "<br>First class color<br>";
-
-        var label_color2 = document.createElement('span');
-        label_color2.className = 'label';
-        label_color2.innerHTML = "<br>Second class color<br>";
-
         var input_password2 = document.createElement('input');
         input_password2.type = 'text';
         input_password2.name = 'password';
-        input_password2.placeholder = 'Enter your new password';
+        input_password2.placeholder = 'Re-Enter your password';
 
         var input_email = document.createElement('input');
         input_email.type = 'text';
         input_email.name = 'email';
-        input_email.placeholder = 'Enter your new mail';
+        input_email.placeholder = 'Enter your mail';
+
+
+        var label_email = document.createElement('span');
+        label_email.className = 'edit-info';
+        label_email.name = 'email-title';
+        label_email.innerHTML = "Email";
+
+        var label_color1 = document.createElement('span');
+        label_color1.className = 'label';
+        label_color1.innerHTML = "Favorites colors  ";
+
 
         // selects
         // -------
@@ -245,23 +296,90 @@ function make_form(type) {
         color_visualiser2.setAttribute('name', 'color_visualiser2');
         color_visualiser2.style.background = array_colors_values[1];
 
-        // re-enter password
-        form.appendChild(input_password2);
 
-        // mail
-        form.appendChild(label_email);
-        form.appendChild(input_email);
+        // change the form's style
+        input_name.style.marginLeft = '10px';
+        input_password1.style.marginLeft = '10px';
+        input_password2.style.marginLeft = '10px';
+        input_email.style.marginLeft = '10px';
+        select_color1.style.marginLeft = '10px';
+        select_color2.style.marginLeft = '10px';
 
-        // prefered color 1
-        form.appendChild(label_color1);
-        form.appendChild(select_color1);
-        form.appendChild(color_visualiser1);
+        // create an array of div elements
+        // -----------------
+        var array_block = [];
+        for (var i = 0; i < 4; i++) {
+            var block = $('<div>');
+            block.attr('class', 'form-block');
+            array_block.push(block);
+        }
 
-        // prefered color 2
-        form.appendChild(label_color2);
-        form.appendChild(select_color2);
-        form.appendChild(color_visualiser2);
+        // add couples of elements
+        // inside blocks
+        array_block[0].append(label_name);
+        array_block[0].append(input_name);
+
+        array_block[1].append(label_password);
+        array_block[1].append(input_password1);
+        array_block[1].append(input_password2);
+
+        array_block[2].append(label_email);
+        array_block[2].append(input_email);
+
+        array_block[3].append(label_color1);
+        array_block[3].append(select_color1);
+        array_block[3].append(color_visualiser1);
+        array_block[3].append(select_color2);
+        array_block[3].append(color_visualiser2);
+
+        for (var i = 0; i < array_block.length; i++) {
+            form.appendChild(array_block[i][0]);
+        }
+
+
+        // change the form's style
+        // -----------------------
+        form.style.width = '100%';
+        form.style.marginLeft = '0';
+
+        $('.login-ui').css({
+            width: '90%',
+            margin: '0',
+            textAlign: 'left',
+        });
+        $('.form').css({
+            width: '90%',
+            margin: '0'
+        });
+
+        var button_go = $('<div>');
+        button_go.addClass('button');
+        button_go.attr('function', 'go');
+        button_go.html('go');
+
+        var button_cancel = $('<div>');
+        button_cancel.addClass('button');
+        button_cancel.attr('function', 'cancel');
+        button_cancel.html('cancel');
+
+        form.appendChild(button_go[0]);
+        form.appendChild(button_cancel[0]);
+
+        return form;
     }
+    else {
+        // if we asked for login form
+        $('.login-ui').css({
+            width: '50%',
+            margin: 'auto',
+            textAlign: 'center',
+        });
+        $('.form').css({
+            width: '200px',
+            margin: 'auto',
+        });
+    }
+
 
     var button_go = $('<div>');
     button_go.addClass('button');

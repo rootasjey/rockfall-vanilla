@@ -6,7 +6,7 @@
 function click_notifications() {
     // save side panel's content
     var sidePanel = $('#side-panel');
-    sidePanelMainContent = sidePanel.html();
+    side_panel_main_content = sidePanel.html();
 
     // empty side panel
     sidePanel.html('');
@@ -24,13 +24,13 @@ function click_notifications() {
     // Add Informations & Mssages sections to Notifications
     // ------------------------
     $('.notifications').append(
+                  " <h2 class='notifications-subtitle'>informations</h2>" +
                   "<div class='informations'>"+
-                      " <h2>informations</h2>" +
                   "</div>" +
 
+                  " <h2 class='notifications-subtitle'>messages</h2>" +
                   "<div class='messages'>"+
-                      " <h2>messages</h2>" +
-                  "</div>")
+                  "</div>");
 
 
     // add back button to the side panel
@@ -55,8 +55,8 @@ function click_notifications() {
     $('.icon-back').click(function() {
         // remplace the html content of side-panel
         // and add events on icons
-        sidePanel.html(sidePanelMainContent);
-        events_sidePanelIcons();
+        sidePanel.html(side_panel_main_content);
+        load_side_panel();
     });
 
     // Add a click event to add dummy message
@@ -65,7 +65,15 @@ function click_notifications() {
         var types = ['informations', 'messages'];
         var rand = getRandomInt(0, 1);
         notify_me('This is a dummy message', types[rand]);
-    })
+    });
+
+    // Add click event on notifications/messages
+    // ----------------
+    $('.notifications-subtitle').click(function () {
+        var type = $(this).html();
+        // console.log(type);
+
+    });
 }
 
 
@@ -76,6 +84,8 @@ function notify_me(message, type) {
 
     // create a box message
     var box = $("<div class='box-message'>");
+    box.attr('type', type);
+
     // add the message content
     box.append("<span class='text-message'>" + message + '</span>');
 
@@ -92,17 +102,91 @@ function notify_me(message, type) {
     });
     ok.click(function (event) {
         event.stopPropagation();
+
+        var type_message = $(this).parent().attr('type');
+        if(type === 'informations') {
+            // var height = $(this).parent().outerHeight( true );
+
+            // reduce the panel if it's empty
+            var parent = $(this).parent().parent();
+            var children = parent.children().length;
+            if(children < 2) {
+                shrink_informations();
+            }
+        }
+        else if(type === 'messages') {
+            // var height = $(this).parent().outerHeight( true );
+
+            // reduce the panel if it's empty
+            var parent = $(this).parent().parent();
+            var children = parent.children().length;
+            if(children < 2) {
+                shrink_messages();
+            }
+        }
+
         $(this).parent().remove();
     });
+
 
     // place the message in the right section
     // --------------------------
     if(type === 'informations') {
         $('.informations').append(box);
+        expand_informations(box.outerHeight(true));
     }
     else if (type === 'messages') {
         $('.messages').append(box);
+        expand_messages(box.outerHeight(true));
     }
+}
+
+function expand_informations(height) {
+    var old_height = $('.informations').height() + 'px';
+    var new_height = '+=' + height + 'px';
+
+    $('.informations').css({
+        height: old_height,
+    })
+    .animate({
+        height: new_height,
+    });
+}
+
+function shrink_informations() {
+    var old_height = $('.informations').height() + 'px';
+    var new_height = '0px';
+
+    $('.informations').css({
+        height: old_height,
+    })
+    .animate({
+        height: new_height,
+    });
+}
+
+function expand_messages(height) {
+    var old_height = $('.messages').height() + 'px';
+    var new_height = '+=' + height + 'px';
+
+    $('.messages').css({
+        height: old_height,
+    })
+    .animate({
+        height: new_height,
+    });
+}
+
+function shrink_messages() {
+    var old_height = $('.messages').height() + 'px';
+    var new_height = '0px';
+
+    $('.messages').css({
+        height: old_height,
+    })
+    .animate({
+        height: new_height,
+    });
 }
 
 
