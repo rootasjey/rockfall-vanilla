@@ -5,7 +5,7 @@
 */
 
 
-function Table(size_x,size_y, start_x, start_y, space){
+function Table(size_x, size_y, start_x, start_y, space){
 
 	/* Le Table du jeu 
 		
@@ -63,7 +63,9 @@ function Table(size_x,size_y, start_x, start_y, space){
     this.evenement_score = null;
 }
 
+
 /* La cellule est l'objet contenant les informations sur une case du plateau */
+
 function Cell(x, y, w, h, matrice_x, matrice_y){
 	
 	this.x = x;
@@ -81,17 +83,20 @@ function Cell(x, y, w, h, matrice_x, matrice_y){
 
 
 /* remet la cellule à l'état initial*/
+
 Table.prototype.remove = function(x,y){
 	this.matrice[x][y] = 0;
 }
 
 /* ajoute un element à la cellule de type shape */
+
 Table.prototype.add = function(x,y,shape){
 	this.matrice[x][y] = shape;
     this.just_add = true;
 }
 
 /* dessine les cellules ssur le context canvas donné avec comme argument la position x et y de depart, ainsi que l'espacement entre les cellules. */
+
 Table.prototype.draw = function(ctx){
 
 	for(var i = 0;i < this.graphique.length;i++){	
@@ -101,10 +106,11 @@ Table.prototype.draw = function(ctx){
         }else{
             this.matrice[cell.matrice_x][cell.matrice_y].draw(ctx);
         }
-		//var cell = this.graphique[i];
-		//cell.draw(ctx);
+        
 	}
 }
+
+/* La fonction search permet de retrouver la cellule du plateau qui est associée à la matrix  */
 
 Table.prototype.search = function(matrice_x,matrice_y){
  
@@ -118,6 +124,7 @@ Table.prototype.search = function(matrice_x,matrice_y){
     return resultat;
 }
 
+/*La fonction gravity permet d'appliquer une certaine gravité au pièce du plateau */
 
 Table.prototype.gravity = function(){
 
@@ -127,15 +134,12 @@ Table.prototype.gravity = function(){
 		for(var j = this.size_x-1;j >= 0;j--){
             if(this.matrice[j][i] != 0){
                 var end = true;
-                //this.matrice[j][i];
                 var k = j
                 while(end){
                     if(k == this.size_x-1){
                         end = false;
                     }else{
                         if(this.matrice[k+1][i] == 0){
-                            
-                            
                            
                             this.matrice[k+1][i] = this.matrice[k][i];
                             var objet = this.search(k+1,i);
@@ -161,10 +165,11 @@ Table.prototype.gravity = function(){
     return fini;
 }
 
+/* la fonction force pemet d'appliquer une force aux pièces afin de se briser si la force est trop forte */
 
 Table.prototype.force = function(state_game){
     
-    var point_gagne = 0;
+    var point_gagne = {point:0,proprietaire:"none",end:false};
     
     for(var i = 0;i < this.size_y;i++){	
         
@@ -187,28 +192,30 @@ Table.prototype.force = function(state_game){
                    }
 
                 }
-                //console.log("la somme  au dessus = "+somme);
+
                 if((item_wheight+item_wheight) < somme ){
+                    point_gagne.end = true;
+                    point_gagne.point = this.matrice[k][i].weight * 2;
+                    point_gagne.proprietaire = this.matrice[k][i].id_proprietaire;
                     
-                    point_gagne = this.matrice[k][i].weight * 2;
-                     console.log("point gagne = "+point_gagne);
-                    this.addScore("user-sore-points",state_game,point_gagne);
-                    write_score(state_game,"+"+point_gagne,this.matrice[k][i].x,this.matrice[k][i].y);
-                     console.log("other");
+                    this.addScore("user-sore-points", state_game, point_gagne);
+                    write_score(state_game,"+"+point_gagne.point,this.matrice[k][i].x,this.matrice[k][i].y);
                     this.matrice[k][i] = 0;
                 }
             }   
         }    
         
     }
-    return {"points":point_gagne};
+    
+    return point_gagne;
     
 }
 
+/*La fonction write_score permet d'affichier les points gagnés lors de la destruction d'une pièce/rock et l'anime vers le haut */
 
 function write_score(state_game, message, x, y){
     
-    state_game.ctx.fillStyle = "rgba(25, 23, 23, 0.8)";//state_game.text_color;
+    state_game.ctx.fillStyle = "rgba(25, 23, 23, 0.8)";
     state_game.ctx.font="20px Georgia";
     state_game.ctx.fillText(message,x,y);
     var nmbre = 0;
@@ -225,21 +232,27 @@ function write_score(state_game, message, x, y){
     },20);
 }
 
+/* addScore permet d'ajouter des points au score du joueur */
 
 Table.prototype.addScore = function(id_container, state_game, points){
     
-    var score = state_game.score;
-   
-    state_game.score = score + points;
-    //var score_a_atteindre = score + points;
-    //state_game.score = score_a_atteindre;
-    //console.log("score a atteindre : "+state_game.score);
+    var plys = state_game.findPlayerById(state_game.players,points.proprietaire);
+    
+    if(plys != null){   
+        var score = plys.score;
+        plys.score = score + points.point;
+    }
+    
+    /*if(plys.identifiant == state_game.active_players.identifiant){
+        score_actual.
+    }*/
+    
     if(this.evenement_score == null){
          
        this.evenement_score = setInterval(function(){
                 score = parseInt($("#"+id_container).html());
           
-                if(score<state_game.score){
+                if(score<state_game.active_players.score){
                     score++;
                     $("#"+id_container).html(score);
                 }else{
@@ -249,31 +262,47 @@ Table.prototype.addScore = function(id_container, state_game, points){
     }
 }
 
+/* removeScore permet de diminuer le score du joueur */
 
 Table.prototype.removeScore = function(id_container, state_game, points){
     
-    var score = state_game.score;
+    var plys = state_game.findPlayerById(state_game.players,points.proprietaire);
     
-    var score_a_atteindre = score - points;
-    state_game.score = score_a_atteindre;
+    if(plys != null){   
+        var score = plys.score;
+        plys.score = score - points.point;
+    }
     
-    setInterval(function(){
-            score = parseInt($("#"+id_container).html());
-            if(score>score_a_atteindre){
-                score--;
-                $("#"+id_container).html(score);
-            }else{
-                clearInterval(this);
-            }
-    },50);
+    /*if(plys.identifiant == state_game.active_players.identifiant){
+        score_actual.
+    }*/
+    
+    if(this.evenement_score == null){
+         
+       this.evenement_score = setInterval(function(){
+                score = parseInt($("#"+id_container).html());
+          
+                if(score>state_game.active_players.score){
+                    score--;
+                    $("#"+id_container).html(score);
+                }else{
+                    clearInterval(this);
+                }
+        },50);
+    }
     
 }
 
-Table.prototype.initialiseScore = function(id_container, state_game, points){
+/*La fonction initialiseScore permet d'initialiser le score du joueur avec un nombre de point spécifique */
+
+Table.prototype.initialiseScore = function(id_container, id_name, state_game, points){
     
-    state_game.score = points;
+    state_game.active_players.score = points;
     $("#"+id_container).html(""+points);
+    $("#"+id_name).html(state_game.active_players.nom);
 }
+
+/* la fonction permet de supprimer graphiquement chaque cellule du plateau du canvas */
 
 Table.prototype.clear = function(ctx){
 
@@ -284,6 +313,7 @@ Table.prototype.clear = function(ctx){
 	}
 }
 
+/*La fonction contains permet de vérifier si la position de la souris est sur la cellule généralement utilisé sur l'event mousedown */
 
 Cell.prototype.contains = function(mx, my) {
   
@@ -291,6 +321,8 @@ Cell.prototype.contains = function(mx, my) {
           (this.y <= my) && (this.y + this.height >= my);
 }
 
+
+/* cell draw permet de dessiner sur la canvas la cellule avec les coordonnées de celle-ci */
 
 Cell.prototype.draw = function(ctx){
 		
@@ -321,6 +353,207 @@ Cell.prototype.draw = function(ctx){
 		ctx.fill();
 }
 
+
+/* La fonction clear permet de supprimer la cellule sur le canvas */
+
 Cell.prototype.clear = function(ctx){
 	ctx.clearRect(this.x-this.lineWidth,this.y-this.lineWidth,this.width+(this.lineWidth*2),this.height+(this.lineWidth*2));
+}
+
+/* verification si en un point x,y il existe une diagonal d'un joueur */
+Table.prototype.verification_diagonale = function(x,y){
+    
+    
+    var diagonal = new Array();
+    
+    if(this.matrice[x][y] != 0){
+        var id = this.matrice[x][y].id_proprietaire;
+        var compt = 1;
+        var find = false;
+        var i = 1, j = 1 ;
+        diagonal.push({"x":x,"y":y});
+        
+        while(x-i >= 0 && y+j < this.size_y && !find){
+
+            if(this.matrice[x-i][y+j] != 0 && id == this.matrice[x-i][y+j].id_proprietaire){
+                compt++;
+                diagonal.push({"x":x-i,"y":y+j});
+                console.log("compte : "+compt);
+                if(compt>=4){
+                    find = true;
+                }
+            }else if(this.matrice[x-i][y+j] != 0){
+                id = this.matrice[x-i][y+j].id_proprietaire;
+                diagonal = new Array();
+                diagonal.push({"x":x-i,"y":y+j});
+                compt = 1;
+            }else{
+                id =-1;
+                compt = 1;
+                diagonal = new Array();
+            }
+            
+            i++;
+            j++;
+
+        }
+        
+        if(!find){
+            id = this.matrice[x][y].id_proprietaire;
+            diagonal = new Array();
+            diagonal.push({"x":x-i,"y":y+j});
+            i = 1;
+            j = 1;
+            compt = 1;
+            while(x+i < this.size_x && y+j < this.size_y && !find){
+
+                if(this.matrice[x+i][y+j] != 0 && id == this.matrice[x+i][y+j].id_proprietaire){
+                    diagonal.push({"x":x-i,"y":y+j});
+                    compt++;
+                
+                    if(compt>=4){
+                        find = true;
+                    }
+                }else if(this.matrice[x+i][y+j] != 0){
+                    id = this.matrice[x+i][y+j].id_proprietaire;
+                    diagonal = new Array();
+                    diagonal.push({"x":x+i,"y":y+j});
+                    compt = 1;
+                }else{
+                    id = -1;
+                    compt = 1;
+                    diagonal = new Array();
+                }
+                
+
+                i++;
+                j++;
+
+            }   
+        }
+    }
+    return {"find":find,"case":diagonal,"id":id};
+}
+
+
+
+/* Verification si un joueur à gagner */
+Table.prototype.find_four = function(){
+    
+    var i = 0,j=0;
+    find = false;
+    var id = -1;
+    var compt = 0;
+    var aligner = new Array();
+    
+    while(i < this.size_x && !find){	
+     
+        compt = 0;
+        var j = 0;
+        
+        while(j < this.size_y && compt < 4){	
+         
+            if(this.matrice[i][j] != 0){
+                if(this.matrice[i][j].id_proprietaire == id){
+                    compt++;
+                    aligner.push({"x":i,"y":j});
+                }else{
+                    aligner = new Array();
+                    aligner.push({"x":i,"y":j});
+                    compt = 1;
+                    id = this.matrice[i][j].id_proprietaire;
+                }
+            }else{
+                id = -1;
+                aligner = new Array();
+                compt = 1;
+            }
+            j++;
+        
+       
+            if(compt >= 4){
+                
+                find = true;
+                for(var k = 0;k<aligner.length;k++){
+                    this.matrice[aligner[k].x][aligner[k].y] = 0;
+                }
+            }
+        }
+        i++;
+    }
+    
+   
+   if(!find){
+       
+        i = 0;
+         while(i < this.size_y && !find){	
+
+            compt = 0;
+            j = 0;
+        
+            while(j < this.size_x && compt < 4){	
+                
+                if(this.matrice[j][i] != 0){
+                    
+                    if(this.matrice[j][i].id_proprietaire == id){
+                         aligner.push({"x":j,"y":i});
+                        compt++;
+                    }else{
+                        aligner = new Array();
+                        aligner.push({"x":i,"y":j});
+                        compt = 1; 
+                        id = this.matrice[j][i].id_proprietaire;
+                    }
+                }else{
+                     aligner = new Array();
+                    id = -1;
+                    compt = 1;
+                }
+                j++;
+
+                if(compt >= 4){
+                    find = true;
+                    for(var k = 0;k<aligner.length;k++){
+                        this.matrice[aligner[k].x][aligner[k].y] = 0;
+                    }
+                }
+            }
+            i++;
+        }
+   }
+
+    if(!find){
+        i = 0;
+         while(i < this.size_x && !find){	
+
+             j = 0;
+        
+            while(j < this.size_y && !find){	
+                
+                    if(this.matrice[i][j] != 0){
+                        var test = this.verification_diagonale(i,j);
+                        
+                        if(test.find){
+                            
+                           find = true;
+                            id = test.id;
+                            for(var k = 0;k<test.case.length;k++){
+                                this.matrice[test.case[k].x][test.case[k].y] = 0;
+                            }
+                        }
+                    }
+                    j++;
+                }
+            if(compt >= 4){
+                find = true;
+            }
+
+            i++;
+        }
+    }
+    
+    
+    
+    return {"find":find,"id":id};
+    
 }

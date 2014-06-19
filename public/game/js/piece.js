@@ -1,10 +1,11 @@
-
+/* La Piece représente l'ensemble des rocks qui seront mis à disposition dans le jeu*/
 function Pieces(){
     
     this.shapes = new Array();
    
 }
 
+/* La fonction permet de dessiner l'ensemble des pieces/rocks contenu dans l'objet */
 Pieces.prototype.draw = function(ctx) {
     
     for(var i =0;i<this.shapes.length;i++){
@@ -14,12 +15,25 @@ Pieces.prototype.draw = function(ctx) {
     }
 }
 
+/* La fonction change_color permet de definir la couleur de l'ensemble des pieces/rocks contenu dans l'objet */
+Pieces.prototype.change_color = function(color,text_color) {
+    
+    for(var i =0;i<this.shapes.length;i++){
+        if(typeof(this.shapes[i]) != "undefined"){
+            this.shapes[i].fill = color;
+            this.shapes[i].text_color = text_color || "rgba(121, 195, 201, 0.81)";
+        }
+    }
+}
+
+
+/* permet d'ajouter un rock à l'ensemble */
 Pieces.prototype.add = function(shape){
 	
     this.shapes.push(shape);
 }
 
-
+/* permet de supprimer un rock en précisant l'indice */
 Pieces.prototype.remove = function(indice){
 	
     if(indice < this.shapes.length){
@@ -27,6 +41,7 @@ Pieces.prototype.remove = function(indice){
     }
 }
 
+/* permet de supprimer graphiquement l'ensemble des rocks*/
 Pieces.prototype.clear = function(ctx){
 	
     for(var i =0;i<this.shapes.length;i++){
@@ -49,6 +64,7 @@ function Shape(x, y, w, h, weight, fill) {
     this.height = h;
     this.weight = weight;
 
+    this.id_proprietaire = -1;
     this.select = false;
     this.fill = fill || "#0128ed";
     this.lineWidth = "4";
@@ -58,12 +74,14 @@ function Shape(x, y, w, h, weight, fill) {
     this.initial_y = y;
 }
 
+/* init est la fonction qui permet de remettre la position d'une shape à l'endroit de sa création */
 Shape.prototype.init = function(){
     
     this.x = this.initial_x;
     this.y = this.initial_y;
 }
 
+/* draw permet de dessiner une shape */
 Shape.prototype.draw = function(ctx) {
   
     var radius = 20;
@@ -77,7 +95,7 @@ Shape.prototype.draw = function(ctx) {
     }else{
          ctx.strokeStyle = this.fill;
     }
-    // ctx.strokeStyle = "red";
+    
    
 
     ctx.lineWidth = this.lineWidth;
@@ -97,11 +115,11 @@ Shape.prototype.draw = function(ctx) {
     ctx.fill();
     ctx.font = 'italic 30pt Calibri';
     ctx.fillStyle = this.text_color;
-    //console.log(this.text_color);
     ctx.fillText(this.weight, this.x+(this.width/4), this.y+(this.height/1.5));
 
 }
 
+/* contains permet de savoir si la position mx,my fait partie de la shape*/
 Shape.prototype.contains = function(mx, my) {
   // All we have to do is make sure the Mouse X,Y fall in the area between
   // the shape's X and (X + Height) and its Y and (Y + Height)
@@ -109,6 +127,7 @@ Shape.prototype.contains = function(mx, my) {
           (this.y <= my) && (this.y + this.height >= my);
 }
 
+/* clear supprime graphique l'élément shape*/
 Shape.prototype.clear = function(ctx){
 	ctx.clearRect(this.x-this.lineWidth,this.y-this.lineWidth,this.width+(this.lineWidth*2),this.height+(this.lineWidth*2));
 }

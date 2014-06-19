@@ -1,3 +1,5 @@
+/* gravity_launch est la fonction qui lance à interval régulier la gravité pour faire descendre les rocks */
+
 function gravity_launch(State_game){
     
     if(State_game.launch_gravity == null){
@@ -13,6 +15,7 @@ function gravity_launch(State_game){
     }
 }
 
+/* fall_effect_and_force permet d'appliquer l'effet de chute sur le plateau de jeu et l'ensemble de ses éléments et de vérifier si le poid ne dépasse pas la limite que peut supporter l'élément porteur */
 
 function fall_effect_and_force(State_game){
      
@@ -33,9 +36,11 @@ function fall_effect_and_force(State_game){
                          }
                     } 	
                 }
-
+                
+                 /* On appel valid à false pour redessiner le plateau avec le decallage */
                 State_game.valid = false;
                     
+                 /* puis dans 300 millisecondes on recalle correctement les éléments du plateau */
                 setTimeout(function(){
                      for(var e = 0;e<State_game.plateau.graphique.length;e++){
                          State_game.plateau.graphique[e].y -= 2;
@@ -52,13 +57,13 @@ function fall_effect_and_force(State_game){
 
 
                      if(State_game.active_force){
-                         //console.log("force");
-                         var pt = State_game.plateau.force(State_game).points;
-                        // console.log(pt);
-                         //if(pt >0){
-                            // console.log("vant le score !");
-                            // State_game.plateau.addScore("user-sore-points",State_game,pt);
-                        // }
+                        if(State_game.plateau.force(State_game).end == false){
+                            var find_or_not = myState.plateau.find_four();
+                            while(find_or_not.find){
+	                           console.log(find_or_not.find+" : "+myState.findPlayerById(myState.players,find_or_not.id).nom);
+                                find_or_not = myState.plateau.find_four();
+                            }
+                        }
                      }
                        
                 },300);
