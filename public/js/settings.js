@@ -24,7 +24,7 @@ function click_settings(remember, name, password, email) {
     if(remember) {
         // if the variable is true,
         // it saves the content of the side-panel
-        sidePanelMainContent = sidePanel.html();
+        side_panel_main_content = sidePanel.html();
     }
 
     // empty side panel
@@ -192,8 +192,8 @@ function click_settings(remember, name, password, email) {
     $('.icon-back').click(function() {
         // remplace the html content of side-panel
         // and add events on icons
-        sidePanel.html(sidePanelMainContent);
-        events_sidePanelIcons();
+        sidePanel.html(side_panel_main_content);
+        load_side_panel();
 
         // save user's settings
         save_settings();
