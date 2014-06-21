@@ -540,6 +540,7 @@ Table.prototype.find_four = function(){
                             for(var k = 0;k<test.case.length;k++){
                                 this.matrice[test.case[k].x][test.case[k].y] = 0;
                             }
+                            aligner = test.case;
                         }
                     }
                     j++;
@@ -554,6 +555,6 @@ Table.prototype.find_four = function(){
     
     
     
-    return {"find":find,"id":id};
+    return {"find":find,"id":id,"case":aligner};
     
 }

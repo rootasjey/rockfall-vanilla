@@ -60,7 +60,17 @@ function fall_effect_and_force(State_game){
                         if(State_game.plateau.force(State_game).end == false){
                             var find_or_not = myState.plateau.find_four();
                             while(find_or_not.find){
-	                           console.log(find_or_not.find+" : "+myState.findPlayerById(myState.players,find_or_not.id).nom);
+
+                                var point_gagne = {point:0,proprietaire:"none"};
+                                
+                                point_gagne.proprietaire = find_or_not.id;
+                                for(var i = 0;i<find_or_not.case.length;i++){
+                                    point_gagne.point = this.matrice[find_or_not.case[i].x][find_or_not.case[i].y].weight * 2;
+                                    this.addScore("user-sore-points", state_game, point_gagne);
+                                    write_score(state_game,"+"+point_gagne.point,find_or_not.case[i].x,find_or_not.case[i].y);
+                                }
+                                
+                                
                                 find_or_not = myState.plateau.find_four();
                             }
                         }
