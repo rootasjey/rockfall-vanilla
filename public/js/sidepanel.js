@@ -6,7 +6,8 @@
 
 // initial side-panel's content
 // ---------------------------
-var side_panel_main_content = '';
+var side_panel_main_content = null;
+var login_ui = null;
 
 function load_side_panel() {
     events_side_panel_icons();
@@ -37,8 +38,8 @@ function events_side_panel_icons() {
 
 function show_login_ui() {
     $('.user-avatar').click(function () {
-        if(($('#game-panel').html() === '') || ($('#game-panel').html().length < 1)) {
-            var login_ui = $('<div>');
+        if(login_ui == null) {
+            login_ui = $('<div>');
             login_ui.addClass('login-ui');
 
             login_ui.append('<span>You can connect to play online and save your personal settings.</span> <br> <br>');
@@ -68,15 +69,12 @@ function show_login_ui() {
             login_ui.append(button_cancel);
             login_ui.append(button_signup);
 
-            // var game_board = $('#game-ui');
-
-            // $('#game-ui').html('');
             $('#game-panel').append(login_ui);
         }
 
-
         $('#game-panel').css('display', 'block');
         $('#canvas').css('display', 'none');
+        console.log(login_ui);
 
         // EVENTS
         // ------

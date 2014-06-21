@@ -213,19 +213,8 @@
   display: block;
   font-size: 2.5em;
 }
-#side-panel .notifications h2.notifications-subtitle {
-  display: block;
-  margin-top: 0;
-  cursor: pointer;
-}
-#side-panel .notifications .informations {
-  max-height: 160px;
-  min-height: 30px;
-  overflow-y: auto;
-}
-#side-panel .notifications .messages {
-  max-height: 160px;
-  min-height: 30px;
+#side-panel .notifications .notifications-body {
+  max-height: 350px;
   overflow-y: auto;
 }
 #side-panel .notifications .box-message {

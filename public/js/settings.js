@@ -393,6 +393,57 @@ function save_settings() {
     // get the form inputs
 }
 
+
+// EVENTS
+// ------
+
+// Hide/Show #header & #footer
+// --------------------
+function fullscreen() {
+    // add click event on the image
+    $('.icon-fullscreen').click(function() {
+        if ($('#header-top').css('height') == '120px') {
+            // reduce the #header & #footer
+            $('#header-top').css('height', '0');
+
+            // rotate the image icon
+            $('.icon-fullscreen').css('-webkit-transform', 'rotate(180deg)');
+            $('.icon-fullscreen').css('-moz-transform', 'rotate(180deg)');
+            $('.icon-fullscreen').css('-ms-transform', 'rotate(180deg)');
+            $('.icon-fullscreen').css('-o-transform', 'rotate(180deg)');
+            $('.icon-fullscreen').css('transform', 'rotate(180deg)');
+        }
+        else {
+            // expend the #header & #footer
+            $('#header-top').css('height','120px');
+
+            // rotate the image icon
+            $('.icon-fullscreen').css('-webkit-transform', 'rotate(0deg)');
+            $('.icon-fullscreen').css('-moz-transform', 'rotate(0deg)');
+            $('.icon-fullscreen').css('-ms-transform', 'rotate(0deg)');
+            $('.icon-fullscreen').css('-o-transform', 'rotate(0deg)');
+            $('.icon-fullscreen').css('transform', 'rotate(0deg)');
+        }
+    });
+}
+
+// Auto Fullscreen
+// ---------------
+function auto_fullscreen() {
+    // Auto-hide
+    if ($('#header-top').css('height') == '120px') {
+        // reduce the #header & #footer
+        $('#header-top').css('height', '0');
+
+        // rotate the image icon
+        $('.icon-fullscreen').css('-webkit-transform', 'rotate(180deg)');
+        $('.icon-fullscreen').css('-moz-transform', 'rotate(180deg)');
+        $('.icon-fullscreen').css('-ms-transform', 'rotate(180deg)');
+        $('.icon-fullscreen').css('-o-transform', 'rotate(180deg)');
+        $('.icon-fullscreen').css('transform', 'rotate(180deg)');
+    }
+}
+
 // PROTOTYPES
 // ----------
 String.prototype.toggleStr = function(str1, str2) {

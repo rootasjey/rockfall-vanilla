@@ -12,33 +12,29 @@ block content
   div#main-ui
     //- side panel with user info, score, settings
     div#side-panel
-      div.user-avatar
-<<<<<<< HEAD
-        div.user-avatar-img
-        span#user-avatar-name-id.user-avatar-name Visitor
-=======
-        img.user-avatar-img(src='../icons/icon_key.png')
-        span.user-avatar-name Visitor
->>>>>>> 836b519dd9e233acab239b4a86e8404f41a5eafc
+      div#side-panel-main-content
+        div.user-avatar
+          img.user-avatar-img(src='../icons/icon_key.png')
+          span#user-avatar-name-id.user-avatar-name Visitor
 
-      //- power-up are stored here
-      div.power-up-panel
-        span.title Power-Up
-        div
-          p.subtitle No Power-Up
-          img.power-up(src='../icons/icon_cross.png')
-          img.power-up(src='../icons/icon_cross.png')
-          img.power-up(src='../icons/icon_cross.png')
+        //- power-up are stored here
+        div.power-up-panel
+          span.title Power-Up
+          div
+            p.subtitle No Power-Up
+            img.power-up(src='../icons/icon_cross.png' tip='Get 30pts to unlock a level 1 power')
+            img.power-up(src='../icons/icon_cross.png')
+            img.power-up(src='../icons/icon_cross.png')
 
-      //- user score
-      div.user-score
-        p#user-sore-points 1,280
+        //- user score
+        div.user-score
+          p#user-sore-points 1,280
 
-      //- settings, message, leadderboard
-      div.user-panel
-        img.user-panel-icon(src='../icons/icon_settings.png' action='settings')
-        img.user-panel-icon(src='../icons/icon_message.png' action='message')
-        img.user-panel-icon(src='../icons/icon_trophy.png' action='trophy')
+        //- settings, message, leadderboard
+        div.user-panel
+          img.user-panel-icon(src='../icons/icon_settings.png' action='settings')
+          img.user-panel-icon(src='../icons/icon_message.png' action='message')
+          img.user-panel-icon(src='../icons/icon_trophy.png' action='trophy')
 
     //- the game
     div#game-ui
