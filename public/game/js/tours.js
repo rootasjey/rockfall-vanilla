@@ -69,6 +69,8 @@ Tours.prototype.end_cycle  = function(){
     if(this.interval_verification != null){
        clearInterval(this.interval_verification);
         this.interval_verification = null;
+        clearInterval(this.time);
+        this.time = null;
     }
     
 }

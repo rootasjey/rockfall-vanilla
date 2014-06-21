@@ -66,6 +66,8 @@ function fall_effect_and_force(State_game){
                                 point_gagne.proprietaire = find_or_not.id;
                                 point_gagne.point = find_or_not.point * 2;
                                 State_game.plateau.addScore("user-sore-points", State_game, point_gagne);
+                                console.log(State_game.players.length+"    "+find_or_not.id);
+                                (State_game.findPlayerById(State_game.players,find_or_not.id)).point = State_game.findPlayerById(State_game.players,find_or_not.id).point +1 ;
                                 
                                 for(var i = 0;i<find_or_not.case.length;i++){
                                     write_score(State_game,"+"+(find_or_not.case[i].point*2),
@@ -76,7 +78,31 @@ function fall_effect_and_force(State_game){
                             }
                         }
                      }
-                       
+                    
+                    
+                    var players_win = new Array();
+                    var players_point = -1;
+                    
+                    for(var p = 0;p<State_game.players.length;p++){
+                        
+                        var plyrs = State_game.players[p];
+                        if(plyrs.point>players_point){
+                            players_win = new Array();
+                            players_win.push(plyrs);
+                            players_point = plyrs.point;
+                        }else if(plyrs.point == players_point){
+                           players_win.push(plyrs);
+                        }
+                    }
+                    
+                    if(players_win[0].point>=State_game.point_to_win){
+                        console.log("Les gagnants sont :");
+                        for(var p = 0;p<players_win.length;p++){
+                            console.log(players_win[p].nom);
+                        }
+                        State_game.tours.end_cycle();
+                    }
+                     
                 },300);
                  
                  State_game.plateau.verification_gravity = false;

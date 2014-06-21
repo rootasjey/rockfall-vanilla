@@ -4,17 +4,19 @@ function load_board() {
     var players = new Array();
     players.push(new Players(1,"Joueur_1","blue",0,[5,10,15]));
     players.push(new Players(2,"Joueur_2","red",0,[8,10,20]));
-   var game = new CanvasState(players);
+   var game = new CanvasState(players,1);
     
     
 }
 
 
-function CanvasState (players){
+function CanvasState (players,point_to_win){
  
       /* On définit le plateau de jeu avec les différents arguments détaillés dans plateau.js*/
     this.plateau = new Table(4, 6, 140, 40, 10);
 
+    this.point_to_win = point_to_win;
+    
     this.canvas = document.getElementById("canvas");
     this.ctx = canvas.getContext("2d");
   
