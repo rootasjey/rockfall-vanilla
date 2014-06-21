@@ -12,4 +12,8 @@ window.onload = function () {
 
     // load the board
     load_board();
+
+    // toggle fullscreen
+    fullscreen();
+    window.setTimeout(auto_fullscreen, 2000);
 };
