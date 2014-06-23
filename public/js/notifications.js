@@ -57,9 +57,10 @@ function click_notifications() {
     // add click event on back button
     // > save preferences
     // ------------------------------
-    $('.icon-back').click(function() {
+    $('.icon-back').click(function(callback) {
         // ANIMATION
         // ---------
+        // fading out
         $('.notifications').css({
             opacity: '1',
             marginLeft: '0',
@@ -68,15 +69,34 @@ function click_notifications() {
             marginLeft: '100px',
         });
 
-        // remplace the html content of side-panel
-        // and add events on icons
-        // sidePanel.html(side_panel_main_content);
-        _notifications.remove();
-        sidePanel.append(side_panel_main_content)
-        load_side_panel();
+        // fading in
+        // with a delayed start
+        window.setTimeout(function() {
+          // remplace the html content of side-panel
+          // and add events on icons
+          _notifications.remove();
+          $('#side-panel').append(side_panel_main_content);
 
+          // code for ie ----------------------------
+          if(side_panel_main_content.html() === '') {
+            remake_sidepanel_content_ie();
+          }
+
+          // fading in of the side panel main content
+          side_panel_main_content.css({
+            opacity: '0',
+            marginLeft: '100px',
+          }).animate({
+            opacity: '1',
+            marginLeft: '0',
+          });
+
+          // add events handler on side panel
+          load_side_panel();
+        }, 500);
 
     });
+
 
     // Add a click event to add dummy message
     // ---------------------------------------
@@ -102,6 +122,35 @@ function click_notifications() {
         marginLeft: '0',
     });
 }
+
+
+function remake_sidepanel_content_ie() {
+  $("<div>", {
+    class: 'user-avatar',
+    html: "<img class='user-avatar-img' src='../icons/icon_key.png'/>" + "<span id='user-avatar-name-id' class='user-avatar-name'> Visitor</span>"
+  }).appendTo(side_panel_main_content);
+
+  $("<div>", {
+    class: 'power-up-panel',
+    html: "<span class='title'> Power-Up </span>" + "<div> <p class='subtitle'> No Power-Up </p> </div>" +
+    "<img class='power-up' src='../icons/icon_cross.png' tip='Get 30pts to unlock a level 1 power'/>" +
+    "<img class='power-up' src='../icons/icon_cross.png' tip='Get 60pts to unlock a level 1 power'/>" +
+    "<img class='power-up' src='../icons/icon_cross.png' tip='Get 120pts to unlock a level 1 power'/>"
+  }).appendTo(side_panel_main_content);
+
+  $("<div>", {
+    class: 'user-score',
+    html: "<p id='user-sore-points'> 0 </p>",
+  }).appendTo(side_panel_main_content);
+
+  $("<div>", {
+    class: 'user-panel',
+    html: "<img class='user-panel-icon' src='../icons/icon_settings.png' action='settings' />" +
+    "<img class='user-panel-icon' src='../icons/icon_message.png' action='message' />" +
+    "<img class='user-panel-icon' src='../icons/icon_trophy.png' action='trophy' />"
+  }).appendTo(side_panel_main_content);
+}
+
 
 
 // Add a notification
