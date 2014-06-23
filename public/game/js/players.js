@@ -12,6 +12,11 @@ function Players(id,nom,color_shape,score,weight_shapes){
     /* couleur du rock du joueur*/
     this.color_shape = color_shape;
     
+    
+    /* le nombre de point du joueur */
+    this.point = 0;
+    
+    
     /* score du joueur */
     this.score = score;
    
@@ -22,11 +27,10 @@ function Players(id,nom,color_shape,score,weight_shapes){
     this.pieces = new Pieces();
     
     /**/
-    //this.shape_cinq = new Shape(280, 410, 70, 70, 5);
-    //this.shape_dix = new Shape(450, 410, 70, 70, 10);
-    //this.shape_quinze = new Shape(620, 410, 70, 70, 15);
     
     for(var i = 0;i<this.weight_shapes.length;i++){
         this.pieces.add(new Shape(280 + (170*i), 410, 70, 70,this.weight_shapes[i]));
     }
+    
+    this.power_active = null;
 }

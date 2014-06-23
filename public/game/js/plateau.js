@@ -371,21 +371,24 @@ Table.prototype.verification_diagonale = function(x,y){
         var compt = 1;
         var find = false;
         var i = 1, j = 1 ;
-        diagonal.push({"x":x,"y":y});
+        var pos_graph = this.search(x,y);
+        diagonal.push({"x":x,"y":y,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[x][y].weight});
         
         while(x-i >= 0 && y+j < this.size_y && !find){
 
             if(this.matrice[x-i][y+j] != 0 && id == this.matrice[x-i][y+j].id_proprietaire){
                 compt++;
-                diagonal.push({"x":x-i,"y":y+j});
-                console.log("compte : "+compt);
+                var pos_graph = this.search(x-i,y+j);
+                diagonal.push({"x":x-i,"y":y+j,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[x-i][y+j].weight});
+                //console.log("compte : "+compt);
                 if(compt>=4){
                     find = true;
                 }
             }else if(this.matrice[x-i][y+j] != 0){
                 id = this.matrice[x-i][y+j].id_proprietaire;
                 diagonal = new Array();
-                diagonal.push({"x":x-i,"y":y+j});
+                var pos_graph = this.search(x-i,y+j);
+                diagonal.push({"x":x-i,"y":y+j,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[x-i][y+j].weight});
                 compt = 1;
             }else{
                 id =-1;
@@ -401,14 +404,16 @@ Table.prototype.verification_diagonale = function(x,y){
         if(!find){
             id = this.matrice[x][y].id_proprietaire;
             diagonal = new Array();
-            diagonal.push({"x":x-i,"y":y+j});
+            var pos_graph = this.search(x,y);
+            diagonal.push({"x":x,"y":y,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[x][y].weight});
             i = 1;
             j = 1;
             compt = 1;
             while(x+i < this.size_x && y+j < this.size_y && !find){
 
                 if(this.matrice[x+i][y+j] != 0 && id == this.matrice[x+i][y+j].id_proprietaire){
-                    diagonal.push({"x":x-i,"y":y+j});
+                    var pos_graph = this.search(x+i,y+j);
+                    diagonal.push({"x":x+i,"y":y+j,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[x+i][y+j].weight});
                     compt++;
                 
                     if(compt>=4){
@@ -417,7 +422,8 @@ Table.prototype.verification_diagonale = function(x,y){
                 }else if(this.matrice[x+i][y+j] != 0){
                     id = this.matrice[x+i][y+j].id_proprietaire;
                     diagonal = new Array();
-                    diagonal.push({"x":x+i,"y":y+j});
+                    var pos_graph = this.search(x+i,y+j);
+                    diagonal.push({"x":x+i,"y":y+j,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[x+i][y+j].weight});
                     compt = 1;
                 }else{
                     id = -1;
@@ -444,6 +450,7 @@ Table.prototype.find_four = function(){
     find = false;
     var id = -1;
     var compt = 0;
+    var somme_point = 0;
     var aligner = new Array();
     
     while(i < this.size_x && !find){	
@@ -456,10 +463,12 @@ Table.prototype.find_four = function(){
             if(this.matrice[i][j] != 0){
                 if(this.matrice[i][j].id_proprietaire == id){
                     compt++;
-                    aligner.push({"x":i,"y":j});
+                    var pos_graph = this.search(i,j);
+                    aligner.push({"x":i,"y":j,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[i][j].weight});
                 }else{
                     aligner = new Array();
-                    aligner.push({"x":i,"y":j});
+                    var pos_graph = this.search(i,j);
+                    aligner.push({"x":i,"y":j,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[i][j].weight});
                     compt = 1;
                     id = this.matrice[i][j].id_proprietaire;
                 }
@@ -474,7 +483,9 @@ Table.prototype.find_four = function(){
             if(compt >= 4){
                 
                 find = true;
+                somme_point = 0;
                 for(var k = 0;k<aligner.length;k++){
+                    somme_point += this.matrice[aligner[k].x][aligner[k].y].weight;
                     this.matrice[aligner[k].x][aligner[k].y] = 0;
                 }
             }
@@ -496,11 +507,13 @@ Table.prototype.find_four = function(){
                 if(this.matrice[j][i] != 0){
                     
                     if(this.matrice[j][i].id_proprietaire == id){
-                         aligner.push({"x":j,"y":i});
+                         var pos_graph = this.search(j,i);
+                        aligner.push({"x":j,"y":i,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[j][i].weight});
                         compt++;
                     }else{
                         aligner = new Array();
-                        aligner.push({"x":i,"y":j});
+                        var pos_graph = this.search(j,i);
+                        aligner.push({"x":j,"y":i,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[j][i].weight});
                         compt = 1; 
                         id = this.matrice[j][i].id_proprietaire;
                     }
@@ -513,7 +526,9 @@ Table.prototype.find_four = function(){
 
                 if(compt >= 4){
                     find = true;
+                    somme_point = 0;
                     for(var k = 0;k<aligner.length;k++){
+                        somme_point += this.matrice[aligner[k].x][aligner[k].y].weight;
                         this.matrice[aligner[k].x][aligner[k].y] = 0;
                     }
                 }
@@ -537,16 +552,19 @@ Table.prototype.find_four = function(){
                             
                            find = true;
                             id = test.id;
+                            somme_point = 0;
                             for(var k = 0;k<test.case.length;k++){
+                                somme_point += this.matrice[aligner[k].x][aligner[k].y].weight;
                                 this.matrice[test.case[k].x][test.case[k].y] = 0;
                             }
+                            aligner = test.case;
                         }
                     }
                     j++;
                 }
-            if(compt >= 4){
+            /*if(compt >= 4){
                 find = true;
-            }
+            }*/
 
             i++;
         }
@@ -554,6 +572,6 @@ Table.prototype.find_four = function(){
     
     
     
-    return {"find":find,"id":id};
+    return {"find":find,"id":id,"case":aligner,"point":somme_point};
     
 }
