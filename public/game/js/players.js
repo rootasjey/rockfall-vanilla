@@ -27,10 +27,46 @@ function Players(id,nom,color_shape,score,weight_shapes){
     this.pieces = new Pieces();
     
     /**/
+    /*this.ready = false;
     
+    this.img = new Image();
+     this.img.onload = function(){ 
+        state_pl.loadImg();        
+    };*/
+    //img.onerror=function(){alert("image load failed");} 
+    //img.crossOrigin="anonymous";
+     this.image = null ;
+    /*
     for(var i = 0;i<this.weight_shapes.length;i++){
         this.pieces.add(new Shape(280 + (170*i), 410, 70, 70,this.weight_shapes[i]));
-    }
+    }*/
+    //this.ready = true;
+    /*
+    for(var i = 0;i<this.weight_shapes.length;i++){
+        this.pieces.add(new Shape(280 + (170*i), 410, 70, 70,this.weight_shapes[i],img));
+    }*/
+    
+    //state_pl = this;
     
     this.power_active = null;
 }
+
+
+Players.prototype.getPiece = function(){
+    
+    for(var i = 0;i<this.weight_shapes.length;i++){
+        //console.log(this.image);
+        var shape = new Shape(280 + (170*i), 410, 70, 70,this.weight_shapes[i]);
+        shape.image = this.image;
+        this.pieces.add(shape);
+    }
+    
+}
+/*
+Players.prototype.loadImg = function(){
+    //console.log("rtr");
+    for(var i = 0;i<this.weight_shapes.length;i++){
+        this.pieces.add(new Shape(280 + (170*i), 410, 70, 70,this.weight_shapes[i], this.img));
+    }
+    this.ready = true;
+}*/

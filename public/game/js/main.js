@@ -2,15 +2,63 @@ function load_board() {
 
     
     var players = new Array();
-    players.push(new Players(1,"Joueur_1","blue",0,[5,10,15]));
-    players.push(new Players(2,"Joueur_2","red",0,[8,10,20]));
-   var game = new CanvasState(players,1);
+    players.push(new Players(1,"Joueur_1","blue",0,[5,10,15]/*,"./rocher.jpg"*/));
+    players.push(new Players(2,"Joueur_2","red",0,[8,10,20]/*,"./rocher.jpg"*/));
+    /*
+    var imageObjs = new Array();
     
+    for(var a = 0; a<2 ;a++){
+        imageObjs.push(new Image());
+    
+        imageObjs[a].onload = function() {
+          //context.drawImage(this, 0, 0);
+        };
+        
+        imageObjs[a].src = "./rocher.jpg";
+    }
+    
+    */
+    
+     var game = null;
+    
+    var sources = {
+        "Joueur_1": './rocher.png',
+        "Joueur_2": './rocher.png'
+      };
+
+      loadImages(sources, function(images) {
+        /*context.drawImage(images.darthVader, 100, 30, 200, 137);
+        context.drawImage(images.yoda, 350, 55, 93, 104);*/
+          
+          game = new CanvasState(players,1,images);
+          
+      });
     
 }
 
 
-function CanvasState (players,point_to_win){
+function loadImages(sources, callback) {
+    
+    var images = {};
+    var loadedImages = 0;
+    var numImages = 0;
+    // get num of sources
+    for(var src in sources) {
+      numImages++;
+    }
+    for(var src in sources) {
+      images[src] = new Image();
+      images[src].onload = function() {
+        if(++loadedImages >= numImages) {
+          callback(images);
+        }
+      };
+      images[src].src = sources[src];
+    }
+}
+
+
+function CanvasState (players,point_to_win, image_load){
  
       /* On définit le plateau de jeu avec les différents arguments détaillés dans plateau.js*/
     this.plateau = new Table(4, 6, 140, 40, 10);
@@ -20,8 +68,20 @@ function CanvasState (players,point_to_win){
     this.canvas = document.getElementById("canvas");
     this.ctx = canvas.getContext("2d");
   
+    
+    
     /* un tableau qui contient les joueurs de la partie*/
     this.players = players;
+    
+    this.image_load = image_load;
+    
+    for(var r = 0;r<this.players.length;r++){
+        var name = this.players[r].nom
+       // console.log(this.image_load[name].src);
+        this.players[r].image = this.image_load[name]; 
+        this.players[r].getPiece(); 
+        
+    }
     
     this.active_players = this.players[0];
     
@@ -86,6 +146,9 @@ function CanvasState (players,point_to_win){
     /* une fois avoir ajouter tous ses éléments, on force la mise a jour du canvas en mettant valid à false */
     this.valid = false; 
     
+    
+    //this.all_ready = false;
+    
     /* On conserve l'etat de l'objet dans la variable afin de pouvoir utiliser les différents éléments dans les listeners à venir*/
     myState = this;
     
@@ -98,16 +161,30 @@ function CanvasState (players,point_to_win){
   
     /* fonction qui permet de redessiner le canvas si besoin avec une fréquence de 30 millisecondes*/
   var interval = 30;
-  setInterval(function() { 
-                        if(!myState.valid){ 
-                            clear(myState.ctx,myState.canvas); 
-                            myState.plateau.draw(myState.ctx); 
-                            draw_info(myState.ctx, myState.canvas, myState.text_color, myState.time_life); 
-                            myState.active_players.pieces.draw(myState.ctx); 
-                            myState.valid = true; 
-                        } 
-  }, interval);
-
+   // var ok = false;
+   // while(!ok){
+        //this.all_ready = true;
+        /*for(var r = 0;r<this.players.length;r++){
+            if(!this.players[r].ready){
+                this.all_ready = false;
+            }
+        }
+        
+        if(this.all_ready){*/
+          setInterval(function() { 
+            if(!myState.valid){ 
+                clear(myState.ctx,myState.canvas); 
+                myState.plateau.draw(myState.ctx); 
+                draw_info(myState.ctx, myState.canvas, myState.text_color, myState.time_life); 
+                myState.active_players.pieces.draw(myState.ctx); 
+                myState.valid = true; 
+            } 
+          }, interval);
+           /* 
+            ok = true;
+        }*/
+        
+   // }
     
     
     /* Dans la fonction mousemove on récupère la position de la souris et on vérifie qu'elle ne passe pas sur une case du plateau sinon on affiche cette case en propriété selected */
@@ -158,21 +235,11 @@ $(canvas).on("mousedown",function(e) {
 			
 			myState.dragoffx = mx - mySel.x;
 			myState.dragoffy = my - mySel.y;
-			/*if(myState.pieces.shapes[i].weight == 5 && myState.active_players.quantite_cinq != 0){
-              
-                myState.selection_piece = myState.pieces.shapes[i];
-                myState.selection_piece.select = true;
-                
-            }else if(myState.pieces.shapes[i].weight == 10 && myState.active_players.quantite_dix != 0){
-                myState.selection_piece = myState.pieces.shapes[i];
-                myState.selection_piece.select = true;
-                
-            }else if(myState.pieces.shapes[i].weight == 15 && myState.active_players.quantite_quinze != 0){
-                */
+
             myState.selection_piece = myState.active_players.pieces.shapes[i];
             myState.selection_piece.select = true; 
-           /* }*/
-              /* on redessine le canvas et ses éléments */
+           
+            /* on redessine le canvas et ses éléments */
             myState.valid = false;
 	       }
         }
@@ -202,6 +269,7 @@ $(canvas).on("mouseup",function(e) {
                      success = true;
                      
 				      var shape = new Shape(myState.plateau.graphique[i].x, myState.plateau.graphique[i].y, myState.selection_piece.width, myState.selection_piece.height, myState.selection_piece.weight, myState.selection_piece.fill);
+                    shape.image = myState.active_players.image;
                     shape.id_proprietaire = myState.active_players.identifiant;
                       myState.plateau.add(myState.plateau.graphique[i].matrice_x, myState.plateau.graphique[i].matrice_y, shape);
                      

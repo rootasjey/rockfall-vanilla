@@ -29,7 +29,7 @@ Pieces.prototype.change_color = function(color,text_color) {
 
 /* permet d'ajouter un rock à l'ensemble */
 Pieces.prototype.add = function(shape){
-	
+	//console.log(shape.image);
     this.shapes.push(shape);
 }
 
@@ -56,7 +56,7 @@ Pieces.prototype.clear = function(ctx){
 	
 	les arguments x et y représente les coordonnées de la pièce, w et h sont respectivement la largeur et la hauteur et fill la couleur de la pièce
 */
-function Shape(x, y, w, h, weight, fill) {
+function Shape(x, y, w, h, weight, fill, img) {
 
     this.x = x;
     this.y = y;
@@ -67,11 +67,26 @@ function Shape(x, y, w, h, weight, fill) {
     this.id_proprietaire = -1;
     this.select = false;
     this.fill = fill || "#0128ed";
-    this.lineWidth = "4";
+    this.lineWidth = "1";
     this.text_color = "rgba(121, 195, 201, 0.81)";
     
     this.initial_x = x;
     this.initial_y = y;
+    
+    this.image = img || null;
+    
+    //console.log(" sur de csa "+img);
+    /*
+    this.ok_draw = false;
+    
+    myshap = this;
+    /
+    this.img = new Image();
+    this.img.onload = function(){       
+        myshap.ok_draw = true;
+        console.log("ddd");
+    };
+    this.img.src =  img_source || "./rocher.jpg";*/
 }
 
 /* init est la fonction qui permet de remettre la position d'une shape à l'endroit de sa création */
@@ -96,9 +111,16 @@ Shape.prototype.draw = function(ctx) {
          ctx.strokeStyle = this.fill;
     }
     
-   
+    
 
-    ctx.lineWidth = this.lineWidth;
+    var x_img = parseInt(this.x)+parseInt(this.lineWidth);
+    var y_img = parseInt(this.y)+parseInt(this.lineWidth);
+    var w_img = parseInt(this.width)-parseInt(this.lineWidth);
+    var h_img = parseInt(this.height)-parseInt(this.lineWidth);
+    
+    ctx.drawImage(this.image, x_img, y_img, w_img, h_img);
+    /*
+    ctx.lineWidth = this.lineWidth;//+2;
     ctx.moveTo(this.x+radius, this.y);
     ctx.lineTo(r-radius, this.y);
     ctx.quadraticCurveTo(r, this.y, r, this.y+radius);
@@ -111,10 +133,17 @@ Shape.prototype.draw = function(ctx) {
     ctx.stroke();
 
     ctx.closePath();
-    ctx.fillStyle = this.fill;
-    ctx.fill();
+   */
+    
+     
+   
+    
+    
+    
+    //ctx.fillStyle = this.fill;
+    //ctx.fill();
     ctx.font = 'italic 30pt Calibri';
-    ctx.fillStyle = this.text_color;
+    ctx.fillStyle = "red";//this.text_color;
     ctx.fillText(this.weight, this.x+(this.width/4), this.y+(this.height/1.5));
 
 }
