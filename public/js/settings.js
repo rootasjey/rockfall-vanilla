@@ -3,6 +3,7 @@
 // --------------------------
 // --------------------------
 
+var _settings = null;
 // global var : user
 // --------
 var _user = {
@@ -19,56 +20,65 @@ var _user = {
 function click_settings(remember, name, password, email) {
 
     // save side panel's content
-    var sidePanel = $('#side-panel');
+    var side_panel = $('#side-panel');
 
-    if(remember) {
-        // if the variable is true,
-        // it saves the content of the side-panel
-        side_panel_main_content = sidePanel.html();
+    // if(remember) {
+    //     // if the variable is true,
+    //     // it saves the content of the side-panel
+    //     side_panel_main_content = side_panel.html();
+    // }
+    if(side_panel_main_content === null) {
+        side_panel_main_content = $('#side-panel-main-content');
     }
+
 
     // empty side panel
-    sidePanel.html('');
+    side_panel.html('');
 
-    // create & show settings
-    $('<div>', {
-        class: 'settings',
-        html: "<h1>settings</h1>",
+    if(_settings === null) {
+      // create & show settings
+      _settings = $('<div>', {
+          class: 'settings',
+          html: "<h1>settings</h1>",
 
-    }).appendTo('#side-panel');
+      }).appendTo('#side-panel');
+
+      // create a settings form
+      // ----------------------
+      var form = null;
+      form = make_settings_form();
+      // if(name || password || email) {
+      //     form = make_settings_form(name, password, email);
+      // }
+      // else form = make_settings_form();
+
+      $('.settings').append(form);
+      $('.settings').append("<br>");
+
+      $('.settings').append("<div class='background-color-section'> <h2>background color</h2>" +
+      "<div class='background-color' style='background-color: white;'></div>"+
+      "<div class='background-color' style='background-color: #2c3e50;'></div>"+
+      "</div>");
+
+      // add sounds/music options
+      // ----------
+      $('<span>', {
+          class: 'toggle',
+          html: 'music: on',
+      }).appendTo('.settings');
+      $('<span>', {
+          class: 'toggle',
+          html: 'sounds: on',
+      }).appendTo('.settings');
 
 
-    // create a settings form
-    // ----------------------
-    var form = null;
-    if(name || password || email) {
-        form = make_settings_form(name, password, email);
+      // add back button to the side panel
+      // ---------------------------------
+      $('.settings').append("<img class='icon-back' src='/icons/icon_arrow.png'/>");
     }
-    else form = make_settings_form();
-
-    $('.settings').append(form);
-    $('.settings').append("<br>");
-
-    $('.settings').append("<div class='background-color-section'> <h2>background color</h2>" +
-    "<div class='background-color' style='background-color: white;'></div>"+
-    "<div class='background-color' style='background-color: #2c3e50;'></div>"+
-    "</div>");
-
-    // add sounds/music options
-    // ----------
-    $('<span>', {
-        class: 'toggle',
-        html: 'music: on',
-    }).appendTo('.settings');
-    $('<span>', {
-        class: 'toggle',
-        html: 'sounds: on',
-    }).appendTo('.settings');
-
-
-    // add back button to the side panel
-    // ---------------------------------
-    $('.settings').append("<img class='icon-back' src='/icons/icon_arrow.png'/>");
+    else {
+      side_panel.append(_settings);
+    }
 
 
     // animation
@@ -111,8 +121,8 @@ function click_settings(remember, name, password, email) {
             // hide others form's contents
             $('#form_settings').css('display', 'block');
             $('span.edit-info').css('display', 'block');
-            $('.color-visualiser').css('display', 'none');
 
+            $('.color-visualiser').css('display', 'none');
             $('.label').css('display', 'none');
             $('#color1').css('display', 'none');
             $('#color2').css('display', 'none');
@@ -131,14 +141,23 @@ function click_settings(remember, name, password, email) {
             $('.button-rectangle').click(function() {
                 if($(this).html() === 'save') {
                     // save the content
-                    var new_name = $("input[name='name']")[0].value;
-                    var new_password = $("input[name='password']")[0].value;
-                    var new_email = $("input[name='email']")[0].value;
+                    // var new_name = $("input[name='name']")[0].value;
+                    // var new_password = $("input[name='password']")[0].value;
+                    // var new_email = $("input[name='email']")[0].value;
                 }
 
-                click_settings(false, new_name, new_password, new_email);
+                $('.settings').children().each(function() {
+                    $(this).css('display', 'block');
+                });
 
-            })
+                // $('#form_settings').css('display', 'block');
+                $('span.edit-info').css('display', 'none');
+                $('.button-rectangle').css('display', 'none');
+                $('.color-visualiser').css('display', 'inline-block');
+                $('.label').css('display', 'block');
+                $('#color1').css('display', 'inline-block');
+                $('#color2').css('display', 'inline-block');
+            });
         });
 
 
@@ -190,10 +209,43 @@ function click_settings(remember, name, password, email) {
     // > save preferences
     // ------------------------------
     $('.icon-back').click(function() {
-        // remplace the html content of side-panel
-        // and add events on icons
-        sidePanel.html(side_panel_main_content);
-        load_side_panel();
+        // ANIMATION
+        // ---------
+        // fading out
+        $('.settings').css({
+            opacity: '1',
+            marginLeft: '0',
+        }).animate({
+            opacity: '0',
+            marginLeft: '100px',
+        });
+
+        // fading in
+        // with a delayed start
+        window.setTimeout(function() {
+          // remplace the html content of side-panel
+          // and add events on icons
+          _settings.remove();
+          $('#side-panel').append(side_panel_main_content);
+
+          // code for ie ----------------------------
+          if(side_panel_main_content.html() === '') {
+            remake_sidepanel_content_ie();
+          }
+
+          // fading in of the side panel main content
+          side_panel_main_content.css({
+            opacity: '0',
+            marginLeft: '100px',
+          }).animate({
+            opacity: '1',
+            marginLeft: '0',
+          });
+
+          // add events handler on side panel
+          load_side_panel();
+        }, 500);
+
 
         // save user's settings
         save_settings();

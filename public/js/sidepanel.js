@@ -22,11 +22,14 @@ function events_side_panel_icons() {
             var action = $(this).attr('action');
 
             if (action === 'settings') {
-                click_settings(true);
+              anime_sidebar();
+              delay(click_settings);
+              // click_settings(true);
             }
 
             else if (action === 'message') {
-                click_notifications();
+              anime_sidebar();
+              delay(click_notifications);
             }
 
             else if (action === 'trophy') {
@@ -36,9 +39,15 @@ function events_side_panel_icons() {
     });
 }
 
+function delay(func, options) {
+  window.setTimeout( function() {
+    func(options);
+  }, 500);
+}
+
 function show_login_ui() {
     $('.user-avatar').click(function () {
-        if(login_ui == null) {
+        if(login_ui === null) {
             login_ui = $('<div>');
             login_ui.addClass('login-ui');
 
@@ -72,9 +81,22 @@ function show_login_ui() {
             $('#game-panel').append(login_ui);
         }
 
-        $('#game-panel').css('display', 'block');
+		
+		// ANIMATIONS
+		// fade in login ui
+        $('#game-panel').css({
+			display: 'block',
+			opacity: '0',
+			marginTop: '100px',
+		}).animate({
+			opacity: '1',
+			marginTop: '0',
+		});
+		
+		// hide the game
         $('#canvas').css('display', 'none');
-        console.log(login_ui);
+		// pause the game
+		
 
         // EVENTS
         // ------
@@ -98,7 +120,22 @@ function show_login_ui() {
                 // show connexion/cancel/signup buttons
                 $(".button").css('display', 'inline-block');
                 $('.form').remove();
+				
+				
+				// ANIMATIONS
+				$('#game-panel').css({
+					opacity: '0',
+				}).animate({
+					opacity: '1',
+				});
             });
+			
+			// ANIMATION
+			$('#form_login').css({
+				opacity: '0',
+			}).animate({
+				opacity: '1',
+			});
         });
 
         $(".button[function='signup']").click(function () {
@@ -147,17 +184,43 @@ function show_login_ui() {
                 // change the style of edit-info
                 $('.edit-info').css('display', 'block');
                 $('input').css('display', 'block');
+				
+				// ANIMATIONS
+				$('#game-panel').css({
+					opacity: '0',
+				}).animate({
+					opacity: '1',
+				});
             });
+			// ANIMATIONS
+			$('#form_signup').css({
+				opacity: '0',
+			}).animate({
+				opacity: '1',
+			});
         });
 
 
         // event on login/signup ui
         // >action: back to the game
         $(".button[function='cancel']").click(function () {
-            $('#game-panel').css('display', 'none');
-            $('#canvas').css('display', 'block');
+            // ANIMATIONS
+			// fade out login ui
+			$('#game-panel').css({
+				display: 'block',
+				opacity: '1',
+				marginTop: '0',
+			}).animate({
+				opacity: '0',
+				marginTop: '100px',
+			});
+			
+			// display the game board
+			delay(function() {
+				$('#canvas').css('display', 'block');
+			});
+            
             $(this).off('click');
-
             $(".button[function='login']").off('click');
             $(".button[function='signup']").off('click');
         });
@@ -397,9 +460,13 @@ function make_form(type) {
 }
 
 
-function anime_rollup_main_sidebar() {
-    $('.user-avatar').slideUp();
-    $('.power-up-panel').slideUp();
-    $('.user-score').slideUp();
-    $('.user-panel').slideUp();
+
+function anime_sidebar() {
+  $('#side-panel-main-content').css({
+    opacity: '1',
+    marginLeft: '0',
+  }).animate({
+    opacity: '0',
+    marginLeft: '100px',
+  })
 }
