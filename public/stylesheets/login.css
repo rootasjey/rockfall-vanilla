@@ -29,17 +29,19 @@
   display: block;
   margin: auto;
   margin-bottom: 0;
+  margin-top: 0;
 }
 .login-ui .form .form-block {
   display: block;
   margin-bottom: 10px;
 }
 .login-ui .form .edit-info {
+  font-size: 0.7em;
   text-align: left;
   display: block;
   margin-top: 5px;
 }
-.login-ui .form input {
+.login-ui .form .input {
   display: block;
   margin-top: 10px;
   width: 200px;
@@ -47,12 +49,12 @@
   opacity: 0.5;
   transition: 0.5s;
 }
-.login-ui .form input:hover {
+.login-ui .form .input:hover {
   opacity: 0.5;
   border: 5px solid #000;
   transition: 0.5s;
 }
-.login-ui .form input:focus {
+.login-ui .form .input:focus {
   opacity: 1;
   height: 25px;
   border: 10px solid #3498db;
@@ -62,8 +64,27 @@
   height: 20px;
   width: 20px;
   transition: 1s;
-  margin-left: 20px;
+  margin-left: 10px;
+  margin-right: 20px;
   margin-bottom: -5px;
   border-radius: 20px;
   display: inline-block;
+}
+.login-ui .form .button-form {
+  color: #fff;
+  font-size: 0.9em;
+  font-family: exothinitalic;
+  opacity: 0.5;
+  background-color: #000;
+  display: inline-block;
+  border-width: 0;
+  padding: 10px;
+  margin-right: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: 0.5s;
+}
+.login-ui .form .button-form:hover {
+  opacity: 0.7;
+  transition: 0.5s;
 }

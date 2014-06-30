@@ -4,23 +4,23 @@ function Tours(state_Game,nombre_action_add, nombre_action_effet, tours_time){
 
     this.state_Game = state_Game;
 
-    
+
     this.nombre_action_add = nombre_action_add;
     this.nombre_action_effet = nombre_action_effet;
-    
-    
+
+
     this.action_add_rock = 0;
     this.action_effet_rock = 0;
-    
+
     this.end_tour = false;
-    
+
     this.tours_time = tours_time;
-    
+
     this.cycle_time = tours_time;
     this.interval_verification = null;
-    
+
     this.time = null;
-    
+
     myTours = this;
 }
 
@@ -43,25 +43,25 @@ Tours.prototype.remove_effet = function(){
 }
 
 Tours.prototype.can_add = function(){
-    
+
     var can = true;
     if(this.action_add_rock>= this.nombre_action_add){
         can = false;
     }
-    
+
     return can;
-    
+
 }
 
 Tours.prototype.can_effet = function(){
-    
+
     var can = true;
     if(this.action_effet_rock>= this.nombre_action_effet){
         can = false;
     }
-    
+
     return can;
-    
+
 }
 
 /* fonction mettant fin au cycle de jeu */
@@ -72,12 +72,12 @@ Tours.prototype.end_cycle  = function(){
         clearInterval(this.time);
         this.time = null;
     }
-    
+
 }
 
 /* fonction qui decrémente le temps d'un tour */
 Tours.prototype.time_cycl = function(callback){
-    
+
         this.time = setInterval(function(){
             myTours.cycle_time--;
             callback(myTours.cycle_time);
@@ -86,23 +86,23 @@ Tours.prototype.time_cycl = function(callback){
 
 /* fonction qui lance le cycle de jeux */
 Tours.prototype.launch_cycle = function(ctx, text_color, id_name, id_score){
-    
-    
+
+
     this.cycle_time = this.tours_time;
-    
-    
+
+
     this.interval_verification = setInterval(function(){
-        
+
         if(myTours.cycle_time <= 0){
             myTours.end_tour = true;
         }
         if( !myTours.can_add() && !myTours.can_effet() || myTours.end_tour){
-        
+
             var i = 0,find = false;
             while(i<myTours.state_Game.players.length && !find){
-               
+
                if(myTours.state_Game.players[i].identifiant == myTours.state_Game.active_players.identifiant){
-                   
+
                     if(i+1 == myTours.state_Game.players.length){
                        myTours.state_Game.active_players = myTours.state_Game.players[0];
                     }else{
@@ -121,6 +121,6 @@ Tours.prototype.launch_cycle = function(ctx, text_color, id_name, id_score){
                i++;
            }
         }
-        
+
     },300);
 }
