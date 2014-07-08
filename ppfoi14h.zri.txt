@@ -1,0 +1,21 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	modified:   public/game/js/main.js
+#	modified:   public/game/js/physics.js
+#	modified:   public/game/js/piece.js
+#	modified:   public/game/js/plateau.js
+#	modified:   public/game/js/players.js
+#	new file:   public/game/js/powerNeutralPiece.js
+#	new file:   public/game/js/powerWeightDouble.js
+#	new file:   public/game/js/powerWeightLoseHalf.js
+#	deleted:    public/game/js/powers.js
+#	modified:   public/game/js/tours.js
+#	modified:   views/index.jade
+#	modified:   views/layout.jade
+#
+
