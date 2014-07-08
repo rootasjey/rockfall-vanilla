@@ -1,119 +1,119 @@
-/* gravity_launch est la fonction qui lance à interval régulier la gravité pour faire descendre les rocks */
+/* gravityLaunch est la fonction qui lance à interval régulier la gravité pour faire descendre les rocks */
 
-function gravity_launch(State_game){
+function GravityLaunch(stateGame){
     
-    if(State_game.launch_gravity == null){
+    if(stateGame.launchGravity == null){
          
-        State_game.launch_gravity = setInterval(function(){
-                if(!State_game.plateau.gravity()){
+        stateGame.launchGravity = setInterval(function(){
+                if(!stateGame.plateau.gravity()){
 
-                    State_game.valid=false;
+                    stateGame.valid=false;
                 }else{
-                    State_game.plateau.verification_gravity = true;
+                    stateGame.plateau.verificationGravity = true;
                 }
          },250);
     }
 }
 
-/* fall_effect_and_force permet d'appliquer l'effet de chute sur le plateau de jeu et l'ensemble de ses éléments et de vérifier si le poid ne dépasse pas la limite que peut supporter l'élément porteur */
+/* FallEffectAndForce permet d'appliquer l'effet de chute sur le plateau de jeu et l'ensemble de ses éléments et de vérifier si le poid ne dépasse pas la limite que peut supporter l'élément porteur */
 
-function fall_effect_and_force(State_game){
+function FallEffectAndForce(stateGame){
      
-    if(State_game.evenement_effet_fall == null){
+    if(stateGame.evenementEffetFall == null){
         
-         State_game.evenement_effet_fall = setInterval(function(){
-             if(State_game.plateau.verification_gravity == true){
+         stateGame.evenementEffetFall = setInterval(function(){
+             if(stateGame.plateau.verificationGravity == true){
 
-                 for(var e = 0;e<State_game.plateau.graphique.length;e++){
-                     State_game.plateau.graphique[e].y += 2;
+                 for(var e = 0;e<stateGame.plateau.graphique.length;e++){
+                     stateGame.plateau.graphique[e].y += 2;
                  }
 
-                 for(var g = 0;g < State_game.plateau.size_x;g++){
+                 for(var g = 0;g < stateGame.plateau.sizeX;g++){
 
-                    for(var h = 0;h < State_game.plateau.size_y;h++){
-                         if(State_game.plateau.matrice[g][h] != 0){
-                            State_game.plateau.matrice[g][h].y += 2;
+                    for(var h = 0;h < stateGame.plateau.sizeY;h++){
+                         if(stateGame.plateau.matrice[g][h] != 0){
+                            stateGame.plateau.matrice[g][h].y += 2;
                          }
                     } 	
                 }
                 
                  /* On appel valid à false pour redessiner le plateau avec le decallage */
-                State_game.valid = false;
+                stateGame.valid = false;
                     
                  /* puis dans 300 millisecondes on recalle correctement les éléments du plateau */
                 setTimeout(function(){
-                     for(var e = 0;e<State_game.plateau.graphique.length;e++){
-                         State_game.plateau.graphique[e].y -= 2;
+                     for(var e = 0;e<stateGame.plateau.graphique.length;e++){
+                         stateGame.plateau.graphique[e].y -= 2;
                      }
 
-                     for(var g = 0;g < State_game.plateau.size_x;g++){
+                     for(var g = 0;g < stateGame.plateau.sizeX;g++){
 
-                        for(var h = 0;h < State_game.plateau.size_y;h++){
-                             if(State_game.plateau.matrice[g][h] != 0){
-                                State_game.plateau.matrice[g][h].y -= 2;
+                        for(var h = 0;h < stateGame.plateau.sizeY;h++){
+                             if(stateGame.plateau.matrice[g][h] != 0){
+                                stateGame.plateau.matrice[g][h].y -= 2;
                              }
                         } 	
                     }
 
 
-                     if(State_game.active_force){
-                         State_game.end_of_force = State_game.plateau.force(State_game).end;
-                        if(State_game.end_of_force == false){
-                            var find_or_not = myState.plateau.find_four();
-                            while(find_or_not.find){
+                     if(stateGame.activeForce){
+                         stateGame.endOfForce = stateGame.plateau.force(stateGame).end;
+                        if(stateGame.endOfForce == false){
+                            var findOrNot = stateGame.plateau.findFour();
+                            while(findOrNot.find){
 
-                                var point_gagne = {point:0,proprietaire:"none"};
+                                var pointGagne = {point:0,proprietaire:"none"};
                                 
-                                State_game.hit_combo += 4;
-                                point_gagne.proprietaire = find_or_not.id;
-                                point_gagne.point = find_or_not.point * 2;
+                                stateGame.hitCombo += 4;
+                                pointGagne.proprietaire = findOrNot.id;
+                                pointGagne.point = findOrNot.point * 2;
                                 
-                                if(point_gagne.proprietaire == State_game.combo_maker.id){
-                                 point_gagne.point = parseInt(point_gagne.point *(State_game.hit_combo/(State_game.hit_combo - 0.1 * State_game.hit_combo)));   
+                                if(pointGagne.proprietaire == stateGame.comboMaker.id){
+                                 pointGagne.point = parseInt(pointGagne.point *(stateGame.hitCombo/(stateGame.hitCombo - 0.1 * stateGame.hitCombo)));   
                                 }
 
-                                State_game.plateau.addScore("user-sore-points", State_game, point_gagne);                   
+                                stateGame.plateau.addScore("user-sore-points", stateGame, pointGagne);                   
+                                console.log(stateGame.findPlayerById(stateGame.players,findOrNot.id));
+                                (stateGame.findPlayerById(stateGame.players,findOrNot.id)).point = stateGame.findPlayerById(stateGame.players,findOrNot.id).point + 1 ;
                                 
-                                (State_game.findPlayerById(State_game.players,find_or_not.id)).point = State_game.findPlayerById(State_game.players,find_or_not.id).point + 1 ;
-                                
-                                for(var i = 0;i<find_or_not.case.length;i++){
-                                    State_game.addDrawPoints("+"+(find_or_not.case[i].point*2), find_or_not.case[i].graph_x, find_or_not.case[i].graph_y,find_or_not.case[i].color);
+                                for(var i = 0;i<findOrNot.case.length;i++){
+                                    stateGame.addDrawPoints("+"+(findOrNot.case[i].point*2), findOrNot.case[i].graphX, findOrNot.case[i].graphY,findOrNot.case[i].color);
                                 }
                                 
-                                find_or_not = myState.plateau.find_four();
+                                findOrNot = stateGame.plateau.findFour();
                             }
                         }
                      }
                     
                     
-                    var players_win = new Array();
-                    var players_point = -1;
+                    var playersWin = new Array();
+                    var playersPoint = -1;
                     
-                    for(var p = 0;p<State_game.players.length;p++){
+                    for(var p = 0;p<stateGame.players.length;p++){
                         
-                        var plyrs = State_game.players[p];
-                        if(plyrs.point>players_point){
-                            players_win = new Array();
-                            players_win.push(plyrs);
-                            players_point = plyrs.point;
-                        }else if(plyrs.point == players_point){
-                           players_win.push(plyrs);
+                        var plyrs = stateGame.players[p];
+                        if(plyrs.point>playersPoint){
+                            playersWin = new Array();
+                            playersWin.push(plyrs);
+                            playersPoint = plyrs.point;
+                        }else if(plyrs.point == playersPoint){
+                           playersWin.push(plyrs);
                         }
                     }
                     
-                    if(players_win[0].point>=State_game.point_to_win){
+                    if(playersWin[0].point>=stateGame.pointToWin){
                         var endGame = "Le(s) gagnant(s) sont : \n";
-                        for(var p = 0;p<players_win.length;p++){
-                            endGame = players_win[p].nom+ " \n";
+                        for(var p = 0;p<playersWin.length;p++){
+                            endGame = playersWin[p].nom+ " \n";
                         }
-                        State_game.tours.end_cycle();
+                        stateGame.tours.endCycle();
                         
                         alert(endGame);
                     }
                      
                 },300);
                  
-                 State_game.plateau.verification_gravity = false;
+                 stateGame.plateau.verificationGravity = false;
             }
 
          },200);

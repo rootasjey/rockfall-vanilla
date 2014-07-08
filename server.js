@@ -1,8 +1,10 @@
-// --------------------
-// ROCKFALL
-// MAIN JAVASCRIPT FILE
-// --------------------
-// --------------------
+// -----------------------------
+// SERVER.JS (ROCKFALL)
+// -----------------------------
+// This file contains
+// the server's logic
+// -----------------------------
+// -----------------------------
 
 
 // -----------------------------
@@ -54,8 +56,136 @@ app.use(express.static(__dirname + '/public'));
 // static folder containing css, img & others contents
 // ---------------------------------------------------
 
+
+// ---------------
+// DATABASE: AZURE
+// ---------------
+var azure = require('azure-storage');
+var nconf = require('nconf');
+var uuid = require('node-uuid');
+var entGen = azure.TableUtilities.entityGenerator;
+// -----------------------------
+// -----------------------------
+// configuration for local developpement
+// -----------------------------
+nconf.env()
+     .file({ file: './public/database/config.json'});
+var tableName = nconf.get("TABLE_NAME");
+var partitionKey = nconf.get("PARTITION_KEY");
+var accountName = nconf.get("STORAGE_NAME");
+var accountKey = nconf.get("STORAGE_KEY");
+// -----------------------------
+// -----------------------------
+// An object (Table) for table access storage
+// -----------------------------
+var Table = require('./public/database/table');
+var usersTable = new Table(azure.createTableService(accountName, accountKey), tableName, partitionKey);
+
+
 app.get('/', function(req, res) {
 	res.render('index', {title: 'Home'});
+})
+
+.post('/login/', function (req, res) {
+	// get variables from the form
+	var user 	= req.param('user');
+	var password= req.param('password');
+
+	// escape special chars
+	user 		= escape(user);
+	password 	= escape(password);
+
+
+	var query = new azure.TableQuery()
+		.select()
+		.where('user eq ?', user);
+
+	usersTable.storageClient.queryEntities('users', query, null, function (error, result, response) {
+		if(!error) {
+			// result contains an array of result
+			// check if password is correct
+			if(result.entries.length > 0) {
+				// get the user password
+				var pass = result.entries[0].password['_'];
+
+				// verify the validity of the password entered
+				if(pass === password) {
+					// login success!
+					console.log('login success');
+					res.send(200);
+				}
+				else res.send(401, 'wrong password');
+			}
+		}
+		else res.send(404);
+	});
+})
+
+.post('/signup/', function (req, res) {
+	// get variables from the form
+	var user 	= req.param('user');
+	var password= req.param('password');
+	var email 	= req.param('email');
+	var color1	= req.param('color1');
+	var color2	= req.param('color2');
+
+	// escape special chars
+	user 		= escape(user);
+	password 	= escape(password);
+	email		= escape(email);
+
+
+	// console.log(user + ' ' + password + ' ' + email + ' ' + color1 + ' ' + color2);
+
+	// Test if the username and/or email isn't already in use in the database
+	// -----------
+	var queryUsername = new azure.TableQuery()
+		.select()
+		.where('user eq ?', user);
+	var queryEmail = new azure.TableQuery()
+		.select()
+		.where('email eq ?', email);
+
+	usersTable.storageClient.queryEntities('users', queryUsername, null, function (error, result, response) {
+		if(!error) {
+			console.log(result);
+			if(result.entries.length > 1) res.send(401, 'username');
+		}
+		else res.send(404, 'error');
+	});
+
+	usersTable.storageClient.queryEntities('users', queryEmail, null, function (error, result, response) {
+		if(!error) {
+			console.log(result);
+			if(result.entries.length > 1) res.send(401, 'email');
+		}
+		else res.send(404, 'error');
+	});
+
+	// Insert a new user
+	// -----------------
+	// Create the query
+	var task = {
+		PartitionKey: entGen.String('game')
+		, RowKey 	: entGen.String(uuid())
+		, user 		: entGen.String(user)
+		, password  : entGen.String(password)
+		, email 	: entGen.String(email)
+		, color1 	: entGen.String(color1)
+		, color2 	: entGen.String(color2)
+	};
+
+	// Add a new entity
+	usersTable.storageClient.insertOrReplaceEntity(
+		"users"
+		, task
+		, function (error, result, response) {
+			if(!error) {
+				// Success : Entity inserted
+				res.send(200);
+			}
+			else res.send(404); // error
+	});
 })
 
 .use(function(req, res, next) {

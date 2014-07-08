@@ -1,7 +1,10 @@
-// JAVASCRIPT FILE - SETTINGS.JS
-// ROCKFALL
-// --------------------------
-// --------------------------
+// ----------------------------
+// SETTINGS.JS (ROCKFALL)
+// ----------------------------
+// This file contains game's
+// settings
+// ----------------------------
+// ----------------------------
 
 var _settings = null;
 // global var : user
@@ -17,23 +20,23 @@ var _user = {
 // Fire when settings icon is clicked
 // remember(arg) = save the previous content
 // --------------------------------
-function click_settings(remember, name, password, email) {
+function ClickSettings(remember, name, password, email) {
 
     // save side panel's content
-    var side_panel = $('#side-panel');
+    var sidepanel = $('#side-panel');
 
     // if(remember) {
     //     // if the variable is true,
     //     // it saves the content of the side-panel
-    //     side_panel_main_content = side_panel.html();
+    //     sidePanelMainContent = sidepanel.html();
     // }
-    if(side_panel_main_content === null) {
-        side_panel_main_content = $('#side-panel-main-content');
+    if(sidePanelMainContent === null) {
+        sidePanelMainContent = $('#side-panel-main-content');
     }
 
 
     // empty side panel
-    side_panel.html('');
+    sidepanel.html('');
 
     if(_settings === null) {
       // create & show settings
@@ -46,11 +49,11 @@ function click_settings(remember, name, password, email) {
       // create a settings form
       // ----------------------
       var form = null;
-      form = make_settings_form();
+      form = CreateFormSettings();
       // if(name || password || email) {
-      //     form = make_settings_form(name, password, email);
+      //     form = CreateFormSettings(name, password, email);
       // }
-      // else form = make_settings_form();
+      // else form = CreateFormSettings();
 
       $('.settings').append(form);
       $('.settings').append("<br>");
@@ -77,19 +80,8 @@ function click_settings(remember, name, password, email) {
       $('.settings').append("<img class='icon-back' src='/icons/icon_arrow.png'/>");
     }
     else {
-      side_panel.append(_settings);
+      sidepanel.append(_settings);
     }
-
-
-    // animation
-    // ---------
-    $('.settings').css({
-        opacity: '0',
-        marginLeft: '100px',
-    }).animate({
-        opacity: '1',
-        marginLeft: '0',
-    });
 
 
     // EVENTS
@@ -119,8 +111,18 @@ function click_settings(remember, name, password, email) {
             }
 
             // hide others form's contents
-            $('#form_settings').css('display', 'block');
-            $('span.edit-info').css('display', 'block');
+            $('#form_settings').css({
+				display: 'block',
+				opacity: '0',
+			}).animate({
+				opacity: '1',
+			});
+            $('span.edit-info').css({
+				display: 'block',
+				opacity: '0',
+			}).animate({
+				opacity: '1',
+			});
 
             $('.color-visualiser').css('display', 'none');
             $('.label').css('display', 'none');
@@ -132,11 +134,20 @@ function click_settings(remember, name, password, email) {
                 class: 'button-rectangle',
                 html: 'save'
             }).appendTo('.settings');
+
             // cancel button
             $('<div>', {
                 class: 'button-rectangle',
                 html: 'cancel'
             }).appendTo('.settings');
+
+			// BUTTONS ANIMATIONS
+			$('.button-rectangle').css({
+				opacity: '0',
+			}).animate({
+				opacity: '0.5',
+			});
+
 
             $('.button-rectangle').click(function() {
                 if($(this).html() === 'save') {
@@ -147,10 +158,15 @@ function click_settings(remember, name, password, email) {
                 }
 
                 $('.settings').children().each(function() {
-                    $(this).css('display', 'block');
+                    $(this).fadeIn();
                 });
 
-                // $('#form_settings').css('display', 'block');
+				$('#form_settings').css({
+					opacity: '0'
+				}).animate({
+					opacity: '1'
+				});
+
                 $('span.edit-info').css('display', 'none');
                 $('.button-rectangle').css('display', 'none');
                 $('.color-visualiser').css('display', 'inline-block');
@@ -158,6 +174,20 @@ function click_settings(remember, name, password, email) {
                 $('#color1').css('display', 'inline-block');
                 $('#color2').css('display', 'inline-block');
             });
+
+			$('.button-rectangle').hover(function(){
+				$(this).css({
+					opacity: '0.5',
+				}).animate({
+					opacity: '1',
+				}, 20);
+			}, function() {
+				$(this).css({
+					opacity: '1',
+				}).animate({
+					opacity: '0.5',
+				}, 20);
+			});
         });
 
 
@@ -198,10 +228,10 @@ function click_settings(remember, name, password, email) {
     // to update colors visualisers
     // when a different color is selected
     $('#color1').change(function() {
-        update_color_visualiser(1);
+        UpdateColorVisualiser(1);
     });
     $('#color2').change(function() {
-        update_color_visualiser(2);
+        UpdateColorVisualiser(2);
     });
 
 
@@ -209,122 +239,93 @@ function click_settings(remember, name, password, email) {
     // > save preferences
     // ------------------------------
     $('.icon-back').click(function() {
-        // ANIMATION
-        // ---------
-        // fading out
-        $('.settings').css({
-            opacity: '1',
-            marginLeft: '0',
-        }).animate({
-            opacity: '0',
-            marginLeft: '100px',
+        AnimateOutSettings();
+
+        Delay(function () {
+            AnimateInSidePanelMainContent();
+            LoadSidePanel();
         });
 
-        // fading in
-        // with a delayed start
-        window.setTimeout(function() {
-          // remplace the html content of side-panel
-          // and add events on icons
-          _settings.remove();
-          $('#side-panel').append(side_panel_main_content);
-
-          // code for ie ----------------------------
-          if(side_panel_main_content.html() === '') {
-            remake_sidepanel_content_ie();
-          }
-
-          // fading in of the side panel main content
-          side_panel_main_content.css({
-            opacity: '0',
-            marginLeft: '100px',
-          }).animate({
-            opacity: '1',
-            marginLeft: '0',
-          });
-
-          // add events handler on side panel
-          load_side_panel();
-        }, 500);
-
-
         // save user's settings
-        save_settings();
+        SaveSettings();
     });
+
+    AnimateInSettings();
 }
 
 
 // Create a settings form
 // ----------------------------
-function make_settings_form(name, password, email) {
+function CreateFormSettings(name, password, email) {
     var form = document.createElement('form');
     form.title = 'form_settings';
     form.id = 'form_settings';
 
-    var title_edit_ids = document.createElement('h2');
-    title_edit_ids.className ='edit-info';
-    title_edit_ids.innerHTML = "user info <span class='edit-button'>edit</span>";
+    var editButton = document.createElement('h2');
+    editButton.className ='edit-info';
+    editButton.innerHTML = "user info <span class='edit-button'>edit</span>";
 
 
     // labels
     // ------
-    var label_name = document.createElement('span');
-    label_name.className = 'edit-info';
-    label_name.name = 'name-title';
-    label_name.innerHTML = "<br> Name <span class='edit-button'>edit</span> <br>";
+    var labelName = document.createElement('span');
+    labelName.className = 'edit-info';
+    labelName.name = 'name-title';
+    labelName.innerHTML = "<br> Name <span class='edit-button'>edit</span> <br>";
 
-    var label_password = document.createElement('span');
-    label_password.className = 'edit-info';
-    label_password.name = 'password-title';
-    label_password.innerHTML = "Password <span class='edit-button'>edit</span> <br>";
+    var labelPassword = document.createElement('span');
+    labelPassword.className = 'edit-info';
+    labelPassword.name = 'password-title';
+    labelPassword.innerHTML = "Password <span class='edit-button'>edit</span> <br>";
 
-    var label_email = document.createElement('span');
-    label_email.className = 'edit-info';
-    label_email.name = 'email-title';
-    label_email.innerHTML = "Email <span class='edit-button'>edit</span> <br>";
+    var labelEmail = document.createElement('span');
+    labelEmail.className = 'edit-info';
+    labelEmail.name = 'email-title';
+    labelEmail.innerHTML = "Email <span class='edit-button'>edit</span> <br>";
 
-    var label_color1 = document.createElement('span');
-    label_color1.className = 'label';
-    label_color1.innerHTML = "<br>First class color<br>";
+    var labelColor1 = document.createElement('span');
+    labelColor1.className = 'label';
+    labelColor1.innerHTML = "<br>First class color<br>";
 
-    var label_color2 = document.createElement('span');
-    label_color2.className = 'label';
-    label_color2.innerHTML = "<br>Second class color<br>";
+    var labelColor2 = document.createElement('span');
+    labelColor2.className = 'label';
+    labelColor2.innerHTML = "<br>Second class color<br>";
 
 
     // inputs
     // ------
-    var input_name = document.createElement('input');
-    input_name.type = 'text';
-    input_name.name = 'name';
-    input_name.placeholder = 'Enter your new name';
+    var inputName = document.createElement('input');
+    inputName.type = 'text';
+    inputName.name = 'name';
+    inputName.placeholder = 'Enter your new name';
 
-    var input_password_old = document.createElement('input');
-    input_password_old.type = 'text';
-    input_password_old.name = 'old_password';
-    input_password_old.placeholder = 'Enter your old password';
+    var inputPasswordOld = document.createElement('input');
+    inputPasswordOld.type = 'text';
+    inputPasswordOld.name = 'old_password';
+    inputPasswordOld.placeholder = 'Enter your old password';
 
-    var input_password = document.createElement('input');
-    input_password.type = 'text';
-    input_password.name = 'password';
-    input_password.placeholder = 'Enter your new password';
+    var inputPassword = document.createElement('input');
+    inputPassword.type = 'text';
+    inputPassword.name = 'password';
+    inputPassword.placeholder = 'Enter your new password';
 
-    var input_email = document.createElement('input');
-    input_email.type = 'text';
-    input_email.name = 'email';
-    input_email.placeholder = 'Enter your new mail';
+    var inputEmail = document.createElement('input');
+    inputEmail.type = 'text';
+    inputEmail.name = 'email';
+    inputEmail.placeholder = 'Enter your new mail';
 
 
     // selects
     // -------
-    var select_color1 = document.createElement('select');
-    select_color1.form = 'form_settings';
-    select_color1.name = 'color1';
-    select_color1.id = 'color1';
+    var selectColor1 = document.createElement('select');
+    selectColor1.form = 'form_settings';
+    selectColor1.name = 'color1';
+    selectColor1.id = 'color1';
 
-    var select_color2 = document.createElement('select');
-    select_color2.form = 'form_settings';
-    select_color2.name = 'color2';
-    select_color2.id = 'color2';
+    var selectColor2 = document.createElement('select');
+    selectColor2.form = 'form_settings';
+    selectColor2.name = 'color2';
+    selectColor2.id = 'color2';
 
 
     // array of colors values
@@ -354,50 +355,50 @@ function make_settings_form(name, password, email) {
 
         if(i==1) o[0].setAttribute('selected', 'true');
 
-        select_color1.appendChild(option[0]);
-        select_color2.appendChild(o[0]);
+        selectColor1.appendChild(option[0]);
+        selectColor2.appendChild(o[0]);
     }
 
 
     // colors visualisers
-    var color_visualiser1 = document.createElement('span');
-    color_visualiser1.className = 'color-visualiser';
-    color_visualiser1.setAttribute('name', 'color_visualiser1');
-    color_visualiser1.style.background = array_colors_values[0];
+    var colorVisualiser1 = document.createElement('span');
+    colorVisualiser1.className = 'color-visualiser';
+    colorVisualiser1.setAttribute('name', 'color_visualiser1');
+    colorVisualiser1.style.background = array_colors_values[0];
 
-    var color_visualiser2 = document.createElement('span');
-    color_visualiser2.className = 'color-visualiser';
-    color_visualiser2.setAttribute('name', 'color_visualiser2');
-    color_visualiser2.style.background = array_colors_values[1];
+    var colorVisualiser2 = document.createElement('span');
+    colorVisualiser2.className = 'color-visualiser';
+    colorVisualiser2.setAttribute('name', 'color_visualiser2');
+    colorVisualiser2.style.background = array_colors_values[1];
 
     // add elements to the form
     // form's title
-    form.appendChild(title_edit_ids);
+    form.appendChild(editButton);
 
     // labels + inputs
-    form.appendChild(label_name);
-    form.appendChild(input_name);
+    form.appendChild(labelName);
+    form.appendChild(inputName);
 
-    form.appendChild(label_password);
-    form.appendChild(input_password_old);
-    form.appendChild(input_password);
+    form.appendChild(labelPassword);
+    form.appendChild(inputPasswordOld);
+    form.appendChild(inputPassword);
 
-    form.appendChild(label_email);
-    form.appendChild(input_email);
+    form.appendChild(labelEmail);
+    form.appendChild(inputEmail);
 
-    form.appendChild(label_color1);
-    form.appendChild(select_color1);
-    form.appendChild(color_visualiser1);
+    form.appendChild(labelColor1);
+    form.appendChild(selectColor1);
+    form.appendChild(colorVisualiser1);
 
-    form.appendChild(label_color2);
-    form.appendChild(select_color2);
-    form.appendChild(color_visualiser2);
+    form.appendChild(labelColor2);
+    form.appendChild(selectColor2);
+    form.appendChild(colorVisualiser2);
 
     // fill name, email, password
     // if available
-    if(name) label_name.innerHTML = label_name.innerHTML.replace('Name', name);
-    if(password) label_password.innerHTML = label_password.innerHTML.replace('Password', password);
-    if(email) label_email.innerHTML = label_email.innerHTML.replace('Email', email);
+    if(name) labelName.innerHTML = labelName.innerHTML.replace('Name', name);
+    if(password) labelPassword.innerHTML = labelPassword.innerHTML.replace('Password', password);
+    if(email) labelEmail.innerHTML = labelEmail.innerHTML.replace('Email', email);
 
     // return the form
     return form;
@@ -406,7 +407,7 @@ function make_settings_form(name, password, email) {
 
 // Update the color visualisers
 // ----------------------------
-function update_color_visualiser(number) {
+function UpdateColorVisualiser(number) {
     // get the color value
     // -----------------------------------------
     var color = $('#color'+ number)[0].value;
@@ -419,17 +420,17 @@ function update_color_visualiser(number) {
         // console.log('same color');
         // if the two colors are the same
         // we select the next color in the list
-        var select_color = $('#color' + number)[0];
+        var selectColor = $('#color' + number)[0];
 
         // get the selected index, and go to the next one
-        var index  = select_color.selectedIndex;
+        var index  = selectColor.selectedIndex;
         index += 1;
         index = index % 12;
-        select_color.selectedIndex = index;
+        selectColor.selectedIndex = index;
 
         // now update the color visualiser
-        var color_visualiser = $(".color-visualiser[name='color_visualiser" + number + "']");
-        color_visualiser.css('background-color', select_color[index].value);
+        var colorVisualiser = $(".color-visualiser[name='color_visualiser" + number + "']");
+        colorVisualiser.css('background-color', selectColor[index].value);
     }
     else {
         $(".color-visualiser[name='color_visualiser" + number + "']").css('background-color', color);
@@ -439,7 +440,7 @@ function update_color_visualiser(number) {
 
 // Save user's settings
 // --------------------
-function save_settings() {
+function SaveSettings() {
     // send to the server
     // create a ajax request
     // get the form inputs
@@ -451,7 +452,7 @@ function save_settings() {
 
 // Hide/Show #header & #footer
 // --------------------
-function fullscreen() {
+function Fullscreen() {
     // add click event on the image
     $('.icon-fullscreen').click(function() {
         if ($('#header-top').css('height') == '120px') {
@@ -481,7 +482,7 @@ function fullscreen() {
 
 // Auto Fullscreen
 // ---------------
-function auto_fullscreen() {
+function AutoFullscreen() {
     // Auto-hide
     if ($('#header-top').css('height') == '120px') {
         // reduce the #header & #footer

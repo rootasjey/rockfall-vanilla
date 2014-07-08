@@ -1,0 +1,6 @@
+{
+    "STORAGE_NAME": "***",
+    "STORAGE_KEY": "***",
+    "PARTITION_KEY": "game",
+    "TABLE_NAME": "users"
+}

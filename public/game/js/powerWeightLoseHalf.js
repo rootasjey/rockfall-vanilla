@@ -1,8 +1,8 @@
 /* La fonction (classe) qui gère le bonus du poid diviser par 2, il permet de diviser le poid par 2 d'une pièce afin de la rendre plus fragile */
-function powerWeightLoseHalf (element_listener,price){
+function powerWeightLoseHalf (elementListener,price){
     
     /* l'élément sur lequel le bonus pourra être activé au click */
-    this.element_listener = element_listener;
+    this.elementListener = elementListener;
     
     /* permettra de rendre valide ou pas un bonus*/
     this.valid = true;
@@ -11,16 +11,16 @@ function powerWeightLoseHalf (element_listener,price){
     this.price = price;
     
     /* la variable qui garde en mémoire l'état de l'"objet" dans le listener */
-    saveStateL = this;
+    _saveStateL = this;
 }
 
 /* la fonction listen permet de mettre effectivement en place l'activation du bonus lors du clique sur l'élément choisi */
 powerWeightLoseHalf.prototype.listen = function(stateGame){
     
-    $("#"+this.element_listener).click(function(){
+    $("#"+this.elementListener).click(function(){
             if(!stateGame.usePower){
                 stateGame.usePower = true;
-                stateGame.powerToUse = saveStateL;
+                stateGame.powerToUse = _saveStateL;
             }else{
                 stateGame.usePower = false;
                 stateGame.powerToUse = null;
@@ -38,5 +38,5 @@ powerWeightLoseHalf.prototype.power = function(shape){
 
 /* permet de supprimer le listener */
 powerWeightLoseHalf.prototype.unlisten = function(stateGame){
-    $("#"+this.element_listener).unbind( "click" );
+    $("#"+this.elementListener).unbind( "click" );
 }

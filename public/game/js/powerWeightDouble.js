@@ -1,8 +1,8 @@
 /* La fonction (classe) qui gère le bonus de double poid, il permet de doubler le poid d'une pièce afin de la rendre plus résistante */
-function powerWeightDouble (element_listener, price){
+function powerWeightDouble (elementListener, price){
     
     /* l'élément sur lequel le bonus pourra être activé au click */
-    this.element_listener = element_listener;
+    this.elementListener = elementListener;
     
     /* permettra de rendre valide ou pas un bonus*/
     this.valid = true;
@@ -11,17 +11,17 @@ function powerWeightDouble (element_listener, price){
     this.price = price;
     
     /* la variable qui garde en mémoire l'état de l'"objet" dans le listener */
-    saveStateD = this;
+    _saveStateD = this;
 }
 
 /* la fonction listen permet de mettre effectivement en place l'activation du bonus lors du clique sur l'élément choisi */
 powerWeightDouble.prototype.listen = function(stateGame){
     
     
-    $("#"+this.element_listener).click(function(){
+    $("#"+this.elementListener).click(function(){
             if(!stateGame.usePower){
                 stateGame.usePower = true;
-                stateGame.powerToUse = saveStateD;
+                stateGame.powerToUse = _saveStateD;
             }else{
                 stateGame.usePower = false;
                 stateGame.powerToUse = null;
@@ -42,6 +42,6 @@ powerWeightDouble.prototype.power = function(shape){
 /* permet de supprimer le listener */
 powerWeightDouble.prototype.unlisten = function(stateGame){
     
-    $("#"+this.element_listener).unbind( "click" );
+    $("#"+this.elementListener).unbind( "click" );
 
 }

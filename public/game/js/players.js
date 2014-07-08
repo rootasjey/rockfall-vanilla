@@ -1,6 +1,6 @@
 /* Represente un joueur avec un nom, les caractéristiques du personnage comme le score la couleur 
 des rocks etc... */
-function Players(id,nom,color_shape,score,weight_shapes){
+function Players(id,nom,colorShape,score,weightShapes){
     
     /* le nom du personnage */
     this.nom = nom;
@@ -10,7 +10,7 @@ function Players(id,nom,color_shape,score,weight_shapes){
     this.identifiant = id;
     
     /* couleur du rock du joueur*/
-    this.color_shape = color_shape;
+    this.colorShape = colorShape;
     
     
     /* le nombre de point du joueur */
@@ -21,7 +21,7 @@ function Players(id,nom,color_shape,score,weight_shapes){
     this.score = score;
    
     /* les 3 poids que le joueur souhaite avoir dans son jeu */
-    this.weight_shapes = weight_shapes;
+    this.weightShapes = weightShapes;
     
      /* on définit l'objet Pieces qui ressence les différentes rocks créés qui seront affiché sur le plateau */
     this.pieces = new Pieces();
@@ -32,11 +32,11 @@ function Players(id,nom,color_shape,score,weight_shapes){
     
     this.image = null ;
     
-    this.tampon_score = 0;
-    this.set_score = null;
+    this.tamponScore = 0;
+    this.setScore = null;
     
     
-    this.power_active = null;
+    this.powerActive = null;
     
     savePlayer = this;
 }
@@ -44,32 +44,32 @@ function Players(id,nom,color_shape,score,weight_shapes){
 
 Players.prototype.getPiece = function(){
     
-    for(var i = 0;i<this.weight_shapes.length;i++){
-        var shape = new Shape(280 + (170*i), 410, 70, 70,this.weight_shapes[i],this.color_shape);
+    for(var i = 0;i<this.weightShapes.length;i++){
+        var shape = new Shape(280 + (170*i), 410, 70, 70,this.weightShapes[i],this.colorShape);
         shape.image = this.image;
         this.pieces.add(shape);
     }
     
 }
 
-Players.prototype.changeScore = function(id_container, points, stateGame){
+Players.prototype.changeScore = function(idContainer, points, stateGame){
     
     this.score += points;
 
-    savePlayer.tampon_score = this.score;
-    var start_score = parseInt($("#"+id_container).html());
-    if(this.set_score == null && this.identifiant == stateGame.active_players.identifiant){
-        this.set_score = setInterval(function(){
-            if(stateGame.score_signal){
-                if(start_score>savePlayer.tampon_score){
-                    start_score--;
-                    $("#"+id_container).html(start_score);
-                }else if(start_score<savePlayer.tampon_score){
-                    start_score++;
-                    $("#"+id_container).html(start_score);
+    savePlayer.tamponScore = this.score;
+    var startScore = parseInt($("#"+idContainer).html());
+    if(this.setScore == null && this.identifiant == stateGame.activePlayers.identifiant){
+        this.setScore = setInterval(function(){
+            if(stateGame.scoreSignal){
+                if(startScore>savePlayer.tamponScore){
+                    startScore--;
+                    $("#"+idContainer).html(startScore);
+                }else if(startScore<savePlayer.tamponScore){
+                    startScore++;
+                    $("#"+idContainer).html(startScore);
                 }else{
                     clearInterval(this);
-                    savePlayer.set_score = null;
+                    savePlayer.setScore = null;
                 }
             }
         },50);

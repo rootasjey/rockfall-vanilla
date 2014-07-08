@@ -15,13 +15,13 @@ Pieces.prototype.draw = function(ctx) {
     }
 }
 
-/* La fonction change_color permet de definir la couleur de l'ensemble des pieces/rocks contenu dans l'objet */
-Pieces.prototype.change_color = function(color,text_color) {
+/* La fonction changeColor permet de definir la couleur de l'ensemble des pieces/rocks contenu dans l'objet */
+Pieces.prototype.changeColor = function(color,textColor) {
     
     for(var i =0;i<this.shapes.length;i++){
         if(typeof(this.shapes[i]) != "undefined"){
             this.shapes[i].fill = color;
-            this.shapes[i].text_color = text_color || "rgba(121, 195, 201, 0.81)";
+            this.shapes[i].textColor = textColor || "rgba(121, 195, 201, 0.81)";
         }
     }
 }
@@ -64,36 +64,24 @@ function Shape(x, y, w, h, weight, fill, img) {
     this.height = h;
     this.weight = weight;
 
-    this.id_proprietaire = -1;
+    this.idProprietaire = -1;
     this.select = false;
     this.fill = fill || "#0128ed";
     this.lineWidth = "1";
-    this.text_color = "rgba(121, 195, 201, 0.81)";
+    this.textColor = "rgba(121, 195, 201, 0.81)";
     
-    this.initial_x = x;
-    this.initial_y = y;
+    this.initialX = x;
+    this.initialY = y;
     
     this.image = img || null;
     
-    //console.log(" sur de csa "+img);
-    /*
-    this.ok_draw = false;
-    
-    myshap = this;
-    /
-    this.img = new Image();
-    this.img.onload = function(){       
-        myshap.ok_draw = true;
-        console.log("ddd");
-    };
-    this.img.src =  img_source || "./rocher.jpg";*/
 }
 
 /* init est la fonction qui permet de remettre la position d'une shape à l'endroit de sa création */
 Shape.prototype.init = function(){
     
-    this.x = this.initial_x;
-    this.y = this.initial_y;
+    this.x = this.initialX;
+    this.y = this.initialY;
 }
 
 /* draw permet de dessiner une shape */
@@ -113,48 +101,23 @@ Shape.prototype.draw = function(ctx) {
     
     
 
-    var x_img = parseInt(this.x)+parseInt(this.lineWidth);
-    var y_img = parseInt(this.y)+parseInt(this.lineWidth);
-    var w_img = parseInt(this.width)-parseInt(this.lineWidth);
-    var h_img = parseInt(this.height)-parseInt(this.lineWidth);
+    var xImg = parseInt(this.x)+parseInt(this.lineWidth);
+    var yImg = parseInt(this.y)+parseInt(this.lineWidth);
+    var wImg = parseInt(this.width)-parseInt(this.lineWidth);
+    var hImg = parseInt(this.height)-parseInt(this.lineWidth);
     
-    ctx.drawImage(this.image, x_img, y_img, w_img, h_img);
-    /*
-    ctx.lineWidth = this.lineWidth;//+2;
-    ctx.moveTo(this.x+radius, this.y);
-    ctx.lineTo(r-radius, this.y);
-    ctx.quadraticCurveTo(r, this.y, r, this.y+radius);
-    ctx.lineTo(r, this.y+this.height-radius);
-    ctx.quadraticCurveTo(r, b, r-radius, b);
-    ctx.lineTo(this.x+radius, b);
-    ctx.quadraticCurveTo(this.x, b, this.x, b-radius);
-    ctx.lineTo(this.x, this.y+radius);
-    ctx.quadraticCurveTo(this.x, this.y, this.x+radius, this.y);
-    ctx.stroke();
+    ctx.drawImage(this.image, xImg, yImg, wImg, hImg);
+    
 
-    ctx.closePath();
-   */
-    
-     
-   
-    
-    
-    
-    //ctx.fillStyle = this.fill;
-    //ctx.fill();
     ctx.font = "italic 30pt "+fontScore;
-    write_message(ctx, this.weight, this.fill, (this.x + (this.width/4)), (this.y + (this.height/1.5)), 5);
-    
-    //
-    //ctx.fillStyle = "red";//this.text_color;
-    //ctx.fillText(this.weight, this.x+(this.width/4), this.y+(this.height/1.5));
+    WriteMessage(ctx, this.weight, this.fill, (this.x + (this.width/4)), (this.y + (this.height/1.5)), 5);
 
 }
 
 /* contains permet de savoir si la position mx,my fait partie de la shape*/
 Shape.prototype.contains = function(mx, my) {
-  // All we have to do is make sure the Mouse X,Y fall in the area between
-  // the shape's X and (X + Height) and its Y and (Y + Height)
+  /* All we have to do is make sure the Mouse X,Y fall in the area between
+   the shape's X and (X + Height) and its Y and (Y + Height)*/
   return  (this.x <= mx) && (this.x + this.width >= mx) &&
           (this.y <= my) && (this.y + this.height >= my);
 }

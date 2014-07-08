@@ -1,4 +1,4 @@
-function load_board() {
+function LoadBoard() {
 
     /* On créé les joueurs du mode solo ici du 1 vs 1, mais qui peut s'étendre,
     chaque joueur jouera de manière alterné */
@@ -7,14 +7,14 @@ function load_board() {
     players.push(new Players(2,"Joueur_2","red",0,[8,10,20]));
     
     /* On définit les pouvoirs qui seront disponible lors de la partie ici nous avons définit 3 qui seront les mêmes pour chaque joueur */
-    var power_player_un = new Array();
-    power_player_un.push(new powerWeightDouble("cadre-un",10));
-    power_player_un.push(new powerNeutralPiece("cadre-deux",10));
-    power_player_un.push(new powerWeightLoseHalf("cadre-trois",20));
+    var powerPlayerUn = new Array();
+    powerPlayerUn.push(new powerWeightDouble("cadre-un",10));
+    powerPlayerUn.push(new powerNeutralPiece("cadre-deux",10));
+    powerPlayerUn.push(new powerWeightLoseHalf("cadre-trois",20));
     
     /* on assigne le tableau de pouvoir aux personnages */
     for(var i = 0; i < players.length;i++){
-        players[i].power = power_player_un;
+        players[i].power = powerPlayerUn;
     }
     
     
@@ -58,13 +58,13 @@ function loadImages(sources, callback) {
 }
 
 
-function CanvasState (players,point_to_win, image_load){
+function CanvasState (players,pointToWin, imageLoad){
  
       /* On définit le plateau de jeu avec les différents arguments détaillés dans plateau.js*/
     this.plateau = new Table(4, 6, 140, 40, 10);
 
     /*la variable qui détermine le nombre de point qu'il faut pour gagner la partie */
-    this.point_to_win = point_to_win;
+    this.pointToWin = pointToWin;
     
     this.canvas = document.getElementById("canvas");
     this.ctx = canvas.getContext("2d");
@@ -77,55 +77,55 @@ function CanvasState (players,point_to_win, image_load){
     this.players = players;
     
     /* contient les images chargées précédement */
-    this.image_load = image_load;
+    this.imageLoad = imageLoad;
     
     /* assigne à chaque joueur son image de pièce */
     for(var r = 0;r<this.players.length;r++){
         var name = this.players[r].nom
-        this.players[r].image = this.image_load[name]; 
+        this.players[r].image = this.imageLoad[name]; 
         this.players[r].getPiece(); 
         
     }
     
     /* initialise le jeux en commencant par choisir le joueur qui commencera, basiquement le premier du tableau */
-    this.active_players = this.players[0];
+    this.activePlayers = this.players[0];
     
     
     /* variable qui sert d'horloge du jeux */
-    this.time_life = 0;
+    this.timeLife = 0;
     
     /* Variable qui sert au stockage de la cellule du plateau et de la pièce sélectionnée */
-    this.selection_graphique = null;
-    this.selection_piece = null;
+    this.selectionGraphique = null;
+    this.selectionPiece = null;
     
     /* définit la couleur du texte */
-    this.text_color = "rgba(25, 23, 23, 0.49)";
+    this.textColor = "rgba(25, 23, 23, 0.49)";
     
     /*on stock le setIntervall pour ne pas le déclencher à chaque event "mouseup" */
-    this.evenement_effet_fall = null;
+    this.evenementEffetFall = null;
     
     /* lors du drag and drop permet avoir la position de la souris */
     this.dragoffx = 0;
     this.dragoffy = 0;
     
     /* Tableau qui enregistre les points gagnés par l'utilisateur qui devront être affiché sur le jeux */
-    this.point_to_draw = new Array();
+    this.pointToDraw = new Array();
    
     /* le compteur de combo*/
-    this.hit_combo = 0;
+    this.hitCombo = 0;
     
     /*Enregistre l'utilisateur à l'auteur du combo*/
-    this.combo_maker = {"nom":"","id":-1};
+    this.comboMaker = {"nom":"","id":-1};
     
-     this.time_combo = 0;
+     this.timeCombo = 0;
     
     /* Permet de déterminer le moment ou il n'y a plus aucune intéraction de force entre les pièeces */
-    this.end_of_force = false;
+    this.endOfForce = false;
     
    
     
     /* permet de déterminer si le score peut être mise à jour*/
-    this.score_signal = false;
+    this.scoreSignal = false;
     
     /* valid est la variable qui permet un redessinement efficace du canvas on la met à false et le canvas se met a jour */
     this.valid = true;
@@ -134,46 +134,46 @@ function CanvasState (players,point_to_win, image_load){
     this.plateau.draw(this.ctx);
   
     /* permet de prévenir le multi setInterval en testant si la variable ne contient pas déjà le lancement de la gravité */
-    this.launch_gravity = null;
+    this.launchGravity = null;
     
     /* on souhaite effectivement que la force s'applique au jeux*/
-    this.active_force = true;
+    this.activeForce = true;
     
     /* une fois avoir ajouter tous ses éléments, on force la mise a jour du canvas en mettant valid à false */
     this.valid = false; 
     
     
     /* On conserve l'etat de l'objet dans la variable afin de pouvoir utiliser les différents éléments dans les listeners à venir*/
-    myState = this;
+    _myState = this;
     
     /* On lance les listeners pour l'activation des bonus */
-    for(var c = 0;c<this.active_players.power.length;c++){
-        this.active_players.power[c].listen(myState);
+    for(var c = 0;c<this.activePlayers.power.length;c++){
+        this.activePlayers.power[c].listen(_myState);
     }
     /* On initialise le déroulement d'un tour*/
-    this.tours = new Tours(myState, 1, 1, 6);
+    this.tours = new Tours(_myState, 1, 1, 6);
     
     /* lance le début du cycle de jeux*/
-    this.tours.launch_cycle(this.ctx, this.text_color, "user-avatar-name-id", "user-sore-points" );
+    this.tours.launchCycle(this.ctx, this.textColor, "user-avatar-name-id", "user-sore-points" );
     
     /*détermine le temps d'un tour */
-    this.tours.time_cycl(this.time_change);
+    this.tours.timeCycle(this.timeChange);
     
     /* on initialise le score à 0 */
-    this.plateau.initialiseScore("user-sore-points", "user-avatar-name-id", myState,0);
+    this.plateau.initialiseScore("user-sore-points", "user-avatar-name-id", _myState,0);
   
     /* fonction qui permet de redessiner le canvas si besoin avec une fréquence de 30 millisecondes*/
   var interval = 30;
    
   setInterval(function() { 
-    if(!myState.valid){ 
-        clear(myState.ctx,myState.canvas); 
-        myState.plateau.draw(myState.ctx); 
-        draw_info(myState.ctx, myState.canvas, myState.text_color, myState.time_life); 
-        myState.active_players.pieces.draw(myState.ctx);
-        myState.drawCombo(myState.ctx,630,80,2);
-        if(!myState.drawPoints()){
-        myState.valid = true; 
+    if(!_myState.valid){ 
+        clear(_myState.ctx,_myState.canvas); 
+        _myState.plateau.draw(_myState.ctx); 
+        drawInfo(_myState.ctx, _myState.canvas, _myState.textColor, _myState.timeLife); 
+        _myState.activePlayers.pieces.draw(_myState.ctx);
+        _myState.drawCombo(_myState.ctx,630,80,2);
+        if(!_myState.drawPoints()){
+        _myState.valid = true; 
         }
     } 
   }, interval);
@@ -182,31 +182,31 @@ function CanvasState (players,point_to_win, image_load){
   $(canvas).on("mousemove",function(e){
 
       /* On récupère le positionnement de la souris */
-	var canvas = myState.canvas;
+	var canvas = _myState.canvas;
 	var mouse = getMouse(e,canvas);
 	var mx = mouse.x, my = mouse.y;
 
       
-	for (var i = 0; i < myState.plateau.graphique.length; i++) {
-        if(myState.selection_piece != null){
-            if (myState.plateau.graphique[i].contains(mx, my)) {
+	for (var i = 0; i < _myState.plateau.graphique.length; i++) {
+        if(_myState.selectionPiece != null){
+            if (_myState.plateau.graphique[i].contains(mx, my)) {
 
-                myState.plateau.graphique[i].selected = true;
-                myState.selection_graphique = myState.plateau.graphique[i];
-                myState.valid = false;
+                _myState.plateau.graphique[i].selected = true;
+                _myState.selectionGraphique = _myState.plateau.graphique[i];
+                _myState.valid = false;
 
             }else{
 
-                myState.plateau.graphique[i].selected = false;
-                myState.valid = false;
+                _myState.plateau.graphique[i].selected = false;
+                _myState.valid = false;
             }
         }
 	}
       
-    if(myState.selection_piece != null){
-        myState.selection_piece.x = mouse.x - myState.dragoffx;
-        myState.selection_piece.y = mouse.y - myState.dragoffy;
-        myState.valid = false;
+    if(_myState.selectionPiece != null){
+        _myState.selectionPiece.x = mouse.x - _myState.dragoffx;
+        _myState.selectionPiece.y = mouse.y - _myState.dragoffy;
+        _myState.valid = false;
     }
 
   });
@@ -220,19 +220,19 @@ $(canvas).on("mousedown",function(e) {
     var my = mouse.y;
     
     /* on vérifie pour chaque pieces/rocks du plateau si on à activé l'evenement sur l'une de ces pièces, si c'est le cas on vérifie aussi qu'il n'y a pas de calcul de gravité qui s'opère. Pour finir pour permettre à l'utilisateur de pouvoir utiliser la fonctionnalité drag&drop il faut que la quantité de pièce soit supérieur à 0 */
-    for (var i = 0; i < myState.active_players.pieces.shapes.length; i++) {
-		if(typeof(myState.active_players.pieces.shapes[i]) != "undefined" &&  !myState.plateau.verification_gravity){
-		  if (myState.active_players.pieces.shapes[i].contains(mx, my)) {
-			var mySel = myState.active_players.pieces.shapes[i];
+    for (var i = 0; i < _myState.activePlayers.pieces.shapes.length; i++) {
+		if(typeof(_myState.activePlayers.pieces.shapes[i]) != "undefined" &&  !_myState.plateau.verificationGravity){
+		  if (_myState.activePlayers.pieces.shapes[i].contains(mx, my)) {
+			var mySel = _myState.activePlayers.pieces.shapes[i];
 			
-			myState.dragoffx = mx - mySel.x;
-			myState.dragoffy = my - mySel.y;
+			_myState.dragoffx = mx - mySel.x;
+			_myState.dragoffy = my - mySel.y;
 
-            myState.selection_piece = myState.active_players.pieces.shapes[i];
-            myState.selection_piece.select = true; 
+            _myState.selectionPiece = _myState.activePlayers.pieces.shapes[i];
+            _myState.selectionPiece.select = true; 
            
             /* on redessine le canvas et ses éléments */
-            myState.valid = false;
+            _myState.valid = false;
 	       }
         }
     }
@@ -246,37 +246,37 @@ $(canvas).on("mouseup",function(e) {
         var success = false;
        
     
-        var mouse = getMouse(e,myState.canvas);
+        var mouse = getMouse(e,_myState.canvas);
         var mx = mouse.x;
         var my = mouse.y;
         /* vérification de si on à une pièce/rock sélectionner */
-        if(myState.selection_piece != null){
+        if(_myState.selectionPiece != null){
         
 		  
            
            /* pour chaque cellule on vérifie si on relache le rock sur une cellule du plateau libre*/
-		  for (var i = 0; i < myState.plateau.graphique.length; i++) {
-            if(typeof(myState.plateau.graphique[i]) != "undefined"){
-if(myState.tours.can_add() == true){
-                if (myState.plateau.graphique[i].contains(mx, my) && myState.plateau.matrice[myState.plateau.graphique[i].matrice_x][myState.plateau.graphique[i].matrice_y] == 0) {
+		  for (var i = 0; i < _myState.plateau.graphique.length; i++) {
+            if(typeof(_myState.plateau.graphique[i]) != "undefined"){
+if(_myState.tours.canAdd() == true){
+                if (_myState.plateau.graphique[i].contains(mx, my) && _myState.plateau.matrice[_myState.plateau.graphique[i].matriceX][_myState.plateau.graphique[i].matriceY] == 0) {
                      
                      success = true;
-                     myState.combo_maker.nom = myState.active_players.nom;
-                     myState.combo_maker.id = myState.active_players.identifiant;
+                     _myState.comboMaker.nom = _myState.activePlayers.nom;
+                     _myState.comboMaker.id = _myState.activePlayers.identifiant;
                     
-				      var shape = new Shape(myState.plateau.graphique[i].x, myState.plateau.graphique[i].y, myState.selection_piece.width, myState.selection_piece.height, myState.selection_piece.weight, myState.selection_piece.fill);
-                    shape.image = myState.active_players.image;
-                    shape.id_proprietaire = myState.active_players.identifiant;
-                      myState.plateau.add(myState.plateau.graphique[i].matrice_x, myState.plateau.graphique[i].matrice_y, shape);
+				      var shape = new Shape(_myState.plateau.graphique[i].x, _myState.plateau.graphique[i].y, _myState.selectionPiece.width, _myState.selectionPiece.height, _myState.selectionPiece.weight, _myState.selectionPiece.fill);
+                    shape.image = _myState.activePlayers.image;
+                    shape.idProprietaire = _myState.activePlayers.identifiant;
+                      _myState.plateau.add(_myState.plateau.graphique[i].matriceX, _myState.plateau.graphique[i].matriceY, shape);
                      
                     /* une fois l'ajout de la pièce dans le plateau on décrémente la quantité et on lance la fonction de gravité de force et on replace la pièce movable à son origine */
-                    gravity_launch(myState);
+                    GravityLaunch(_myState);
                     
-                    fall_effect_and_force(myState);
+                    FallEffectAndForce(_myState);
                      
-                    myState.selection_piece.init();
+                    _myState.selectionPiece.init();
                     
-                    myState.tours.add_action();
+                    _myState.tours.addAction();
                     
                 }
               }  
@@ -285,30 +285,30 @@ if(myState.tours.can_add() == true){
         
             /* si le mouseup est relâché dans le vide on remet a sa position initial la cellule */
         if(!success){
-            myState.selection_piece.init();
+            _myState.selectionPiece.init();
         }
         /* Ensuite on remet par defaut l'état de la pièce/rock  et on redessine en mettant valid à false */
-        myState.selection_piece.select = false;
-        myState.selection_piece = null;
-        myState.valid = false;
+        _myState.selectionPiece.select = false;
+        _myState.selectionPiece = null;
+        _myState.valid = false;
         
 	}else{
         
-        for (var i = 0; i < myState.plateau.graphique.length; i++) {
+        for (var i = 0; i < _myState.plateau.graphique.length; i++) {
             
-            if(typeof(myState.plateau.graphique[i]) != "undefined"){
+            if(typeof(_myState.plateau.graphique[i]) != "undefined"){
                 
-                    if(myState.tours.can_effet() && myState.usePower){
+                    if(_myState.tours.canEffet() && _myState.usePower){
                         
-                        var reference_shape = myState.plateau.matrice[myState.plateau.graphique[i].matrice_x][myState.plateau.graphique[i].matrice_y];
+                        var referenceShape = _myState.plateau.matrice[_myState.plateau.graphique[i].matriceX][_myState.plateau.graphique[i].matriceY];
                         
-                        if (myState.plateau.graphique[i].contains(mx, my) && reference_shape != 0) {
+                        if (_myState.plateau.graphique[i].contains(mx, my) && referenceShape != 0) {
                              
-                            if(myState.active_players.score >= myState.powerToUse.price){
+                            if(_myState.activePlayers.score >= _myState.powerToUse.price){
                                 
-                                myState.plateau.matrice[myState.plateau.graphique[i].matrice_x][myState.plateau.graphique[i].matrice_y] = myState.powerToUse.power(reference_shape);
-                                myState.score_signal = true;
-                                myState.active_players.changeScore("user-sore-points",-myState.powerToUse.price,myState);
+                                _myState.plateau.matrice[_myState.plateau.graphique[i].matriceX][_myState.plateau.graphique[i].matriceY] = _myState.powerToUse.power(referenceShape);
+                                _myState.scoreSignal = true;
+                                _myState.activePlayers.changeScore("user-sore-points",-_myState.powerToUse.price,_myState);
                                 
                             }
                         }
@@ -316,17 +316,17 @@ if(myState.tours.can_add() == true){
                 }
         }
         
-        myState.plateau.verification_gravity = true;            
-        fall_effect_and_force(myState);
+        _myState.plateau.verificationGravity = true;            
+        FallEffectAndForce(_myState);
         
-        myState.valid = false;
+        _myState.valid = false;
     }
     
     /* on déselectionne graphiquement la cellule du plateau visée */
-    if(myState.selection_graphique != null){
-        myState.selection_graphique.selected = false;
-         myState.selection_graphique = null;
-        myState.valid = false;
+    if(_myState.selectionGraphique != null){
+        _myState.selectionGraphique.selected = false;
+         _myState.selectionGraphique = null;
+        _myState.valid = false;
     }
     
 
@@ -334,26 +334,27 @@ if(myState.tours.can_add() == true){
   
 }
 
-CanvasState.prototype.time_change = function(time){
-    myState.time_life = time;
-    if(time<1 && myState.selection_piece != null){
-        myState.selection_piece.init();
-        myState.selection_piece.select = false;
-        myState.selection_piece = null;
+/* timeChange  la fonction de callback une fois le tour changé  pour réinitialiser */
+CanvasState.prototype.timeChange = function(time){
+    _myState.timeLife = time;
+    if(time<1 && _myState.selectionPiece != null){
+        _myState.selectionPiece.init();
+        _myState.selectionPiece.select = false;
+        _myState.selectionPiece = null;
         
     }
-    myState.valid = false;
+    _myState.valid = false;
 }
 
 /* fonction findPlayerById retourne le profil du player en fonction de l'id fournit */
-CanvasState.prototype.findPlayerById = function(players, id_player){
+CanvasState.prototype.findPlayerById = function(players, idPlayer){
     
     var player = null;
     var find = false;
     var i = 0;
     
     while(i<players.length && !find){
-        if(players[i].identifiant == id_player){
+        if(players[i].identifiant == idPlayer){
             player = players[i];
             find = true;
         }
@@ -366,10 +367,10 @@ CanvasState.prototype.findPlayerById = function(players, id_player){
 CanvasState.prototype.addDrawPoints = function(message, x, y, color){
     
     var i = 0,end = false;
-    while(i<this.point_to_draw.length && !end){
+    while(i<this.pointToDraw.length && !end){
         
-        if(!this.point_to_draw[i].active){
-            this.point_to_draw[i] = {"active":true,"message":message,"x":x,"y":y,"color":color,"high_eff":0};
+        if(!this.pointToDraw[i].active){
+            this.pointToDraw[i] = {"active":true,"message":message,"x":x,"y":y,"color":color,"highEff":0};
             end = true;
         }
         
@@ -377,7 +378,7 @@ CanvasState.prototype.addDrawPoints = function(message, x, y, color){
     }
     
     if(!end){
-        this.point_to_draw.push({"active":true,"message":message,"x":x,"y":y,"color":color,"high_eff":0});
+        this.pointToDraw.push({"active":true,"message":message,"x":x,"y":y,"color":color,"highEff":0});
     }
     
 }
@@ -385,60 +386,60 @@ CanvasState.prototype.addDrawPoints = function(message, x, y, color){
 
 CanvasState.prototype.drawPoints = function(){
 
-    var point_to_draw_verification = false;
+    var pointToDrawVerification = false;
     
-    for(var i = 0; i<this.point_to_draw.length;i++){
+    for(var i = 0; i<this.pointToDraw.length;i++){
         
-        if(parseInt(this.point_to_draw[i].high_eff) >= parseInt(this.canvas.height)/10){
+        if(parseInt(this.pointToDraw[i].highEff) >= parseInt(this.canvas.height)/10){
             
-            this.point_to_draw[i].active = false;
+            this.pointToDraw[i].active = false;
             
         }else{
-            point_to_draw_verification = true;
-            if(this.point_to_draw[i].active){
-                this.ctx.fillStyle = this.point_to_draw[i].color;
-                this.ctx.font="80pt Calibri";//+fontScore;
+            pointToDrawVerification = true;
+            if(this.pointToDraw[i].active){
+                this.ctx.fillStyle = this.pointToDraw[i].color;
+                this.ctx.font="80pt Calibri";
                 this.ctx.shadowColor = "white";
                                   
-                write_message(this.ctx, this.point_to_draw[i].message, this.point_to_draw[i].color, this.point_to_draw[i].x,(parseInt(this.point_to_draw[i].y) - parseInt(this.point_to_draw[i].high_eff)),1);
+                WriteMessage(this.ctx, this.pointToDraw[i].message, this.pointToDraw[i].color, this.pointToDraw[i].x,(parseInt(this.pointToDraw[i].y) - parseInt(this.pointToDraw[i].highEff)),1);
                 
-                this.point_to_draw[i].high_eff += 5;
+                this.pointToDraw[i].highEff += 5;
             }
         }
         
     }    
     
-    return point_to_draw_verification;   
+    return pointToDrawVerification;   
 }
 
 /* Fonction qui prend en charge l'affichage d'hit et de combo quand il y en a */
 CanvasState.prototype.drawCombo = function(ctx,x,y,dpth){
     
-    var hit_message = "";
+    var hitMessage = "";
     var sizeCombo = 20;
-    var hit_color = "black";
+    var hitColor = "black";
     
-    var combo = this.hit_combo;
+    var combo = this.hitCombo;
 
     if(combo == 1){
         
-        hit_message = this.combo_maker.nom+" : 1x Hit";
-        hit_color = "black";
+        hitMessage = this.comboMaker.nom+" : 1x Hit";
+        hitColor = "black";
         
     }else if(combo == 2){
         
-        hit_message = this.combo_maker.nom+ " : 2x Hits"; 
-        hit_color = "black";
+        hitMessage = this.comboMaker.nom+ " : 2x Hits"; 
+        hitColor = "black";
         
     }else if(combo ==3){
         
-        hit_message = this.combo_maker.nom+ " : 3x Hits!!!"; 
-        hit_color = "black";
+        hitMessage = this.comboMaker.nom+ " : 3x Hits!!!"; 
+        hitColor = "black";
         
     }else if(combo >= 4){
         
-        hit_message = this.combo_maker.nom+ " : 4x Combo"; 
-        hit_color = "red";
+        hitMessage = this.comboMaker.nom+ " : 4x Combo"; 
+        hitColor = "red";
     }
     
     
@@ -451,7 +452,7 @@ CanvasState.prototype.drawCombo = function(ctx,x,y,dpth){
     ctx.textAlign = "center";    
     
     ctx.font = "italic "+sizeCombo+"pt Calibri";
-    write_message(ctx, hit_message, hit_color, 100, 0, dpth);
+    WriteMessage(ctx, hitMessage, hitColor, 100, 0, dpth);
     
     ctx.restore();
     
@@ -460,7 +461,7 @@ CanvasState.prototype.drawCombo = function(ctx,x,y,dpth){
 }
 
 /* Fonction qui permet d'écrire sur canvas */
-function write_message (ctx, message, color, x, y, dpth){
+function WriteMessage (ctx, message, color, x, y, dpth){
     var cnt;
     
     ctx.fillStyle = color;
@@ -484,23 +485,23 @@ function clear(ctx,canvas){
 }
 
 
-/* La fonction draw_info permet d'afficher les informations sur la partie comme le nombre de temps restant, la quantitée de rock restant par catégorie */
+/* La fonction drawInfo permet d'afficher les informations sur la partie comme le nombre de temps restant, la quantitée de rock restant par catégorie */
 
-function draw_info(ctx, canvas, text_color, time_sec){
+function drawInfo(ctx, canvas, textColor, timeSecondGame){
     
     /* Ligne de séparation entre le plateau de jeu et les pieces */
   
     ctx.beginPath();
     ctx.rect(0, 380, canvas.width, 5);
     ctx.closePath();
-    ctx.fillStyle = text_color;
+    ctx.fillStyle = textColor;
     ctx.fill();
 
     /* Le texte qui permet d'afficher le temps du tour. */
     
     ctx.font = "italic 40pt Calibri";
-    ctx.fillStyle = text_color;
-    ctx.fillText(time_sec, 35, 460);
+    ctx.fillStyle = textColor;
+    ctx.fillText(timeSecondGame, 35, 460);
     
 }
 

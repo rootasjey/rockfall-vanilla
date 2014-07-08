@@ -1,6 +1,9 @@
-// JAVASCRIPT FILE
-// ROCKFALL
-// ---------------
+// -----------------------------
+// SCRIPT.JS (ROCKFALL)
+// -----------------------------
+// This file is the main script
+// -----------------------------
+// -----------------------------
 
 // Enter point
 // > launch main functions here
@@ -8,12 +11,12 @@
 // --------------------------
 window.onload = function () {
     // load settings function
-    load_side_panel();
+    LoadSidePanel();
 
     // load the board
-    load_board();
+    LoadBoard();
 
     // toggle fullscreen
-    fullscreen();
-    window.setTimeout(auto_fullscreen, 2000);
+    Fullscreen();
+    // window.setTimeout(AutoFullscreen, 2000);
 };

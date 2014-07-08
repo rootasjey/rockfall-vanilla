@@ -4,13 +4,13 @@ RockFall
 A Web Connect Four Game
 
 #version
-0.2.4
+0.4.0
 
 #todo
 * UI
     * Game UI
-        * Board
-        * Animations
+        * Board [OK]
+        * Animations [IN PROGRESS...]
     * Notifications UI
         * Implementation: short-polling?
         * Achievements ?
@@ -19,7 +19,7 @@ A Web Connect Four Game
         * Start/End turn
     * Others UI
         * Leadderboard (online classment)
-        * Settings
+        * Settings [OK]
             * Edit name?
             * Edit avatar
             * Edit password
@@ -29,19 +29,19 @@ A Web Connect Four Game
     * Challenge the IA (offline mode)
     * Time turn (optional)
 * Database
-    * Create an online/offline database
-    * Connect the app with the database
+    * Create an online/offline database [OK]
+    * Connect the app with the database [OK]
     * Tables
-        * Create a users table
+        * Create a users table [OK]
         * Create a parties table
         * (+ Primary/Foreigh key between the two tables)
-    * Create a user account
-    * Login to a user account
+    * Create a user account [OK]
+    * Login to a user account [OK]
     * Create a party
     * Challenge an opponent
     * Add/Delete/Edit rows in both users table & parties table
 * Server
-    * Get an online server (Heroku, Azure)
+    * Get an online server (Heroku, Azure) [OK]
     * Configuration (domain name, Node.js init)
     * Deploy the application to the Cloud
     * Test that everything works fine

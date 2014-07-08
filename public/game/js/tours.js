@@ -1,23 +1,23 @@
 /* La fonction tours permet de gérer le jeu entre différents participant */
 
-function Tours(state_Game,nombre_action_add, nombre_action_effet, tours_time){
+function Tours(stateGame,nombreActionAdd, nombreActionEffet, toursTime){
 
-    this.state_Game = state_Game;
+    this.stateGame = stateGame;
 
     
-    this.nombre_action_add = nombre_action_add;
-    this.nombre_action_effet = nombre_action_effet;
+    this.nombreActionAdd = nombreActionAdd;
+    this.nombreActionEffet = nombreActionEffet;
     
     
-    this.action_add_rock = 0;
-    this.action_effet_rock = 0;
+    this.actionAddRock = 0;
+    this.actionEffetRock = 0;
     
-    this.end_tour = false;
+    this.endTour = false;
     
-    this.tours_time = tours_time;
+    this.toursTime = toursTime;
     
-    this.cycle_time = tours_time;
-    this.interval_verification = null;
+    this.cycleTime = toursTime;
+    this.intervalVerification = null;
     
     this.time = null;
     
@@ -25,28 +25,28 @@ function Tours(state_Game,nombre_action_add, nombre_action_effet, tours_time){
 }
 
 /* ajoute au nombre d'action (pièce ajouter) réaliser */
-Tours.prototype.add_action = function(){
-       this.action_add_rock++;
+Tours.prototype.addAction = function(){
+       this.actionAddRock++;
 }
 
 /* décrémente le nombre d'action réaliser*/
-Tours.prototype.remove_action = function(){
-       this.action_add_rock--;
+Tours.prototype.removeAction = function(){
+       this.actionAddRock--;
 }
 
 /* ajoute au nombre d'effet réaliser */
-Tours.prototype.add_effet = function(){
-       this.action_effet_rock++;
+Tours.prototype.addEffet = function(){
+       this.actionEffetRock++;
 }
 
 /* décrémente le nombre d'effet réaliser*/
-Tours.prototype.remove_effet = function(){
-       this.action_effet_rock--;
+Tours.prototype.removeEffet = function(){
+       this.actionEffetRock--;
 }
 /* permet de savoir si l'utilisateur peut ajouter une pièces dans la limite qui lui ai attribué par tour */
-Tours.prototype.can_add = function(){
+Tours.prototype.canAdd = function(){
     var can = true;
-    if(this.action_add_rock >= this.nombre_action_add){
+    if(this.actionAddRock >= this.nombreActionAdd){
         can = false;
     }
     
@@ -54,9 +54,9 @@ Tours.prototype.can_add = function(){
 }
 
 /* permet de savoir si l'utilisateur peut activer un bonus dans la limite qui lui ai attribué par tour */
-Tours.prototype.can_effet = function(){
+Tours.prototype.canEffet = function(){
     var can = true;
-    if(this.action_effet_rock >= this.nombre_action_effet){
+    if(this.actionEffetRock >= this.nombreActionEffet){
         can = false;
     }
     
@@ -64,10 +64,10 @@ Tours.prototype.can_effet = function(){
 }
 
 /* fonction mettant fin au cycle de jeu */
-Tours.prototype.end_cycle  = function(){
-    if(this.interval_verification != null){
-       clearInterval(this.interval_verification);
-        this.interval_verification = null;
+Tours.prototype.endCycle  = function(){
+    if(this.intervalVerification != null){
+       clearInterval(this.intervalVerification);
+        this.intervalVerification = null;
         clearInterval(this.time);
         this.time = null;
     }
@@ -75,73 +75,73 @@ Tours.prototype.end_cycle  = function(){
 }
 
 /* fonction qui decrémente le temps d'un tour */
-Tours.prototype.time_cycl = function(callback){
+Tours.prototype.timeCycle = function(callback){
     
         this.time = setInterval(function(){
-            if(myTours.cycle_time > 0){
-                myTours.cycle_time--;
+            if(myTours.cycleTime > 0){
+                myTours.cycleTime--;
             }
             
-            if( myTours.state_Game.time_combo>=2){
-                 myTours.state_Game.time_combo = 0;
-                 myTours.state_Game.hit_combo = 0;
-                 myTours.state_Game.valid = false;
+            if( myTours.stateGame.timeCombo>=2){
+                 myTours.stateGame.timeCombo = 0;
+                 myTours.stateGame.hitCombo = 0;
+                 myTours.stateGame.valid = false;
                 
             }
-            myTours.state_Game.time_combo++;
+            myTours.stateGame.timeCombo++;
             
-            callback(myTours.cycle_time);
+            callback(myTours.cycleTime);
         },1000);
 }
 
 /* fonction qui lance le cycle de jeux */
-Tours.prototype.launch_cycle = function(ctx, text_color, id_name, id_score){
+Tours.prototype.launchCycle = function(ctx, textColor, idName, idScore){
     
     
-    this.cycle_time = this.tours_time;
+    this.cycleTime = this.toursTime;
     
     
-    this.interval_verification = setInterval(function(){
+    this.intervalVerification = setInterval(function(){
         
-        if(myTours.cycle_time <= 0){
-            myTours.end_tour = true;
+        if(myTours.cycleTime <= 0){
+            myTours.endTour = true;
         }
-        if( (!myTours.can_add() && !myTours.can_effet() || myTours.end_tour) && !myTours.state_Game.end_of_force){
+        if( (!myTours.canAdd() && !myTours.canEffet() || myTours.endTour) && !myTours.stateGame.endOfForce){
         
             var i = 0,find = false;
-            while(i<myTours.state_Game.players.length && !find){
+            while(i<myTours.stateGame.players.length && !find){
                
-               if(myTours.state_Game.players[i].identifiant == myTours.state_Game.active_players.identifiant){
+               if(myTours.stateGame.players[i].identifiant == myTours.stateGame.activePlayers.identifiant){
                    
-                   for(var b = 0;b<myTours.state_Game.active_players.power.length;b++){
-                        myTours.state_Game.active_players.power[b].unlisten(myTours.state_Game);
+                   for(var b = 0;b<myTours.stateGame.activePlayers.power.length;b++){
+                        myTours.stateGame.activePlayers.power[b].unlisten(myTours.stateGame);
                     }
                    
-                    if(i+1 == myTours.state_Game.players.length){
-                       myTours.state_Game.active_players = myTours.state_Game.players[0];
+                    if(i+1 == myTours.stateGame.players.length){
+                       myTours.stateGame.activePlayers = myTours.stateGame.players[0];
                     }else{
-                       myTours.state_Game.active_players = myTours.state_Game.players[i+1];
+                       myTours.stateGame.activePlayers = myTours.stateGame.players[i+1];
                     }
                    
-                    for(var b = 0;b<myTours.state_Game.active_players.power.length;b++){
-                        myTours.state_Game.active_players.power[b].listen(myTours.state_Game);
+                    for(var b = 0;b<myTours.stateGame.activePlayers.power.length;b++){
+                        myTours.stateGame.activePlayers.power[b].listen(myTours.stateGame);
                     }
-                    $("#"+id_score).html(myTours.state_Game.active_players.score);
-                    $("#"+id_name).html(myTours.state_Game.active_players.nom);
-                    myTours.cycle_time = myTours.tours_time;
-                    myTours.state_Game.usePower = false;
-                    myTours.state_Game.powerToUse = null;
-                    myTours.state_Game.time_life = myTours.tours_time;
-                    myTours.state_Game.score_signal = false;
-                    if(myTours.state_Game.selection_piece != null){
-                        myTours.state_Game.selection_piece.init();
-                        myTours.state_Game.selection_piece = null;
+                    $("#"+idScore).html(myTours.stateGame.activePlayers.score);
+                    $("#"+idName).html(myTours.stateGame.activePlayers.nom);
+                    myTours.cycleTime = myTours.toursTime;
+                    myTours.stateGame.usePower = false;
+                    myTours.stateGame.powerToUse = null;
+                    myTours.stateGame.timeLife = myTours.toursTime;
+                    myTours.stateGame.scoreSignal = false;
+                    if(myTours.stateGame.selectionPiece != null){
+                        myTours.stateGame.selectionPiece.init();
+                        myTours.stateGame.selectionPiece = null;
                     }
-                    myTours.end_tour = false;
-                    myTours.state_Game.hit_combo = 0;
-                    myTours.action_add_rock = 0;
-                    myTours.action_effet_rock = 0;
-                    myTours.state_Game.active_players.pieces.change_color(myTours.state_Game.active_players.color_shape);
+                    myTours.endTour = false;
+                    myTours.stateGame.hitCombo = 0;
+                    myTours.actionAddRock = 0;
+                    myTours.actionEffetRock = 0;
+                    myTours.stateGame.activePlayers.pieces.changeColor(myTours.stateGame.activePlayers.colorShape);
                    
                    
                    find = true;
