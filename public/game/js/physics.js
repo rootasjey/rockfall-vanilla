@@ -57,21 +57,27 @@ function fall_effect_and_force(State_game){
 
 
                      if(State_game.active_force){
-                        if(State_game.plateau.force(State_game).end == false){
+                         State_game.end_of_force = State_game.plateau.force(State_game).end;
+                        if(State_game.end_of_force == false){
                             var find_or_not = myState.plateau.find_four();
                             while(find_or_not.find){
 
                                 var point_gagne = {point:0,proprietaire:"none"};
                                 
+                                State_game.hit_combo += 4;
                                 point_gagne.proprietaire = find_or_not.id;
                                 point_gagne.point = find_or_not.point * 2;
-                                State_game.plateau.addScore("user-sore-points", State_game, point_gagne);
-                                console.log(State_game.players.length+"    "+find_or_not.id);
-                                (State_game.findPlayerById(State_game.players,find_or_not.id)).point = State_game.findPlayerById(State_game.players,find_or_not.id).point +1 ;
+                                
+                                if(point_gagne.proprietaire == State_game.combo_maker.id){
+                                 point_gagne.point = parseInt(point_gagne.point *(State_game.hit_combo/(State_game.hit_combo - 0.1 * State_game.hit_combo)));   
+                                }
+
+                                State_game.plateau.addScore("user-sore-points", State_game, point_gagne);                   
+                                
+                                (State_game.findPlayerById(State_game.players,find_or_not.id)).point = State_game.findPlayerById(State_game.players,find_or_not.id).point + 1 ;
                                 
                                 for(var i = 0;i<find_or_not.case.length;i++){
-                                    write_score(State_game,"+"+(find_or_not.case[i].point*2),
-                                        find_or_not.case[i].graph_x,find_or_not.case[i].graph_y);
+                                    State_game.addDrawPoints("+"+(find_or_not.case[i].point*2), find_or_not.case[i].graph_x, find_or_not.case[i].graph_y,find_or_not.case[i].color);
                                 }
                                 
                                 find_or_not = myState.plateau.find_four();
@@ -96,11 +102,13 @@ function fall_effect_and_force(State_game){
                     }
                     
                     if(players_win[0].point>=State_game.point_to_win){
-                        console.log("Les gagnants sont :");
+                        var endGame = "Le(s) gagnant(s) sont : \n";
                         for(var p = 0;p<players_win.length;p++){
-                            console.log(players_win[p].nom);
+                            endGame = players_win[p].nom+ " \n";
                         }
                         State_game.tours.end_cycle();
+                        
+                        alert(endGame);
                     }
                      
                 },300);

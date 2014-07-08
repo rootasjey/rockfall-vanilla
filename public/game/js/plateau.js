@@ -169,7 +169,7 @@ Table.prototype.gravity = function(){
 
 Table.prototype.force = function(state_game){
     
-    var point_gagne = {point:0,proprietaire:"none",end:false};
+    var point_gagne = {point:0,proprietaire:"none",end:false,color:"grey"};
     
     for(var i = 0;i < this.size_y;i++){	
         
@@ -194,12 +194,19 @@ Table.prototype.force = function(state_game){
                 }
 
                 if((item_wheight+item_wheight) < somme ){
+                    state_game.hit_combo += 1;
                     point_gagne.end = true;
-                    point_gagne.point = this.matrice[k][i].weight * 2;
+                    point_gagne.point = this.matrice[k][i].weight * 2 ;
+                    point_gagne.color = this.matrice[k][i].fill;
                     point_gagne.proprietaire = this.matrice[k][i].id_proprietaire;
                     
+                    if(point_gagne.proprietaire == state_game.combo_maker.id){
+                       point_gagne.point = parseInt(point_gagne.point *  (state_game.hit_combo/(state_game.hit_combo - 0.1 * state_game.hit_combo)));
+                    }
+                    
                     this.addScore("user-sore-points", state_game, point_gagne);
-                    write_score(state_game,"+"+point_gagne.point,this.matrice[k][i].x,this.matrice[k][i].y);
+                    state_game.addDrawPoints("+"+point_gagne.point, this.matrice[k][i].x, this.matrice[k][i].y, point_gagne.color);
+                   
                     this.matrice[k][i] = 0;
                 }
             }   
@@ -211,54 +218,15 @@ Table.prototype.force = function(state_game){
     
 }
 
-/*La fonction write_score permet d'affichier les points gagnés lors de la destruction d'une pièce/rock et l'anime vers le haut */
-
-function write_score(state_game, message, x, y){
-    
-    state_game.ctx.fillStyle = "rgba(25, 23, 23, 0.8)";
-    state_game.ctx.font="20px Georgia";
-    state_game.ctx.fillText(message,x,y);
-    var nmbre = 0;
-    setInterval(function(){
-    
-        if(nmbre<250){
-            nmbre -= 5;
-            state_game.ctx.fillText(message,x,y + nmbre);
-            state_game.valid = false;
-        }else{
-            clearInterval(this);   
-        }
-    
-    },20);
-}
-
 /* addScore permet d'ajouter des points au score du joueur */
 
 Table.prototype.addScore = function(id_container, state_game, points){
-    
+      
     var plys = state_game.findPlayerById(state_game.players,points.proprietaire);
     
     if(plys != null){   
-        var score = plys.score;
-        plys.score = score + points.point;
-    }
-    
-    /*if(plys.identifiant == state_game.active_players.identifiant){
-        score_actual.
-    }*/
-    
-    if(this.evenement_score == null){
-         
-       this.evenement_score = setInterval(function(){
-                score = parseInt($("#"+id_container).html());
-          
-                if(score<state_game.active_players.score){
-                    score++;
-                    $("#"+id_container).html(score);
-                }else{
-                    clearInterval(this);
-                }
-        },50);
+        state_game.score_signal = true;
+        plys.changeScore(id_container,points.point,state_game);
     }
 }
 
@@ -269,28 +237,9 @@ Table.prototype.removeScore = function(id_container, state_game, points){
     var plys = state_game.findPlayerById(state_game.players,points.proprietaire);
     
     if(plys != null){   
-        var score = plys.score;
-        plys.score = score - points.point;
-    }
-    
-    /*if(plys.identifiant == state_game.active_players.identifiant){
-        score_actual.
-    }*/
-    
-    if(this.evenement_score == null){
-         
-       this.evenement_score = setInterval(function(){
-                score = parseInt($("#"+id_container).html());
-          
-                if(score>state_game.active_players.score){
-                    score--;
-                    $("#"+id_container).html(score);
-                }else{
-                    clearInterval(this);
-                }
-        },50);
-    }
-    
+        state_game.score_signal = true;
+        plys.changeScore(id_container, -points, state_game);
+    }  
 }
 
 /*La fonction initialiseScore permet d'initialiser le score du joueur avec un nombre de point spécifique */
@@ -326,6 +275,7 @@ Cell.prototype.contains = function(mx, my) {
 
 Cell.prototype.draw = function(ctx){
 		
+        ctx.shadowColor = "black";
 		var radius = 20;
 		var r = this.x + this.width;
 		var b = this.y + this.height;
@@ -351,6 +301,7 @@ Cell.prototype.draw = function(ctx){
 		ctx.closePath();
 		ctx.fillStyle = this.color;
 		ctx.fill();
+        ctx.shadowColor = "black";
 }
 
 
@@ -371,24 +322,21 @@ Table.prototype.verification_diagonale = function(x,y){
         var compt = 1;
         var find = false;
         var i = 1, j = 1 ;
-        var pos_graph = this.search(x,y);
-        diagonal.push({"x":x,"y":y,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[x][y].weight});
+        diagonal.push({"x":x,"y":y,"graph_x":this.matrice[x][y].x,"graph_y":this.matrice[x][y].y,"point":this.matrice[x][y].weight,"color":this.matrice[x][y].fill});
         
         while(x-i >= 0 && y+j < this.size_y && !find){
 
             if(this.matrice[x-i][y+j] != 0 && id == this.matrice[x-i][y+j].id_proprietaire){
                 compt++;
-                var pos_graph = this.search(x-i,y+j);
-                diagonal.push({"x":x-i,"y":y+j,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[x-i][y+j].weight});
-                //console.log("compte : "+compt);
+                diagonal.push({"x":x-i,"y":y+j,"graph_x":this.matrice[x-i][y+j].x,"graph_y":this.matrice[x-i][y+j].y,"point":this.matrice[x-i][y+j].weight, "color":this.matrice[x-i][y+j].fill});
+
                 if(compt>=4){
                     find = true;
                 }
             }else if(this.matrice[x-i][y+j] != 0){
                 id = this.matrice[x-i][y+j].id_proprietaire;
                 diagonal = new Array();
-                var pos_graph = this.search(x-i,y+j);
-                diagonal.push({"x":x-i,"y":y+j,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[x-i][y+j].weight});
+                diagonal.push({"x":x-i,"y":y+j,"graph_x":this.matrice[x-i][y+j].x,"graph_y":this.matrice[x-i][y+j].y,"point":this.matrice[x-i][y+j].weight, "color":this.matrice[x-i][y+j].fill});
                 compt = 1;
             }else{
                 id =-1;
@@ -404,16 +352,14 @@ Table.prototype.verification_diagonale = function(x,y){
         if(!find){
             id = this.matrice[x][y].id_proprietaire;
             diagonal = new Array();
-            var pos_graph = this.search(x,y);
-            diagonal.push({"x":x,"y":y,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[x][y].weight});
+            diagonal.push({"x":x,"y":y,"graph_x":this.matrice[x][y].x,"graph_y":this.matrice[x][y].y,"point":this.matrice[x][y].weight, "color":this.matrice[x][y].fill});
             i = 1;
             j = 1;
             compt = 1;
             while(x+i < this.size_x && y+j < this.size_y && !find){
 
                 if(this.matrice[x+i][y+j] != 0 && id == this.matrice[x+i][y+j].id_proprietaire){
-                    var pos_graph = this.search(x+i,y+j);
-                    diagonal.push({"x":x+i,"y":y+j,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[x+i][y+j].weight});
+                    diagonal.push({"x":x+i,"y":y+j,"graph_x":this.matrice[x+i][y+j].x,"graph_y":this.matrice[x+i][y+j].y,"point":this.matrice[x+i][y+j].weight, "color":this.matrice[x+i][y+j].fill});
                     compt++;
                 
                     if(compt>=4){
@@ -423,7 +369,7 @@ Table.prototype.verification_diagonale = function(x,y){
                     id = this.matrice[x+i][y+j].id_proprietaire;
                     diagonal = new Array();
                     var pos_graph = this.search(x+i,y+j);
-                    diagonal.push({"x":x+i,"y":y+j,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[x+i][y+j].weight});
+                    diagonal.push({"x":x+i,"y":y+j,"graph_x":this.matrice[x+i][y+j].x,"graph_y":this.matrice[x+i][y+j].y,"point":this.matrice[x+i][y+j].weight,"color":this.matrice[x+i][y+j].fill});
                     compt = 1;
                 }else{
                     id = -1;
@@ -443,7 +389,7 @@ Table.prototype.verification_diagonale = function(x,y){
 
 
 
-/* Verification si un joueur à gagner */
+/* Verification si un joueur à gagner un point en alignant 4 pieces */
 Table.prototype.find_four = function(){
     
     var i = 0,j=0;
@@ -463,12 +409,10 @@ Table.prototype.find_four = function(){
             if(this.matrice[i][j] != 0){
                 if(this.matrice[i][j].id_proprietaire == id){
                     compt++;
-                    var pos_graph = this.search(i,j);
-                    aligner.push({"x":i,"y":j,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[i][j].weight});
+                    aligner.push({"x":i,"y":j,"graph_x":this.matrice[i][j].x,"graph_y":this.matrice[i][j].y,"point":this.matrice[i][j].weight, "color":this.matrice[i][j].fill});
                 }else{
                     aligner = new Array();
-                    var pos_graph = this.search(i,j);
-                    aligner.push({"x":i,"y":j,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[i][j].weight});
+                    aligner.push({"x":i,"y":j,"graph_x":this.matrice[i][j].x,"graph_y":this.matrice[i][j].y,"point":this.matrice[i][j].weight,"color":this.matrice[i][j].fill});
                     compt = 1;
                     id = this.matrice[i][j].id_proprietaire;
                 }
@@ -507,13 +451,11 @@ Table.prototype.find_four = function(){
                 if(this.matrice[j][i] != 0){
                     
                     if(this.matrice[j][i].id_proprietaire == id){
-                         var pos_graph = this.search(j,i);
-                        aligner.push({"x":j,"y":i,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[j][i].weight});
+                        aligner.push({"x":j,"y":i,"graph_x":this.matrice[j][i].x,"graph_y":this.matrice[j][i].y,"point":this.matrice[j][i].weight,"color":this.matrice[j][i].fill});
                         compt++;
                     }else{
                         aligner = new Array();
-                        var pos_graph = this.search(j,i);
-                        aligner.push({"x":j,"y":i,"graph_x":pos_graph.x,"graph_y":pos_graph.y,"point":this.matrice[j][i].weight});
+                        aligner.push({"x":j,"y":i,"graph_x":this.matrice[j][i].x,"graph_y":this.matrice[j][i].y,"point":this.matrice[j][i].weight, "color": this.matrice[j][i].fill});
                         compt = 1; 
                         id = this.matrice[j][i].id_proprietaire;
                     }
@@ -562,10 +504,6 @@ Table.prototype.find_four = function(){
                     }
                     j++;
                 }
-            /*if(compt >= 4){
-                find = true;
-            }*/
-
             i++;
         }
     }

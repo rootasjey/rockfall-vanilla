@@ -142,9 +142,12 @@ Shape.prototype.draw = function(ctx) {
     
     //ctx.fillStyle = this.fill;
     //ctx.fill();
-    ctx.font = 'italic 30pt Calibri';
-    ctx.fillStyle = "red";//this.text_color;
-    ctx.fillText(this.weight, this.x+(this.width/4), this.y+(this.height/1.5));
+    ctx.font = "italic 30pt "+fontScore;
+    write_message(ctx, this.weight, this.fill, (this.x + (this.width/4)), (this.y + (this.height/1.5)), 5);
+    
+    //
+    //ctx.fillStyle = "red";//this.text_color;
+    //ctx.fillText(this.weight, this.x+(this.width/4), this.y+(this.height/1.5));
 
 }
 
