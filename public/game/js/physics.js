@@ -4,14 +4,16 @@ function GravityLaunch(stateGame){
     
     if(stateGame.launchGravity == null){
          
-        stateGame.launchGravity = setInterval(function(){
+        stateGame.launchGravity = $.timer(function(){
                 if(!stateGame.plateau.gravity()){
 
                     stateGame.valid=false;
                 }else{
                     stateGame.plateau.verificationGravity = true;
                 }
-         },250);
+         });//,250);
+        
+        stateGame.launchGravity.set({ time : 250, autostart : true });
     }
 }
 
@@ -21,7 +23,7 @@ function FallEffectAndForce(stateGame){
      
     if(stateGame.evenementEffetFall == null){
         
-         stateGame.evenementEffetFall = setInterval(function(){
+         stateGame.evenementEffetFall = $.timer(function(){
              if(stateGame.plateau.verificationGravity == true){
 
                  for(var e = 0;e<stateGame.plateau.graphique.length;e++){
@@ -116,6 +118,8 @@ function FallEffectAndForce(stateGame){
                  stateGame.plateau.verificationGravity = false;
             }
 
-         },200);
+         });//,200);
+        
+        stateGame.evenementEffetFall.set({ time : 200, autostart : true });
     }
 }

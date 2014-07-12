@@ -45,7 +45,7 @@ function Players(id,nom,colorShape,score,weightShapes){
 Players.prototype.getPiece = function(){
     
     for(var i = 0;i<this.weightShapes.length;i++){
-        var shape = new Shape(280 + (170*i), 410, 70, 70,this.weightShapes[i],this.colorShape);
+        var shape = new Shape(180 + (150*i), 410, 70, 70,this.weightShapes[i],this.colorShape);
         shape.image = this.image;
         this.pieces.add(shape);
     }
@@ -59,7 +59,7 @@ Players.prototype.changeScore = function(idContainer, points, stateGame){
     savePlayer.tamponScore = this.score;
     var startScore = parseInt($("#"+idContainer).html());
     if(this.setScore == null && this.identifiant == stateGame.activePlayers.identifiant){
-        this.setScore = setInterval(function(){
+        this.setScore = $.timer(function(){ //setInterval(function(){
             if(stateGame.scoreSignal){
                 if(startScore>savePlayer.tamponScore){
                     startScore--;
@@ -68,11 +68,13 @@ Players.prototype.changeScore = function(idContainer, points, stateGame){
                     startScore++;
                     $("#"+idContainer).html(startScore);
                 }else{
-                    clearInterval(this);
+                    //clearInterval(this);
+                    savePlayer.setScore.stop();
                     savePlayer.setScore = null;
                 }
             }
-        },50);
-    }
-    
+        });// },50);
+        
+        this.setScore.set({ time : 50, autostart : true });
+    }  
 }

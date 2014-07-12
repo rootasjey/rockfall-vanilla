@@ -1,5 +1,7 @@
 function LoadBoard() {
 
+    
+    InitStyle();
     /* On créé les joueurs du mode solo ici du 1 vs 1, mais qui peut s'étendre,
     chaque joueur jouera de manière alterné */
     var players = new Array();
@@ -8,9 +10,9 @@ function LoadBoard() {
     
     /* On définit les pouvoirs qui seront disponible lors de la partie ici nous avons définit 3 qui seront les mêmes pour chaque joueur */
     var powerPlayerUn = new Array();
-    powerPlayerUn.push(new powerWeightDouble("cadre-un",10));
-    powerPlayerUn.push(new powerNeutralPiece("cadre-deux",10));
-    powerPlayerUn.push(new powerWeightLoseHalf("cadre-trois",20));
+    powerPlayerUn.push(new powerWeightDouble("cadre-un",10,'./bonus_fois_deux.jpg'));
+    powerPlayerUn.push(new powerNeutralPiece("cadre-deux",10,'./bonus_neutre.jpg'));
+    powerPlayerUn.push(new powerWeightLoseHalf("cadre-trois",20,'./bonus_diviser_deux.jpg'));
     
     /* on assigne le tableau de pouvoir aux personnages */
     for(var i = 0; i < players.length;i++){
@@ -70,6 +72,7 @@ function CanvasState (players,pointToWin, imageLoad){
     this.ctx = canvas.getContext("2d");
   
     /* Variable qui sert lors de l'utilisation de bonus par l'utilisateur */
+    this.idPower = 0;
     this.usePower = false;
     this.powerToUse = null;
     
@@ -81,16 +84,18 @@ function CanvasState (players,pointToWin, imageLoad){
     
     /* assigne à chaque joueur son image de pièce */
     for(var r = 0;r<this.players.length;r++){
-        var name = this.players[r].nom
+        var name = this.players[r].nom;
         this.players[r].image = this.imageLoad[name]; 
         this.players[r].getPiece(); 
         
     }
-    
+        
     /* initialise le jeux en commencant par choisir le joueur qui commencera, basiquement le premier du tableau */
     this.activePlayers = this.players[0];
     
+    this.pause = true;
     
+    this.start = false;
     /* variable qui sert d'horloge du jeux */
     this.timeLife = 0;
     
@@ -151,7 +156,7 @@ function CanvasState (players,pointToWin, imageLoad){
         this.activePlayers.power[c].listen(_myState);
     }
     /* On initialise le déroulement d'un tour*/
-    this.tours = new Tours(_myState, 1, 1, 6);
+    this.tours = new Tours(_myState, 1, 1, 15);
     
     /* lance le début du cycle de jeux*/
     this.tours.launchCycle(this.ctx, this.textColor, "user-avatar-name-id", "user-sore-points" );
@@ -165,7 +170,7 @@ function CanvasState (players,pointToWin, imageLoad){
     /* fonction qui permet de redessiner le canvas si besoin avec une fréquence de 30 millisecondes*/
   var interval = 30;
    
-  setInterval(function() { 
+  this.frame = $.timer(function() { 
     if(!_myState.valid){ 
         clear(_myState.ctx,_myState.canvas); 
         _myState.plateau.draw(_myState.ctx); 
@@ -176,9 +181,13 @@ function CanvasState (players,pointToWin, imageLoad){
         _myState.valid = true; 
         }
     } 
-  }, interval);
+  });//, interval);
+    
+  this.frame.set({ time : interval, autostart : true });  
     
     /* Dans la fonction mousemove on récupère la position de la souris et on vérifie qu'elle ne passe pas sur une case du plateau sinon on affiche cette case en propriété selected */
+ screenPrepareStart(_myState);
+    
   $(canvas).on("mousemove",function(e){
 
       /* On récupère le positionnement de la souris */
@@ -251,8 +260,6 @@ $(canvas).on("mouseup",function(e) {
         var my = mouse.y;
         /* vérification de si on à une pièce/rock sélectionner */
         if(_myState.selectionPiece != null){
-        
-		  
            
            /* pour chaque cellule on vérifie si on relache le rock sur une cellule du plateau libre*/
 		  for (var i = 0; i < _myState.plateau.graphique.length; i++) {
@@ -309,9 +316,10 @@ if(_myState.tours.canAdd() == true){
                                 _myState.plateau.matrice[_myState.plateau.graphique[i].matriceX][_myState.plateau.graphique[i].matriceY] = _myState.powerToUse.power(referenceShape);
                                 _myState.scoreSignal = true;
                                 _myState.activePlayers.changeScore("user-sore-points",-_myState.powerToUse.price,_myState);
-                                
+                                 _myState.tours.addEffet();
                             }
                         }
+                       
                     }
                 }
         }
@@ -331,7 +339,18 @@ if(_myState.tours.canAdd() == true){
     
 
  });
-  
+    
+    /* Ecouteur sur le bouton de pause */
+    $("#button-pause").on("click",function(e){
+        ScreenPause(_myState);
+    });
+
+    
+    /* Ecouteur sur le bouton afin de passer son tour*/
+    $("#button-passe").on("click",function(e){
+        PasseTour(_myState);
+    });
+    
 }
 
 /* timeChange  la fonction de callback une fois le tour changé  pour réinitialiser */
@@ -402,8 +421,9 @@ CanvasState.prototype.drawPoints = function(){
                 this.ctx.shadowColor = "white";
                                   
                 WriteMessage(this.ctx, this.pointToDraw[i].message, this.pointToDraw[i].color, this.pointToDraw[i].x,(parseInt(this.pointToDraw[i].y) - parseInt(this.pointToDraw[i].highEff)),1);
-                
-                this.pointToDraw[i].highEff += 5;
+                if(!this.pause){
+                    this.pointToDraw[i].highEff += 5;
+                }
             }
         }
         

@@ -21,7 +21,7 @@ block content
         div.power-up-panel
           span.title Power-Up
           div
-            p.subtitle No Power-Up
+            p#active-power.subtitle No Power-Up
             img#cadre-un.power-up(src='../icons/icon_cross.png' tip='Get 30pts to unlock a level 1 power')
             img#cadre-deux.power-up(src='../icons/icon_cross.png')
             img#cadre-trois.power-up(src='../icons/icon_cross.png')
@@ -39,6 +39,11 @@ block content
     //- the game
     div#game-ui
       //- board is here
-      <canvas id="canvas" width="800px" height="600px">This text is displayed if your browser does not support HTML5 Canvas.</canvas>
+      div#opaquePause
+      button#button-reprendre.button-effet Start
+      label#active-player
+      <canvas id="canvas" width="800px" height="515px">This text is displayed if your browser does not support HTML5 Canvas.</canvas>
+      button#button-pause.button-effet pause
+      button#button-passe.button-effet passer
       //- other ui
       div#game-panel

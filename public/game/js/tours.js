@@ -21,7 +21,7 @@ function Tours(stateGame,nombreActionAdd, nombreActionEffet, toursTime){
     
     this.time = null;
     
-    myTours = this;
+    _myTours = this;
 }
 
 /* ajoute au nombre d'action (pièce ajouter) réaliser */
@@ -66,10 +66,10 @@ Tours.prototype.canEffet = function(){
 /* fonction mettant fin au cycle de jeu */
 Tours.prototype.endCycle  = function(){
     if(this.intervalVerification != null){
-       clearInterval(this.intervalVerification);
+       //clearInterval(this.intervalVerification);
+       this.intervalVerification.stop();
         this.intervalVerification = null;
-        clearInterval(this.time);
-        this.time = null;
+        this.time.stop();
     }
     
 }
@@ -77,21 +77,24 @@ Tours.prototype.endCycle  = function(){
 /* fonction qui decrémente le temps d'un tour */
 Tours.prototype.timeCycle = function(callback){
     
-        this.time = setInterval(function(){
-            if(myTours.cycleTime > 0){
-                myTours.cycleTime--;
-            }
-            
-            if( myTours.stateGame.timeCombo>=2){
-                 myTours.stateGame.timeCombo = 0;
-                 myTours.stateGame.hitCombo = 0;
-                 myTours.stateGame.valid = false;
-                
-            }
-            myTours.stateGame.timeCombo++;
-            
-            callback(myTours.cycleTime);
-        },1000);
+        this.time = $.timer(function() {
+                if(_myTours.cycleTime > 0 && _myTours.stateGame.start){
+                    _myTours.cycleTime--;
+                }
+
+                /* affichage du combo qui dure un certain nombre de seconde */
+                if( _myTours.stateGame.timeCombo>=2){
+                     _myTours.stateGame.timeCombo = 0;
+                     _myTours.stateGame.hitCombo = 0;
+                     _myTours.stateGame.valid = false;
+
+                }
+                _myTours.stateGame.timeCombo++;
+
+                callback(_myTours.cycleTime);
+        });
+
+        this.time.set({ time : 1000, autostart : true });
 }
 
 /* fonction qui lance le cycle de jeux */
@@ -101,54 +104,57 @@ Tours.prototype.launchCycle = function(ctx, textColor, idName, idScore){
     this.cycleTime = this.toursTime;
     
     
-    this.intervalVerification = setInterval(function(){
+    this.intervalVerification = $.timer(function(){//setInterval(function(){
         
-        if(myTours.cycleTime <= 0){
-            myTours.endTour = true;
+        if(_myTours.cycleTime <= 0){
+            _myTours.endTour = true;
         }
-        if( (!myTours.canAdd() && !myTours.canEffet() || myTours.endTour) && !myTours.stateGame.endOfForce){
+        if( (!_myTours.canAdd() && !_myTours.canEffet() || _myTours.endTour) && !_myTours.stateGame.endOfForce){
         
             var i = 0,find = false;
-            while(i<myTours.stateGame.players.length && !find){
+            while(i<_myTours.stateGame.players.length && !find){
                
-               if(myTours.stateGame.players[i].identifiant == myTours.stateGame.activePlayers.identifiant){
+               if(_myTours.stateGame.players[i].identifiant == _myTours.stateGame.activePlayers.identifiant){
                    
-                   for(var b = 0;b<myTours.stateGame.activePlayers.power.length;b++){
-                        myTours.stateGame.activePlayers.power[b].unlisten(myTours.stateGame);
+                   for(var b = 0;b<_myTours.stateGame.activePlayers.power.length;b++){
+                        _myTours.stateGame.activePlayers.power[b].unlisten(_myTours.stateGame);
                     }
+                    $("#active-power").html("No power-Up");
                    
-                    if(i+1 == myTours.stateGame.players.length){
-                       myTours.stateGame.activePlayers = myTours.stateGame.players[0];
+                    if(i+1 == _myTours.stateGame.players.length){
+                       _myTours.stateGame.activePlayers = _myTours.stateGame.players[0];
                     }else{
-                       myTours.stateGame.activePlayers = myTours.stateGame.players[i+1];
+                       _myTours.stateGame.activePlayers = _myTours.stateGame.players[i+1];
                     }
                    
-                    for(var b = 0;b<myTours.stateGame.activePlayers.power.length;b++){
-                        myTours.stateGame.activePlayers.power[b].listen(myTours.stateGame);
+                    for(var b = 0;b<_myTours.stateGame.activePlayers.power.length;b++){
+                        _myTours.stateGame.activePlayers.power[b].listen(_myTours.stateGame);
                     }
-                    $("#"+idScore).html(myTours.stateGame.activePlayers.score);
-                    $("#"+idName).html(myTours.stateGame.activePlayers.nom);
-                    myTours.cycleTime = myTours.toursTime;
-                    myTours.stateGame.usePower = false;
-                    myTours.stateGame.powerToUse = null;
-                    myTours.stateGame.timeLife = myTours.toursTime;
-                    myTours.stateGame.scoreSignal = false;
-                    if(myTours.stateGame.selectionPiece != null){
-                        myTours.stateGame.selectionPiece.init();
-                        myTours.stateGame.selectionPiece = null;
+                    $("#"+idScore).html(_myTours.stateGame.activePlayers.score);
+                    $("#"+idName).html(_myTours.stateGame.activePlayers.nom);
+                    _myTours.cycleTime = _myTours.toursTime;
+                    _myTours.stateGame.idPower = 0;
+                    _myTours.stateGame.usePower = false;
+                    _myTours.stateGame.powerToUse = null;
+                    _myTours.stateGame.timeLife = _myTours.toursTime;
+                    _myTours.stateGame.scoreSignal = false;
+                    if(_myTours.stateGame.selectionPiece != null){
+                        _myTours.stateGame.selectionPiece.init();
+                        _myTours.stateGame.selectionPiece = null;
                     }
-                    myTours.endTour = false;
-                    myTours.stateGame.hitCombo = 0;
-                    myTours.actionAddRock = 0;
-                    myTours.actionEffetRock = 0;
-                    myTours.stateGame.activePlayers.pieces.changeColor(myTours.stateGame.activePlayers.colorShape);
+                    _myTours.endTour = false;
+                    _myTours.stateGame.hitCombo = 0;
+                    _myTours.actionAddRock = 0;
+                    _myTours.actionEffetRock = 0;
+                    _myTours.stateGame.activePlayers.pieces.changeColor(_myTours.stateGame.activePlayers.colorShape);
                    
-                   
+                   ChangePlayer(_myTours.stateGame);
                    find = true;
                }
                i++;
            }
         }
         
-    },300);
+    });//,300);
+    this.intervalVerification.set({ time : 300, autostart : true });
 }
