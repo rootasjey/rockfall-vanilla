@@ -105,7 +105,7 @@ function EventLoginUI() {
 
 
             // Show login ui & hide the game
-    		AnimateInLoginUI();
+    		    AnimateInLoginUI();
 
             // ---------------
             // LOGIN -> click
@@ -219,21 +219,56 @@ function SubmitLogin() {
             url: '/login/',
             data: $('#form_login').serialize(),
             success: function (data) {
-                if (data == 'OK') {
-                    console.log('OK');
+                if (data !== 'wrong password' && data !== 'wrong login') {
+                    LoginSuccess();
                 }
                 else {
-                    console.log('NOT OK');
+
                 }
             },
-            error: function () {
-                console.log('NOT OK2');
+            error: function (data) {
+                LoginFail(data);
             }
         });
         return false;
     });
 }
 
+
+// Notify the success
+// ----------------------
+function LoginSuccess() {
+    var newMessage = "You're now connected"
+    DisplayGamePanelMessage(newMessage);
+}
+
+function LoginFail(message) {
+    var newMessage = message;
+    DisplayGamePanelMessage(newMessage);
+}
+
+// Display a message in the game-panel
+// ----------------------------------------
+function DisplayGamePanelMessage(message) {
+    var successMessage = $('<div>');
+    var content = "<div>" + message + "</div>";
+    var button = "<div class='button-form'> ok </div>";
+
+    successMessage.attr('class', 'login-ui-message');
+    successMessage.html(content + button);
+
+    var previousContent = $('#game-panel').html();
+    $('#game-panel').html(successMessage);
+
+
+    // button events
+    // -------------
+    $(".login-ui-message .button-form").click(function () {
+        // remove the message
+        AnimateOutLoginUI();
+        $('#game-panel').html(previousContent);
+      });
+}
 
 // Submit ajax request
 // to server.js

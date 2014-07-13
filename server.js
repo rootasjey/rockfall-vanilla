@@ -79,7 +79,7 @@ var accountKey = nconf.get("STORAGE_KEY");
 // An object (Table) for table access storage
 // -----------------------------
 var Table = require('./public/database/table');
-var usersTable = new Table(azure.createTableService(accountName, accountKey), tableName, partitionKey);
+// var usersTable = new Table(azure.createTableService(accountName, accountKey), tableName, partitionKey);
 
 
 app.get('/', function(req, res) {
@@ -111,13 +111,20 @@ app.get('/', function(req, res) {
 				// verify the validity of the password entered
 				if(pass === password) {
 					// login success!
-					console.log('login success');
-					res.send(200);
+					// console.log('login success');
+					var user = {};
+					user.name = result.entries[0].user['_'];
+					user.pass = result.entries[0].password['_'];
+					user.email = result.entries[0].email['_'];
+					user.color1 = result.entries[0].color1['_'];
+					user.color2 = result.entries[0].color2['_'];
+
+					res.send(200, user);
 				}
 				else res.send(401, 'wrong password');
 			}
 		}
-		else res.send(404);
+		else res.send(404, 'wrong login');
 	});
 })
 
