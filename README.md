@@ -4,7 +4,7 @@ RockFall
 A Web Connect Four Game
 
 #version
-0.4.0
+0.5.0
 
 #todo
 * UI

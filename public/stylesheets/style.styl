@@ -43,10 +43,14 @@ html, body{
 #body {
     min-height: 100%;
     position: relative;
+	// background #eee;
+	background url("../images/shattered.png") 0px 0px repeat
+
 
     // HEADER
     // ------
 	#header {
+		// display: none;
 		background: #eee;
 
 		// main content
@@ -97,15 +101,12 @@ html, body{
     // ----
     #container {
         padding-top: 40px;
-        padding-bottom: 130px; /* Height of the footer */
-        // background: #3c3e50;
-
-		/* W3C Markup, IE10 Release Preview */
-		background-image: linear-gradient(to bottom right, #1F2029 0%, #3C3E50 100%);
+        //padding-bottom: 130px; /* Height of the footer */
 
 		transition: 1s;
 
         #main-ui {
+			// display: none;
             width: 80%;
             height: 600px;
             min-widgth: 450px;
@@ -158,6 +159,7 @@ html, body{
     // FOOTER
     // ----
     #footer {
+		display: none;
         width: 100%;
         height: 120px; /* Height of the footer */
         background: #eee;

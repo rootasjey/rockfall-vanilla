@@ -19,6 +19,7 @@ body {
 #body {
   min-height: 100%;
   position: relative;
+  background: url("../images/shattered.png") 0px 0px repeat;
 }
 #body #header {
   background: #eee;
@@ -56,10 +57,6 @@ body {
 }
 #body #container {
   padding-top: 40px;
-  padding-bottom: 130px;
-/* Height of the footer */
-/* W3C Markup, IE10 Release Preview */
-  background-image: linear-gradient(to bottom right, #1f2029 0%, #3c3e50 100%);
   transition: 1s;
 }
 #body #container #main-ui {
@@ -98,6 +95,7 @@ body {
   display: none;
 }
 #body #footer {
+  display: none;
   width: 100%;
   height: 120px;
 /* Height of the footer */
@@ -119,83 +117,4 @@ body {
 #body #footer ul a:hover {
   color: #e74c3c;
   transition: 0.5s;
-}
-
-#opaquePause{
-    
-    background-color:rgba(0, 0, 0,0.3);
-    border-radius: 5px;
-    position:absolute;
-    z-index:15;
-}
-
-#button-reprendre{
-    display:none;
-    top:30%;
-    left:22%;
-    width:400px;
-    height:100px;
-    position:absolute;
-    font-size:2.5em;
-    z-index:20;
-    
-    /*background-color: #1270ce ;*/
-    
-}
-
-#button-pause{
-    top:420px;
-    left: 620px;
-    width:100px;
-    height:50px;
-    font-size: 1.5em;
-    position:absolute;
-     z-index:5;
-}
-
-#button-passe{
-    
-    top:480px;
-    left:620px;
-    width:100px;
-    height:50px;
-    font-size: 1.5em;
-    position:absolute;
-     z-index:5;
-}
-
-.button-effet{
-    
-    border:2px solid white;
-    background-color: #3f90e3;
-    color:white;
-    font-family: exothinitalic;
-    cursor: pointer;
-    border-radius: 10px;
-}
- 
-.button-effet:hover{
-    border:5px solid #62aaef;
-    background-color: #0061c7;
-}
-
-.button-effet:active{
-    border:5px solid #62aaef;
-    background-color: #0061c7;
-}
-
-#active-player{
-    
-    display:none;
-    top:30%;
-    left:100px;
-    width:400px;
-    height:100px;
-    position:absolute;
-    font-size:2.5em;
-    z-index:20;
-    border:5px solid white;
-    background-color: #0c80f7;
-    color:white;
-    font-family: exothinitalic;
 }

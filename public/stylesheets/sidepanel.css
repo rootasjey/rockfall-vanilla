@@ -52,10 +52,10 @@
   font-weight: bolder;
 }
 #side-panel .power-up-panel .power-up {
-  height: 45px;
-  width: 45px;
+  height: 10px;
+  width: 10px;
   margin: 5px;
-  padding: 5px;
+  padding: 20px;
   border-radius: 40px;
   background: rgba(0,0,0,0.5);
   display: inline-block;
@@ -284,13 +284,4 @@
 #side-panel .icon-back:hover {
   opacity: 1;
   transition: 0.5s;
-}
-
-.qtip-content{
-    border-radius: 5px;
-    border: 2px solid #ffffff;
-    background-color: #e74c3c;
-    font-family: exothinitalic;
-    font-size:1.5em;
-    color:rgba(255, 255, 255, 0.96);
 }

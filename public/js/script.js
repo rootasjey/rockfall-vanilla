@@ -18,5 +18,7 @@ window.onload = function () {
 
     // toggle fullscreen
     Fullscreen();
+
+    WelcomeIconsMouseEvents();
     // window.setTimeout(AutoFullscreen, 2000);
 };

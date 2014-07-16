@@ -46,10 +46,11 @@ function EventsSidePanelIcons() {
 // Start a function
 // with a delay
 // ----------------------------
-function Delay(func, options) {
-  window.setTimeout( function() {
-    func(options);
-  }, 500);
+function Delay(func, time) {
+    if(!time) time = 500;
+    window.setTimeout( function() {
+        func();
+    }, time);
 }
 
 
