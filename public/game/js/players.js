@@ -38,7 +38,7 @@ function Players(id,nom,colorShape,score,weightShapes){
     
     this.powerActive = null;
     
-    savePlayer = this;
+    
 }
 
 
@@ -54,11 +54,13 @@ Players.prototype.getPiece = function(){
 
 Players.prototype.changeScore = function(idContainer, points, stateGame){
     
+    var savePlayer = this;
+    
     this.score += points;
-
-    savePlayer.tamponScore = this.score;
+    
+    this.tamponScore = this.score;
     var startScore = parseInt($("#"+idContainer).html());
-    if(this.setScore == null && this.identifiant == stateGame.activePlayers.identifiant){
+    if((this.setScore == null || !this.setScore.isActive) && this.identifiant == stateGame.activePlayers.identifiant){
         this.setScore = $.timer(function(){ //setInterval(function(){
             if(stateGame.scoreSignal){
                 if(startScore>savePlayer.tamponScore){
@@ -67,10 +69,12 @@ Players.prototype.changeScore = function(idContainer, points, stateGame){
                 }else if(startScore<savePlayer.tamponScore){
                     startScore++;
                     $("#"+idContainer).html(startScore);
-                }else{
+                }else if(startScore == savePlayer.tamponScore){
                     //clearInterval(this);
-                    savePlayer.setScore.stop();
-                    savePlayer.setScore = null;
+                    if(savePlayer.setScore != null){
+                        savePlayer.setScore.stop();
+                    }
+                    //savePlayer.setScore = null;
                 }
             }
         });// },50);

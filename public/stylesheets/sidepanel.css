@@ -285,12 +285,3 @@
   opacity: 1;
   transition: 0.5s;
 }
-
-.qtip-content{
-    border-radius: 5px;
-    border: 2px solid #ffffff;
-    background-color: #e74c3c;
-    font-family: exothinitalic;
-    font-size:1.5em;
-    color:rgba(255, 255, 255, 0.96);
-}

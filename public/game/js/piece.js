@@ -126,3 +126,24 @@ Shape.prototype.contains = function(mx, my) {
 Shape.prototype.clear = function(ctx){
 	ctx.clearRect(this.x-this.lineWidth,this.y-this.lineWidth,this.width+(this.lineWidth*2),this.height+(this.lineWidth*2));
 }
+
+
+/* clear supprime graphique l'élément shape*/
+Shape.prototype.drawStar = function(ctx, r, p, m){
+    ctx.save();
+    ctx.strokeStyle = "#e74c3c";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.translate(this.x, this.y);
+    ctx.moveTo(0,0-r);
+    for (var i = 0; i < p; i++)
+    {
+        ctx.rotate(Math.PI / p);
+        ctx.lineTo(0, 0 - (r*m));
+        ctx.rotate(Math.PI / p);
+        ctx.lineTo(0, 0 - r);
+    }
+    ctx.fillStyle = this.fill;
+    ctx.fill();
+    ctx.restore();
+}

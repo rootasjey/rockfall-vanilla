@@ -62,57 +62,76 @@ function FallEffectAndForce(stateGame){
                          stateGame.endOfForce = stateGame.plateau.force(stateGame).end;
                         if(stateGame.endOfForce == false){
                             var findOrNot = stateGame.plateau.findFour();
-                            while(findOrNot.find){
-
-                                var pointGagne = {point:0,proprietaire:"none"};
+                            if(findOrNot.find){
                                 
-                                stateGame.hitCombo += 4;
-                                pointGagne.proprietaire = findOrNot.id;
-                                pointGagne.point = findOrNot.point * 2;
                                 
-                                if(pointGagne.proprietaire == stateGame.comboMaker.id){
-                                 pointGagne.point = parseInt(pointGagne.point *(stateGame.hitCombo/(stateGame.hitCombo - 0.1 * stateGame.hitCombo)));   
+                                
+                                for(var k = 0;k<findOrNot.box.length;k++){
+                                    stateGame.plateau.matrice[findOrNot.box[k].x][findOrNot.box[k].y].fill = "yellow";
                                 }
+                                stateGame.valid = false;
+                                
+                                setTimeout(function(){
+                                    for(var k = 0;k<findOrNot.box.length;k++){
+                                    stateGame.plateau.matrice[findOrNot.box[k].x][findOrNot.box[k].y] = 0;
+                                    }
+                                    ScreenContinueWithFrame(stateGame);
+                                    
+                                     var pointGagne = {point:0,proprietaire:"none"};
+                                
+                                    stateGame.hitCombo += 4;
+                                    pointGagne.proprietaire = findOrNot.id;
+                                    pointGagne.point = findOrNot.point * 2;
 
-                                stateGame.plateau.addScore("user-sore-points", stateGame, pointGagne);                   
-                                console.log(stateGame.findPlayerById(stateGame.players,findOrNot.id));
-                                (stateGame.findPlayerById(stateGame.players,findOrNot.id)).point = stateGame.findPlayerById(stateGame.players,findOrNot.id).point + 1 ;
+                                    if(pointGagne.proprietaire == stateGame.comboMaker.id){
+                                     pointGagne.point = parseInt(pointGagne.point *(stateGame.hitCombo/(stateGame.hitCombo - 0.1 * stateGame.hitCombo)));   
+                                    }
+
+                                    stateGame.plateau.addScore("user-sore-points", stateGame, pointGagne);                   
+                                    //console.log(stateGame.findPlayerById(stateGame.players,findOrNot.id));
+                                    (stateGame.findPlayerById(stateGame.players,findOrNot.id)).point = stateGame.findPlayerById(stateGame.players,findOrNot.id).point + 1 ;
+
+                                    for(var i = 0;i<findOrNot.box.length;i++){
+                                        stateGame.addDrawPoints("+"+(findOrNot.box[i].point*2), findOrNot.box[i].graphX, findOrNot.box[i].graphY,findOrNot.box[i].color);
+                                    }
+                                },2000);
                                 
-                                for(var i = 0;i<findOrNot.case.length;i++){
-                                    stateGame.addDrawPoints("+"+(findOrNot.case[i].point*2), findOrNot.case[i].graphX, findOrNot.case[i].graphY,findOrNot.case[i].color);
-                                }
+                                ScreenPauseWithFrame(stateGame);
                                 
-                                findOrNot = stateGame.plateau.findFour();
+                                //console.log("inifity loop...");            
+                                //findOrNot = stateGame.plateau.findFour();
                             }
                         }
                      }
                     
-                    
-                    var playersWin = new Array();
-                    var playersPoint = -1;
-                    
-                    for(var p = 0;p<stateGame.players.length;p++){
+                    if(stateGame.verificationEndGame == null){
+        
+                        stateGame.verificationEndGame = $.timer(function(){
+                            var playersWin = new Array();
+                            var playersPoint = -1;
+
+                            for(var p = 0;p<stateGame.players.length;p++){
+
+                                var plyrs = stateGame.players[p];
+                                if(plyrs.point>playersPoint){
+                                    playersWin = new Array();
+                                    playersWin.push(plyrs);
+                                    playersPoint = plyrs.point;
+                                }else if(plyrs.point == playersPoint){
+                                   playersWin.push(plyrs);
+                                }
+                            }
+
+
+
+                            if(playersWin[0].point>=stateGame.pointToWin){
+                                ScreenEndGame(stateGame, playersWin);
+                            }
+                        });
                         
-                        var plyrs = stateGame.players[p];
-                        if(plyrs.point>playersPoint){
-                            playersWin = new Array();
-                            playersWin.push(plyrs);
-                            playersPoint = plyrs.point;
-                        }else if(plyrs.point == playersPoint){
-                           playersWin.push(plyrs);
-                        }
+                        stateGame.verificationEndGame.set({ time : 500, autostart : true });
                     }
                     
-                    if(playersWin[0].point>=stateGame.pointToWin){
-                        var endGame = "Le(s) gagnant(s) sont : \n";
-                        for(var p = 0;p<playersWin.length;p++){
-                            endGame = playersWin[p].nom+ " \n";
-                        }
-                        stateGame.tours.endCycle();
-                        
-                        alert(endGame);
-                    }
-                     
                 },300);
                  
                  stateGame.plateau.verificationGravity = false;

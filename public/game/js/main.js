@@ -31,7 +31,7 @@ function LoadBoard() {
     
     /* appel de la fonction qui permet de charger les images et une fois charger lance le jeux*/
       loadImages(sources, function(images) {  
-          game = new CanvasState(players,1,images);
+          game = new CanvasState(players,2,images);
       });
     
 }
@@ -109,6 +109,8 @@ function CanvasState (players,pointToWin, imageLoad){
     /*on stock le setIntervall pour ne pas le déclencher à chaque event "mouseup" */
     this.evenementEffetFall = null;
     
+    this.verificationEndGame = null;
+    
     /* lors du drag and drop permet avoir la position de la souris */
     this.dragoffx = 0;
     this.dragoffy = 0;
@@ -177,6 +179,7 @@ function CanvasState (players,pointToWin, imageLoad){
         drawInfo(_myState.ctx, _myState.canvas, _myState.textColor, _myState.timeLife); 
         _myState.activePlayers.pieces.draw(_myState.ctx);
         _myState.drawCombo(_myState.ctx,630,80,2);
+        _myState.drawPointPlayer();
         if(!_myState.drawPoints()){
         _myState.valid = true; 
         }
@@ -478,6 +481,23 @@ CanvasState.prototype.drawCombo = function(ctx,x,y,dpth){
     
     ctx.shadowColor = "black";
     ctx.shadowBlur = 8;
+}
+
+/* Fonction qui prend en charge l'affichage des points des joueurs */
+CanvasState.prototype.drawPointPlayer = function(){
+    
+    var initPosX = 55;
+    var initPosY = 300;
+    
+    for(var i = 0;i<this.pointToWin;i++){
+      if(this.activePlayers.point>i){
+          (new Shape(initPosX, initPosY-(i*100), 50, 50, 0, "yellow", null)).drawStar(this.ctx, 45, 5, 0.5);
+          
+      }else{
+          (new Shape(initPosX, initPosY-(i*100), 50, 50, 0, "grey", null)).drawStar(this.ctx, 45, 5, 0.5);
+      }
+    }
+    
 }
 
 /* Fonction qui permet d'écrire sur canvas */

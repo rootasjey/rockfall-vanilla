@@ -431,7 +431,8 @@ Table.prototype.findFour = function(){
                 sommePoint = 0;
                 for(var k = 0;k<aligner.length;k++){
                     sommePoint += this.matrice[aligner[k].x][aligner[k].y].weight;
-                    this.matrice[aligner[k].x][aligner[k].y] = 0;
+                    
+                    //this.matrice[aligner[k].x][aligner[k].y] = 0;
                 }
             }
         }
@@ -473,7 +474,7 @@ Table.prototype.findFour = function(){
                     sommePoint = 0;
                     for(var k = 0;k<aligner.length;k++){
                         sommePoint += this.matrice[aligner[k].x][aligner[k].y].weight;
-                        this.matrice[aligner[k].x][aligner[k].y] = 0;
+                        //this.matrice[aligner[k].x][aligner[k].y] = 0;
                     }
                 }
             }
@@ -500,7 +501,7 @@ Table.prototype.findFour = function(){
                             sommePoint = 0;
                             for(var k = 0;k<test.case.length;k++){
                                 sommePoint += this.matrice[aligner[k].x][aligner[k].y].weight;
-                                this.matrice[test.case[k].x][test.case[k].y] = 0;
+                                //this.matrice[test.case[k].x][test.case[k].y] = 0;
                             }
                             aligner = test.case;
                         }
@@ -511,6 +512,28 @@ Table.prototype.findFour = function(){
         }
     }
     
-    return {"find":find,"id":id,"case":aligner,"point":sommePoint};
+   
+    /*
+    if(find){
+        
+        for(var k = 0;k<aligner.length;k++){
+            
+            this.matrice[aligner[k].x][aligner[k].y].fill = "yellow";
+        }
+        
+        var matrice = this.matrice;
+        var affichResult = $.timer(function() { 
+            for(var k = 0;k<aligner.length;k++){
+                matrice[aligner[k].x][aligner[k].y] = 0;
+            }
+        });
+        
+        
+        
+        affichResult.once({time:500});         
+    }
+    */
+    
+    return {"find":find,"id":id,"box":aligner,"point":sommePoint};
     
 }
