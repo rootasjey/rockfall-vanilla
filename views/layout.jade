@@ -5,12 +5,17 @@ html(lang='en')
     meta(charset="utf-8")
     title RockFall - #{title}
 
+
     link(type='text/css', rel='stylesheet', href='/stylesheets/style.css')
     link(type='text/css', rel='stylesheet', href='/stylesheets/sidepanel.css')
     link(type='text/css', rel='stylesheet', href='/stylesheets/login.css')
     link(type='text/css', rel='stylesheet', href='/stylesheets/fonts.css')
+    link(type='text/css', rel='stylesheet', href='/stylesheets/gameui.css')
+    link(type='text/css', rel='stylesheet', href='/stylesheets/welcome.css')
+    link(type='text/css', rel='stylesheet', href='/stylesheets/shapes.css')
     link(type='text/css', rel='stylesheet', href='/stylesheets/jquery.qtip.min.css')
     link(type='text/css', rel='stylesheet', href='/stylesheets/stylePlus.css')
+
 
     script(type='text/javascript' src='/js/jquery-2.1.1.min.js')
     script(type='text/javascript' src='/js/script.js')
@@ -20,6 +25,7 @@ html(lang='en')
     script(type='text/javascript' src='/js/notifications.js')
     script(type='text/javascript' src='/js/animations-ui.js')
     script(type='text/javascript' src='/js/jquery.qtip.min.js')
+    script(type='text/javascript' src='/js/welcome.js')
 
 
     script(type='text/javascript' src='/game/js/plateau.js')
@@ -38,8 +44,8 @@ html(lang='en')
   body
     div#body
       div#header
-        include includes/header
+        //- include includes/header
       div#container
         block content
       div#footer
-        include includes/footer
+        //- include includes/footer

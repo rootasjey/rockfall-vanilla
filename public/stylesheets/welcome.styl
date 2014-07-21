@@ -1,0 +1,100 @@
+// ROCKFALL
+// STYL FILE
+// -----------
+// -----------
+/*@import 'nib'*/
+
+/*-------------------*/
+/*-----VARIABLES-----*/
+/*-------------------*/
+color-alizarin = #e74c3c
+color-peter-river = #3498db
+color-emerald = #2ecc71
+color-belize-hole = #2980b9
+color-silver = #bdc3c7
+square-size = 100px
+/*------------------*/
+
+#welcome-ui {
+    display none
+    .title {
+        color black
+        text-align center
+
+        cursor pointer
+        font-size 4em
+        margin-left -60px
+        transition 0.5s
+
+        &:hover {
+            color color-alizarin
+            transition 0.5s
+        }
+    }
+
+    .square-group {
+        width 300px
+        margin-bottom 0
+        margin auto
+        // background black
+        margin-top 100px
+    }
+    .square {
+        position relative
+        right 30px
+        opacity 0.8
+        cursor pointer
+
+        margin 0
+        padding 20px
+
+        height square-size
+        width square-size
+        background black
+        transition 0.5s
+
+        &:hover {
+            opacity 1
+            transition 0.5s
+        }
+    }
+    .square[function='play'] {
+        &:hover {
+            background color-alizarin
+        }
+    }
+    .square[function='connect'] {
+        &:hover {
+            background color-belize-hole
+        }
+    }
+    .square[function='about'] {
+        position relative
+        top -3px
+
+        &:hover {
+            background: #27ae60
+        }
+    }
+
+    .square[function='infos'] {
+        font-size 2em
+        color transparent
+        text-align center
+
+        position relative
+        display inline-block
+        background transparent
+        top -98px
+
+        &:hover {
+            // background: #27ae60
+        }
+
+        .square-text {
+            margin-top 80px
+            vertical-align middle
+            display inline-block
+        }
+    }
+}
