@@ -1,0 +1,91 @@
+#square-ui .mini-icon {
+  opacity: 0.2;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  cursor: pointer;
+  transition: 1s;
+}
+#square-ui .mini-icon:hover {
+  opacity: 1;
+  transition: 1s;
+}
+#square-ui .mini-icon[isGlowing='true'] {
+  animation-duration: 1s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-name: glowIcon;
+}
+#square-ui .square-ui-game {
+  height: 60%;
+  width: 70%;
+  margin: auto;
+}
+#square-ui .vertiacal-pan {
+  width: 140px;
+  height: 300px;
+  opacity: 0.5;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  color: #fff;
+  margin: auto;
+  margin-top: 10px;
+  margin-right: 5px;
+  padding: 5px;
+  background: #000;
+  transition: 0.5s;
+}
+#square-ui .vertiacal-pan:hover {
+  opacity: 1;
+  width: 155px;
+  transition: 0.5s;
+}
+#square-ui .vertiacal-pan:hover .text-info {
+  color: #fff;
+}
+#square-ui .vertiacal-pan img {
+  height: 70px;
+  width: 70px;
+  display: block;
+  margin: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+#square-ui .vertiacal-pan .text-info {
+  margin-top: 10px;
+  display: inline-block;
+  color: transparent;
+}
+@-moz-keyframes glowIcon {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 0.8;
+  }
+}
+@-webkit-keyframes glowIcon {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 0.8;
+  }
+}
+@-o-keyframes glowIcon {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 0.8;
+  }
+}
+@keyframes glowIcon {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 0.8;
+  }
+}

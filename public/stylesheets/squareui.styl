@@ -1,0 +1,89 @@
+#square-ui{
+    .mini-icon{
+        opacity 0.2
+        width 30px
+        height 30px
+
+        margin-right 5px
+
+        cursor pointer
+        transition 1s
+
+        &:hover{
+            opacity 1
+            transition 1s
+        }
+
+        &[isGlowing='true'] {
+            animation-duration: 1s
+            animation-direction: alternate
+            animation-iteration-count infinite
+            animation-name: glowIcon
+
+        }
+    }
+
+    .square-ui-game {
+        height 60%
+        width 70%
+
+        margin auto
+    }
+
+    .vertiacal-pan {
+        width 140px
+        height 300px
+        opacity 0.5
+        display inline-block
+
+        text-align center
+        cursor pointer
+        color white
+
+        margin auto
+        margin-top 10px
+        margin-right 5px
+        padding 5px
+
+        background black
+        transition 0.5s
+
+        &:hover {
+            opacity 1
+            width 155px
+            transition 0.5s
+
+            .text-info {
+                color white
+            }
+        }
+
+        img {
+            height 70px
+            width 70px
+            display block
+
+            margin auto
+            margin-top 30px
+            margin-bottom 30px
+        }
+
+        .text-info {
+            margin-top 10px
+            display inline-block
+            color transparent
+        }
+    }
+}
+
+// Glow Animation for icons
+// --------------
+@keyframes glowIcon {
+    from {
+        opacity 0.2
+    }
+
+    to {
+        opacity 0.8
+    }
+}
