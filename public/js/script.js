@@ -15,7 +15,10 @@ window.onload = function () {
 
     // load the board
     LoadBoard();
-
+    
+    //
+    Connexion();
+    
     // toggle fullscreen
     Fullscreen();
 

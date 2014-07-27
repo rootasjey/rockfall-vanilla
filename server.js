@@ -16,7 +16,9 @@ var express = require('express'),  // web dev framework
 	morgan = require('morgan'),	// loggin middleware
 	nib = require('nib'),		  // Stylus utilities
     http = require('http'),
-    path = require('path');
+    path = require('path'),
+    Matchmaker = require('matchmaker'),
+    io = require('socket.io');
 
 // var fs = require('fs');		// file stream
 
@@ -83,7 +85,7 @@ var usersTable = new Table(azure.createTableService(accountName, accountKey), ta
 
 
 app.get('/', function(req, res) {
-	res.render('index', {title: 'Home'});
+	res.render('form', {title: 'Connexion'});
 })
 
 .post('/login/', function (req, res) {
@@ -205,6 +207,25 @@ http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
+//socket
+
+var players = new Arra();
+
+io.of('/connexion').on('connection', function (socket) {
+    // Dès qu'on nous donne un pseudo, on le stocke en variable de session et on informe les autres personnes
+        socket.on('nouveau_joueur', function(pseudo) {
+        //pseudo = ent.encode(pseudo);
+        //socket.set('pseudo', pseudo);
+        socket.emit('nouveau_joueur', pseudo);
+    });
+
+    // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
+    /*socket.on('message', function (message) {
+       // socket.get('pseudo', function (error, pseudo) {
+         //   message = ent.encode(message);
+           // socket.broadcast.emit('message', {pseudo: pseudo, message: message});
+        });*/
+}); 
 
 
 
@@ -213,3 +234,21 @@ http.createServer(app).listen(app.get('port'), function(){
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
+
+
+// MATCHMAKING
+/*
+var mymatch = new Matchmaker;
+
+mymatch.policy = function(a,b) {
+    return 100
+};
+
+mymatch.on('match', function(result) {
+    console.log(result.a); // match a
+    console.log(result.b); // match b
+});
+
+mymatch.start();
+*/
+//mymatch.push({user:'walter',rank:1450});
