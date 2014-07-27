@@ -3,9 +3,6 @@
 /*-----VARIABLES-----*/
 /*-------------------*/
 /*------------------*/
-#welcome-ui {
-  display: none;
-}
 #welcome-ui .title {
   color: #000;
   text-align: center;

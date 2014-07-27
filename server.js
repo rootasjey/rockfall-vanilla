@@ -86,6 +86,11 @@ app.get('/', function(req, res) {
 	res.render('index', {title: 'Home'});
 })
 
+.get('/new', function (req, res) {
+	// new design
+	res.render('index2', {title: 'Home'});
+})
+
 .post('/login/', function (req, res) {
 	// get variables from the form
 	var user 	= req.param('user');
