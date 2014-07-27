@@ -17,7 +17,7 @@ window.onload = function () {
     LoadBoard();
     
     //
-    Connexion();
+    //Connexion();
     
     // toggle fullscreen
     Fullscreen();
