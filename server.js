@@ -85,7 +85,7 @@ var Table = require('./public/database/table');
 
 
 app.get('/', function(req, res) {
-	res.render('form', {title: 'Connexion'});
+	res.render('index', {title: 'Home'});
 })
 
 .get('/new', function (req, res) {
@@ -214,23 +214,8 @@ http.createServer(app).listen(app.get('port'), function(){
 
 //socket
 
-var players = new Arra();
+var players = new Array();
 
-io.of('/connexion').on('connection', function (socket) {
-    // Dès qu'on nous donne un pseudo, on le stocke en variable de session et on informe les autres personnes
-        socket.on('nouveau_joueur', function(pseudo) {
-        //pseudo = ent.encode(pseudo);
-        //socket.set('pseudo', pseudo);
-        socket.emit('nouveau_joueur', pseudo);
-    });
-
-    // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
-    /*socket.on('message', function (message) {
-       // socket.get('pseudo', function (error, pseudo) {
-         //   message = ent.encode(message);
-           // socket.broadcast.emit('message', {pseudo: pseudo, message: message});
-        });*/
-}); 
 
 
 
