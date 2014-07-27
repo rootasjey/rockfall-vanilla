@@ -16,7 +16,8 @@ square-size = 100px
 /*------------------*/
 
 #welcome-ui {
-    display none
+    // display none
+    
     .title {
         color black
         text-align center
@@ -39,6 +40,7 @@ square-size = 100px
         // background black
         margin-top 100px
     }
+
     .square {
         position relative
         right 30px
@@ -53,48 +55,84 @@ square-size = 100px
         background black
         transition 0.5s
 
+        // Mouse over
         &:hover {
             opacity 1
             transition 0.5s
         }
-    }
-    .square[function='play'] {
-        &:hover {
-            background color-alizarin
+
+        // Specifics squares
+        &[function='play'] {
+            &:hover {
+                background color-alizarin
+            }
         }
-    }
-    .square[function='connect'] {
-        &:hover {
-            background color-belize-hole
+        &[function='connect'] {
+            &:hover {
+                background color-belize-hole
+            }
         }
-    }
-    .square[function='about'] {
-        position relative
-        top -3px
+        &[function='about'] {
+            position relative
+            top -3px
 
-        &:hover {
-            background: #27ae60
+            &:hover {
+                background: #27ae60
+            }
         }
-    }
+        &[function='infos'] {
+            font-size 2em
+            color transparent
+            text-align center
 
-    .square[function='infos'] {
-        font-size 2em
-        color transparent
-        text-align center
-
-        position relative
-        display inline-block
-        background transparent
-        top -98px
-
-        &:hover {
-            // background: #27ae60
-        }
-
-        .square-text {
-            margin-top 80px
-            vertical-align middle
+            position relative
             display inline-block
+            background transparent
+            top -98px
+
+            &:hover {
+                // background: #27ae60
+            }
+
+            .square-text {
+                margin-top 80px
+                vertical-align middle
+                display inline-block
+            }
+        }
+
+        // square ui
+        &[function='ui'] {
+            width square-size *2.5
+            height square-size *2.5
+
+            position relative
+            top -340px
+            z-index -1
+            cursor default
+
+            // BACKGROUND
+            // ----------
+            /* IE10 Consumer Preview */
+            background-image: -ms-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%);
+            /* Mozilla Firefox */
+            background-image: -moz-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%);
+            /* Opera */
+            background-image: -o-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%);
+            /* Webkit (Safari/Chrome 10) */
+            background-image: -webkit-gradient(radial, center center, 0, center center, 486, color-stop(0, #3B536A), color-stop(1, #12191F));
+            /* Webkit (Chrome 11+) */
+            background-image: -webkit-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%);
+            /* W3C Markup, IE10 Release Preview */
+            background-image: radial-gradient(circle farthest-side at center, #3B536A 0%, #12191F 100%);
+
+            // SHADOW BORDERS
+            // --------------
+            -moz-box-shadow: 0 0 20px #000000;
+            -webkit-box-shadow: 0 0 20px #000000;
+            box-shadow: 0 0 20px #000000;
+
+
         }
     }
 }

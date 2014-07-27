@@ -81,11 +81,16 @@ var accountKey = nconf.get("STORAGE_KEY");
 // An object (Table) for table access storage
 // -----------------------------
 var Table = require('./public/database/table');
-var usersTable = new Table(azure.createTableService(accountName, accountKey), tableName, partitionKey);
+// var usersTable = new Table(azure.createTableService(accountName, accountKey), tableName, partitionKey);
 
 
 app.get('/', function(req, res) {
 	res.render('form', {title: 'Connexion'});
+})
+
+.get('/new', function (req, res) {
+	// new design
+	res.render('index2', {title: 'Home'});
 })
 
 .post('/login/', function (req, res) {

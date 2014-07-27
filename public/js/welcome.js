@@ -22,8 +22,6 @@ function MouseHoverEvent() {
             $(this).css('-ms-transform', 'rotate(45deg)');
             $(this).css('-o-transform', 'rotate(45deg)');
             $(this).css('transform', 'rotate(45deg)');
-
-
         },
 
         function () {
@@ -49,40 +47,159 @@ function MouseClickEvent() {
     });
 }
 
+// Maximize the main ui (hide welcome screen)
+// when the user click on a square
+// ----------------------
 function ExpandMainUI() {
-    DropDownSquareUI();
-    HideImagesSquares();
-    Delay(EnlargeSquareUI, 1000);
+    FadeOutSquares();
+    Delay(EnlargeSquaresContainer, 800);
+    Delay(ShowSquareUI, 1000);
+    Delay(EnlargeSquareUI, 1500);
+
+    // add elements to the ui
+    Delay(PopulateSquareUI, 2000);
 }
 
-function DropDownSquareUI() {
-    $("div.square").css({
-        background: 'black',
-    }).animate({
-        background: 'red',
-        top : '-59px',
-    });
+
+// Minimize the main ui
+// and show the welcome screen
+// ----------------------
+function MinimizeMainUI() {
+
+    ReduceSquareUI();
+    Delay(ReduceSquaresContainer, 500);
+    Delay(FadeOutSquareUI, 1000);
+    Delay(FadeInSquares, 1500);
 }
 
-function HideImagesSquares() {
+// Hide all squares
+// ------------------------
+function FadeOutSquares() {
     $("img.square").css({
-        opacity : '0.8',
+        opacity     : '0',
+        top         : '0px',
     }).animate({
-        opacity : '0',
+        opacity     : '0',
+        top         : '-40px',
     });
 }
 
-function EnlargeSquareUI() {
-    $(".square-group").css({
-        // width: '600px',
+// Show all squares
+// -----------------------
+function FadeInSquares() {
+    // Display squares with style
+    $("img.square").css({
+        opacity     : '0',
+        top         : '-40px',
+        display     : 'inline-block',
     }).animate({
-        width: '600px',
+        opacity     : '0.8',
+        top         : '0px',
     });
+
+    // info square
+    // is a div not an img
+    // -------------------
+    $("div.square[function='infos']").css({
+        display     : 'inline-block',
+    });
+
+    // Up the about square
+    // -----------------
+    Delay( function () {
+        // adjustments
+        $(".square[function='about']").css({
+
+        }).animate({
+            top         : '-3.5px',
+        });
+    }, 1000);
+
+
+    // completly hide square ui
+    $("#square-ui").css({
+        display     : 'none',
+        zIndex      : '-1',
+    });
+}
+
+// Show the square UI
+// which contains the game
+// ----------------------
+function ShowSquareUI() {
+    // quick hide others squares
+    $("img.square").css({
+        display     : 'none',
+    });
+
     $("div.square").css({
-        // height: '300px',
-        // width: '500px',
+        display     : 'none',
+    });
+
+    // animate the squaure ui
+    $("div.square[function='ui']").css({
+        zIndex      : '1',
+        top         : '-50px',
+        opacity     : '0',
+        display     : 'inline-block',
     }).animate({
-        height: '300px',
-        width: '500px',
+        opacity     : '1',
+        top         : '0px',
+    });
+}
+
+
+// Expend square UI
+// ------------------------
+function EnlargeSquareUI() {
+    $("div.square[function='ui']").css({
+
+    }).animate({
+        minWidth    : '450px',
+        width       : '100%',
+        height      : '400px',
+        borderRadius: '5px',
+    });
+}
+
+// Expend square UI's container
+// (allow to center the ui)
+// ----------------------------
+function EnlargeSquaresContainer() {
+    $(".square-group").css({
+        width: "800px",
+    });
+}
+
+// Reduce square UI's container
+// (allow to center the ui)
+// ----------------------------
+function ReduceSquaresContainer() {
+    $(".square-group").css({
+        width: "300px",
+    });
+}
+
+// Reduce square UI
+// ----------------------------
+function ReduceSquareUI() {
+    $("#square-ui").css({
+
+    }).animate({
+        minWidth    : '0px',
+        width       : '100px',
+        height      : '100px',
+        borderRadius: '0px',
+    });
+}
+
+// Hide square UI
+// -------------------------
+function FadeOutSquareUI() {
+    $("#square-ui").css({
+        opacity     : '1'
+    }).animate({
+        opacity     : '0',
+        top         : '50px',
     });
 }
