@@ -1,3 +1,7 @@
+// Main UI
+// which contains the game
+// and the main functions
+// --------
 #square-ui{
     .mini-icon{
         opacity 0.2
@@ -25,7 +29,7 @@
 
     .square-ui-game {
         height 60%
-        width 70%
+        width 67%
 
         margin auto
     }
@@ -42,7 +46,7 @@
 
         margin auto
         margin-top 10px
-        margin-right 5px
+        margin-left 5px
         padding 5px
 
         background black
@@ -72,6 +76,66 @@
             margin-top 10px
             display inline-block
             color transparent
+        }
+    }
+}
+
+
+// Second-panel
+// which contains
+// others functions
+// like messages, setings
+// ------------
+.second-panel {
+    height 300px
+    width 840px
+
+    position relative
+    left -10px
+
+    margin auto
+    margin-top -10px
+    padding-top 10px
+    background #e74c3c
+
+    border-radius 5px
+
+    -moz-box-shadow: 0 0 20px #000000;
+    -webkit-box-shadow: 0 0 20px #000000;
+    box-shadow: 0 0 20px #000000;
+
+    // icons
+    .mini-icon {
+        opacity 0.2
+        width 30px
+        height 30px
+
+        margin 5px
+
+        cursor pointer
+        transition 1s
+
+        &:hover{
+            opacity 1
+            transition 1s
+        }
+    }
+
+    .message-panel {
+        .second-panel-title {
+            width 100%
+            margin auto
+
+            color white
+            font-size 2em
+            text-align center
+
+            display inline-block
+
+            .mini-icon {
+                display block
+                margin auto
+            }
         }
     }
 }

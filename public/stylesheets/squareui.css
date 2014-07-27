@@ -18,7 +18,7 @@
 }
 #square-ui .square-ui-game {
   height: 60%;
-  width: 70%;
+  width: 67%;
   margin: auto;
 }
 #square-ui .vertiacal-pan {
@@ -31,7 +31,7 @@
   color: #fff;
   margin: auto;
   margin-top: 10px;
-  margin-right: 5px;
+  margin-left: 5px;
   padding: 5px;
   background: #000;
   transition: 0.5s;
@@ -56,6 +56,44 @@
   margin-top: 10px;
   display: inline-block;
   color: transparent;
+}
+.second-panel {
+  height: 300px;
+  width: 840px;
+  position: relative;
+  left: -10px;
+  margin: auto;
+  margin-top: -10px;
+  padding-top: 10px;
+  background: #e74c3c;
+  border-radius: 5px;
+  -moz-box-shadow: 0 0 20px #000;
+  -webkit-box-shadow: 0 0 20px #000;
+  box-shadow: 0 0 20px #000;
+}
+.second-panel .mini-icon {
+  opacity: 0.2;
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  cursor: pointer;
+  transition: 1s;
+}
+.second-panel .mini-icon:hover {
+  opacity: 1;
+  transition: 1s;
+}
+.second-panel .message-panel .second-panel-title {
+  width: 100%;
+  margin: auto;
+  color: #fff;
+  font-size: 2em;
+  text-align: center;
+  display: inline-block;
+}
+.second-panel .message-panel .second-panel-title .mini-icon {
+  display: block;
+  margin: auto;
 }
 @-moz-keyframes glowIcon {
   from {

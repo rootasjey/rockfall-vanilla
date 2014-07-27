@@ -3,6 +3,9 @@
 /*-----VARIABLES-----*/
 /*-------------------*/
 /*------------------*/
+#welcome-ui {
+  padding-bottom: 50px;
+}
 #welcome-ui .title {
   color: #000;
   text-align: center;
@@ -17,8 +20,8 @@
 }
 #welcome-ui .square-group {
   width: 300px;
-  margin-bottom: 0;
   margin: auto;
+  margin-bottom: 0px;
   margin-top: 100px;
 }
 #welcome-ui .square {

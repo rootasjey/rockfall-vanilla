@@ -130,12 +130,19 @@ function MiniIconEvent() {
     // messages event
     // --------------
     $(".mini-icon[function='messages']").click(function () {
-        if($(this).attr('isGlowing') == 'false'){
-            NewMessage($(this));
-        }
-        else {
-            NoNewMessage($(this));
-        }
+
+            CreateSecondPanel();
+
+            if ($("div.second-panel").css("opacity") == "1") {
+                HideMessagePanel();
+                HideSecondPanel();
+            }
+            else {
+                ShowSecondPanel();
+                CreateMessagePanel();
+                ShowMessagePanel();
+            }
+
     });
 
     // settings event
@@ -189,18 +196,140 @@ function GameModes() {
     ShowSquareUIGame();
 }
 
+// Create the second-panel
+// which contains
+// others functions
+// like messages, setings
+// --------------------------
+function CreateSecondPanel() {
+    // exit if we've already created this object
+    if($(".second-panel").length > 0) return;
+
+    // Create the container
+    // with 0 opacity for animation
+    // and add it to #welcome-ui
+    // ---------
+    $("<div>", {
+        class: "second-panel",
+    }).css({
+        opacity: '0',
+    }).appendTo("#welcome-ui");
+
+    // Add composants to the
+    // .second-panel
+    // -------------
+    // collapse icon
+    // ---------
+    $("<img>", {
+        class   : 'mini-icon',
+        src     : '../icons/icon_arrowup.png',
+        function: 'collapse',
+    }).appendTo(".second-panel");
+
+    // Add events on .second-panel
+    SecondPanelEvents();
+}
+
+// Add events on
+// second-panel's objects
+// --------------------------
+function SecondPanelEvents() {
+    $(".second-panel .mini-icon[function='collapse']").click(
+        function () {
+            if ($("div.second-panel").css("opacity") == "1") {
+                HideSecondPanel();
+            }
+    });
+}
+
+// Show second-panel with style
+// ------------------------
+function ShowSecondPanel() {
+    $("div.second-panel").css({
+        top: '-50px',
+        opacity: '0',
+    }).animate({
+        opacity: '1',
+        top: '0px',
+    });
+
+    // Remove border radius
+    $("#square-ui").css({
+    }).animate({
+        borderBottomLeftRadius: '0px',
+        borderBottomRightRadius: '0px',
+    });
+}
+
+// Hide second-panel with style
+// ------------------------
+function HideSecondPanel() {
+    $(".second-panel").css({
+        top: '0px',
+        opacity: '1',
+    }).animate({
+        opacity: '0',
+        top: '-50px',
+    });
+
+    // Set border radius
+    $("#square-ui").css({
+    }).animate({
+        borderBottomLeftRadius: '5px',
+        borderBottomRightRadius: '5px',
+    });
+}
+
+// Create message container
+// ------------------------
+function CreateMessagePanel() {
+    // Exit if we've already created this object
+    if($(".message-panel").length > 0) return;
+
+    // Create the message-panel
+    // ---------
+    $("<div>", {
+        class: "message-panel",
+        html : "<div class='second-panel-title'> <span> Messages </span> </div>",
+    }).css({
+        opacity: "0",
+    }).appendTo(".second-panel");
+
+    // Add icons to the message-panel
+    $("<img>", {
+        src: "../icons/icon_plus.png",
+        class: "mini-icon",
+    }).appendTo(".second-panel-title");
+}
+
+function ShowMessagePanel() {
+    $(".message-panel").appendTo(".second-panel").css({
+        opacity: "0",
+    }).animate({
+        opacity: "1",
+    });
+}
+
+function HideMessagePanel() {
+    $(".message-panel").appendTo(".second-panel").css({
+        opacity: "1",
+    }).animate({
+        opacity: "0",
+    });
+}
+
 // Animate messages' icon
 // to notify of new messages
 // >use css attribute
 // --------------------------------
-function NewMessage(iconMessages) {
-    iconMessages.attr('isGlowing', 'true');
+function NewMessage() {
+    $(".mini-icon[function='messages']").attr('isGlowing', 'true');
 }
 
 // Set messages' icon to default
 // ---------------------------------
-function NoNewMessage(iconMessages) {
-    iconMessages.attr('isGlowing', 'false');
+function NoNewMessage() {
+    $(".mini-icon[function='messages']").attr('isGlowing', 'false');
 }
 
 // Put everything to default to
