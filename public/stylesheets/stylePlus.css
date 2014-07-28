@@ -79,3 +79,14 @@
     color:white;
     font-family: exothinitalic;
 }
+
+.qtip{
+    
+    border-width: 2px;
+    border-style: solid;
+    border-color: #ff0000;
+    background-color: #FF4A4A;
+    color: #FFF;
+    border-radius: 10px; 
+    font-size: 16px;
+}

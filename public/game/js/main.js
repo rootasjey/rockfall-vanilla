@@ -10,9 +10,9 @@ function LoadBoard() {
     
     /* On définit les pouvoirs qui seront disponible lors de la partie ici nous avons définit 3 qui seront les mêmes pour chaque joueur */
     var powerPlayerUn = new Array();
-    powerPlayerUn.push(new powerWeightDouble("cadre-un",10,'./bonus_fois_deux.jpg'));
-    powerPlayerUn.push(new powerNeutralPiece("cadre-deux",10,'./bonus_neutre.jpg'));
-    powerPlayerUn.push(new powerWeightLoseHalf("cadre-trois",20,'./bonus_diviser_deux.jpg'));
+    powerPlayerUn.push(new powerWeightDouble("cadre-un",10,'./fois-deux.png'));
+    powerPlayerUn.push(new powerNeutralPiece("cadre-deux",10,'./neutre.png'));
+    powerPlayerUn.push(new powerWeightLoseHalf("cadre-trois",20,'./diviser-deux.png'));
     
     /* on assigne le tableau de pouvoir aux personnages */
     for(var i = 0; i < players.length;i++){
