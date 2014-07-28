@@ -431,7 +431,7 @@ function CreateInboxMessages() {
 }
 
 function ShowInboxMessages() {
-    var children = $(".inbox-center-section").children();
+    var children = $(".message");
 
     for (var i = 0; i < children.length; i++) {
         children[i].css({
