@@ -275,6 +275,7 @@ Cell.prototype.contains = function(mx, my) {
 
 Cell.prototype.draw = function(ctx){
 		
+    /*
         ctx.shadowColor = "black";
 		var radius = 20;
 		var r = this.x + this.width;
@@ -301,6 +302,35 @@ Cell.prototype.draw = function(ctx){
 		ctx.closePath();
 		ctx.fillStyle = this.color;
 		ctx.fill();
+        ctx.shadowColor = "black";
+        */
+    
+        var wide = 25;
+    
+        ctx.shadowColor = "black";
+	  
+		ctx.beginPath();
+		if(this.selected){
+			ctx.strokeStyle = "red";
+		}else{
+			ctx.strokeStyle = this.color;
+		}
+		ctx.lineWidth=this.lineWidth;
+    
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x+wide, this.y);
+        ctx.lineTo(this.x+(wide*2), this.y+wide);
+        ctx.lineTo(this.x+(wide*2), this.y+(wide*2));
+        ctx.lineTo(this.x+wide, this.y+(wide*3));
+        ctx.lineTo(this.x, this.y+(wide*3));
+        ctx.lineTo(this.x-wide, this.y+(wide*2));
+        ctx.lineTo(this.x-wide, this.y+wide);
+        ctx.lineTo(this.x, this.y);
+        ctx.stroke();
+    
+        ctx.closePath();
+        ctx.fillStyle = this.color;
+        ctx.fill();
         ctx.shadowColor = "black";
 }
 

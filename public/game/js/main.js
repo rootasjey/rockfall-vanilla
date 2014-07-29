@@ -63,7 +63,7 @@ function loadImages(sources, callback) {
 function CanvasState (players,pointToWin, imageLoad){
  
       /* On définit le plateau de jeu avec les différents arguments détaillés dans plateau.js*/
-    this.plateau = new Table(4, 6, 140, 40, 10);
+    this.plateau = new Table(4, 6, 160, 15, 20);
 
     /*la variable qui détermine le nombre de point qu'il faut pour gagner la partie */
     this.pointToWin = pointToWin;
