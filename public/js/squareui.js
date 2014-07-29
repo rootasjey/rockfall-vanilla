@@ -2,6 +2,9 @@
 // GLOBALS VARS
 // -----------
 var _messageGlowID = null;
+var _box = {
+    'count' : 0,
+};
 
 // Add elements which compose main UI
 // --------------------------
@@ -332,18 +335,29 @@ function MessagePanelEvents() {
     // Click event on new messge icon
     // ------------------------------
     $(".mini-icon[function='new-message']").click(function () {
+
+        // This test decides whether we show or hide
+        // the new message control
         if ($("form[class='new-message']").length) {
             // If the new message form is displayed
             // we hide it
             CloseNewMessage();
-            ShowNewMessageIcon();
         }
         else {
-            // Show message's form
-            NewMessage();
+            // Show the new message control
+            if ($(".inbox-messages").css("display") !== "block") {
+                NewMessage(); // just display new message control
+            }
+            else {
+                // if inbox messages are displayed
+                // we hide them first (inbox messages)
+                HideInboxMessages();
 
-            // Show close icon
-            ShowCloseNewMessageIcon();
+                // Show new message's form
+                Delay(function () {
+                    NewMessage();
+                }, 1500);
+            }
         }
     });
 
@@ -351,16 +365,32 @@ function MessagePanelEvents() {
     // -------------------------
     $(".mini-icon[function='inbox']").click(function () {
 
-        // add +1 to the counter
-        // ---------------------
-        if($(".messages-counter").html() !== '') {
-            var count = $(".messages-counter").html();
-            count++;
-            RefreshMessagesCounter(count);
+            // add +1 to the counter
+            // ---------------------
+            _box.count++;
+
+            // Refresh the mesages counter
+            RefreshMessagesCounter(_box.count);
+            // Show inbox messages if it's not displayed
             CreateInboxMessages();
-            ShowInboxMessages();
-        }
-        else RefreshMessagesCounter('1');
+
+            // This test decides whether we must
+            // hide the new message control
+            // before showing inbox messages
+            if ($(".new-message").css("display") == "block") {
+                // If .new-message is displayed
+                // we hide it first,
+                // then we show .inbox-messages
+                CloseNewMessage();
+                Delay(function () {
+                    ShowInboxMessages();
+                });
+
+            } else  {
+                ShowInboxMessages(); // show instantly
+                RefreshInboxMessages();
+            }
+
     });
 }
 
@@ -374,6 +404,42 @@ function RefreshMessagesCounter(count) {
         opacity: '1',
     });
     $(".messages-counter").html(count);
+
+    // Check if we have > 6 messages
+    // to display prev./next icon
+    if (_box.count < 7)
+        return;
+    else if ($(".inbox-right-section").css("opacity") === "0.5")
+        return;
+
+    else if (_box.count > 6) {
+        // If there're more than 6 messages
+        // that means that we cannont display all
+        // so we've to use pagination
+        $(".inbox-right-section").css({
+            opacity: "0.5",
+        }).hover(function () {
+            $(this).css({
+                opacity: "1",
+            });
+        }, function () {
+            $(this).css({
+                opacity: "0.5",
+            });
+        });
+
+        $(".inbox-left-section").css({
+            opacity: "0.5",
+        }).hover(function () {
+            $(this).css({
+                opacity: "1",
+            });
+        }, function () {
+            $(this).css({
+                opacity: "0.5",
+            });
+        });
+    }
 }
 
 // Create the panel wich contains
@@ -386,7 +452,8 @@ function CreateInboxMessages() {
     // Messages Panel Container
     $("<div>", {
         class: "inbox-messages",
-    }).appendTo(".message-panel");
+    }).css({ opacity: "0", })
+      .appendTo(".message-panel");
 
     // Sub-section containing left arrow
     $("<div>", {
@@ -407,39 +474,120 @@ function CreateInboxMessages() {
     // Add Left & Right Arrows
     // to sub-panels
     $("<img>", {
-        src: "../icons/previous-256.png",
+        src: "../icons/icon_previous.png",
         class: "previous-content",
     }).appendTo(".inbox-left-section");
     $("<img>", {
-        src: "../icons/next-256.png",
+        src: "../icons/icon_next.png",
         class: "next-content",
     }).appendTo(".inbox-right-section");
 
 
     // Add individual message
-    for (var i = 0; i < 6; i++) {
-        var m = $("<div>", {
-            class: "message",
-        }).appendTo(".inbox-center-section");
-
-        $("<img>", {
-            class: "message-icon",
-            src: "../icons/icon_envelope.png",
-        }).appendTo(m);
-        m.append("<span> Informations </span>");
+    for (var i = 0; i < _box.count; i++) {
+        ReceiveNewMessage();
     }
 }
 
-function ShowInboxMessages() {
-    var children = $(".message");
+function RefreshInboxMessages() {
+    if ($(".message").length === _box.count) return;
 
-    for (var i = 0; i < children.length; i++) {
-        children[i].css({
-            opaciy: '0',
-        }).animate({
-            opaciy: '0.5',
-        });
+    var newAdded = _box.count - $(".message").length;
+
+    for (var i = 0; i < newAdded; i++) {
+        ReceiveNewMessage();
     }
+}
+
+// Add a new message to the
+// .inbox-center-section
+// ------------------------
+function ReceiveNewMessage() {
+    // Create a new message object
+    var m = $("<div>", {
+        class: "message",
+
+    }).css({opacity: "0", top: "-10px",})
+      .appendTo(".inbox-center-section");
+
+    $("<img>", {
+        class: "message-icon",
+        src: "../icons/icon_envelope.png",
+    }).appendTo(m);
+    m.append("<span> Informations </span>");
+
+    m.animate({
+        top: "0",
+        opacity: "0.5",
+    });
+
+
+    // EVENTS
+    // ------
+    // Hover event
+    m.hover(function () {
+        $(this).css({
+            opacity: "0.8",
+            top: "-10px",
+        });
+    }, function () {
+        $(this).css({
+            opacity: "0.5",
+            top: "0px",
+        });
+    });
+}
+
+
+function ShowInboxMessages() {
+    if ($(".inbox-messages").css("opacity") === "1")
+        return;
+
+    $(".inbox-messages").css({
+        display: "block",
+    }).animate({
+        opacity: "1",
+    });
+
+
+    var delay = 100;
+    $(".message").each(function () {
+        $(this).css({
+        }).animate({
+            opacity: "0.5",
+            top: "0",
+        },{
+            duration: delay,
+            queue: true,
+        });
+        delay += 100;
+    });
+}
+
+function HideInboxMessages() {
+    if ($(".inbox-messages").css("display") === "none")
+        return;
+
+    var delay = 100;
+    $(".message").each(function () {
+        $(this).css({
+        }).animate({
+            opacity: "0",
+            top: "-10px",
+        },{
+            duration: delay,
+            queue: true,
+        });
+        delay += 100;
+    });
+
+    Delay(function () {
+        $(".inbox-messages").css({
+            display: "none",
+        }).animate({
+            opacity: "0",
+        });
+    }, 1000);
 }
 
 // Display close icon
@@ -552,6 +700,11 @@ function NewMessage() {
         opacity: '1',
         marginTop: '0',
     });
+
+
+    // Animate icon button
+    // (open => close)
+    ShowCloseNewMessageIcon();
 }
 
 
@@ -568,6 +721,10 @@ function CloseNewMessage() {
         opacity: '0',
         marginTop: '-50px',
     });
+
+    // Animate icon button
+    // (close => open)
+    ShowNewMessageIcon();
 
     // Remove the form
     // after the animation

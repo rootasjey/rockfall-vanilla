@@ -7,15 +7,6 @@
 // ----------------------------
 
 var _settings = null;
-// global var : user
-// --------
-var _user = {
-    'name': 'visitor',
-    'password' : 'none',
-    'email' : 'none',
-    'logged' : false,
-};
-
 
 // Fire when settings icon is clicked
 // remember(arg) = save the previous content
