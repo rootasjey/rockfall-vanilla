@@ -15,13 +15,20 @@ window.onload = function () {
 
     // load the board
     LoadBoard();
-    
+
     //
     //Connexion();
-    
+
     // toggle fullscreen
     Fullscreen();
 
     WelcomeIconsMouseEvents();
     // window.setTimeout(AutoFullscreen, 2000);
+};
+
+
+// JS PROTOTYPES
+// ----------
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };

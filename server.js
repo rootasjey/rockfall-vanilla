@@ -218,14 +218,6 @@ var players = new Array();
 
 
 
-
-// PROTOTYPES
-// ----------
-String.prototype.endsWith = function(suffix) {
-    return this.indexOf(suffix, this.length - suffix.length) !== -1;
-};
-
-
 // MATCHMAKING
 /*
 var mymatch = new Matchmaker;

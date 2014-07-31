@@ -2,7 +2,7 @@
   opacity: 0.2;
   width: 30px;
   height: 30px;
-  margin-right: 5px;
+  margin-right: -5px;
   cursor: pointer;
   transition: 1s;
 }
@@ -212,8 +212,26 @@
   opacity: 0.5;
   margin-left: 5px;
   display: inline-block;
+  cursor: pointer;
   position: relative;
   top: -10px;
+}
+.second-panel .rectangle-pagination {
+  color: #fff;
+  text-align: center;
+  min-width: 90px;
+  max-width: 150px;
+  display: inline-block;
+  top: -10px;
+  position: relative;
+  opacity: 0;
+  padding: 10px;
+  margin-left: 10px;
+  background: #e74c3c;
+  -moz-box-shadow: 14px 0 40px -13px #000;
+  -webkit-box-shadow: 14px 0 40px -13px #000;
+  box-shadow: 14px 0 40px -13px #000;
+  transition: 0.5s;
 }
 @-moz-keyframes glowIcon {
   from {

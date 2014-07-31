@@ -3,9 +3,10 @@
 // -----------
 var _messageGlowID = null;
 var _box = {
-    'count' : 0,
-    'page'  : 0,
-    'messagesPerPage' : 6,
+    'count'             : 0,
+    'page'              : 0,
+    'maxPages'          : 0,
+    'messagesPerPage'   : 6,
 };
 
 // Go to the next messages pages
@@ -55,6 +56,12 @@ function NextInboxPage() {
             // Show previous page button
             // now that we're not on 1st page
             ShowPreviousPageInboxMessagesButton();
+
+            // Auto hide next page button
+            AutoHideNextPageMessagesButton();
+
+            // Show pagination
+            RefreshAndShowPagination(_box.page, maxPages);
 
         }, 1000);
     });
@@ -106,6 +113,12 @@ function PreviousInboxPage() {
             // Show next page button
             // now that we're on 1st page
             ShowNextPageInboxMessagesButton();
+
+            // Auto hide previous page button
+            AutoHidePreviousPageMessagesButton();
+
+            // Show pagination
+            RefreshAndShowPagination(_box.page, maxPages);
 
         }, 1000);
     });
@@ -427,8 +440,15 @@ function CreateMessagePanel() {
         function: "inbox",
     }).appendTo(".second-panel");
 
+    // messages counter
     $("<span>", {
         class: "messages-counter",
+    }).appendTo(".second-panel");
+
+    // page number
+    $("<div>", {
+        class: "rectangle-pagination",
+        html: "page 1/1",
     }).appendTo(".second-panel");
 
     MessagePanelEvents();
@@ -498,6 +518,43 @@ function MessagePanelEvents() {
             }
 
     });
+
+    // Hover
+    // on .messages-counter
+    HoverMessagesCounter();
+}
+
+// Event fired when the cursor
+// is over the messages counter
+// > show on which page we are
+// ----------------------------
+function HoverMessagesCounter() {
+    $(".messages-counter").hover(function () {
+        $(".rectangle-pagination").css({
+            opacity: "1",
+            marginRight: "5px",
+        });
+    }, function () {
+        $(".rectangle-pagination").css({
+            opacity: "0",
+            marginRight: "-5px",
+        });
+    })
+}
+
+// Show the current messsages page
+// ---------------------------------------------
+function RefreshAndShowPagination(currentPage) {
+    currentPage++;
+
+    $(".rectangle-pagination")
+        .html("page " + currentPage + "/" + _box.maxPages)
+        .css("opacity", "1");
+
+    Delay(function () {
+        $(".rectangle-pagination")
+            .css("opacity", "0");
+    }, 3000);
 }
 
 
@@ -511,6 +568,9 @@ function RefreshMessagesCounter(count) {
     });
     $(".messages-counter").html(count);
 
+    RefreshBoxMaxPages();
+    UpdatePagination();
+
     // Check if we have > 6 messages
     // to display prev./next icon
     if (_box.count < 7)
@@ -523,14 +583,45 @@ function RefreshMessagesCounter(count) {
         // that means that we cannont display all
         // so we've to use pagination
         ShowNextPageInboxMessagesButton();
-
         // ShowPreviousPageInboxMessagesButton();
-
 
         // Click events on these icons
         NextInboxPage();
         PreviousInboxPage();
+
     }
+}
+
+function UpdatePagination() {
+    var p = _box.page + 1;
+    $(".rectangle-pagination")
+        .html("page " + p + "/" + _box.maxPages);
+}
+
+
+function AutoHideNextPageMessagesButton() {
+    if (_box.maxPages === (_box.page + 1) ) {
+            HideNextPageInboxMessagesButton();
+        }
+}
+
+function AutoHidePreviousPageMessagesButton() {
+    if (_box.page === 0) {
+            HidePreviousPageInboxMessagesButton();
+        }
+}
+
+// Refresh the max pages available
+// which contains all messages
+// --------------------------
+function RefreshBoxMaxPages() {
+    _box.maxPages = _box.count / _box.messagesPerPage;
+
+    if (_box.count % _box.messagesPerPage !== 0) {
+        _box.maxPages++;
+    }
+
+    _box.maxPages = parseInt(_box.maxPages);
 }
 
 function ShowNextPageInboxMessagesButton() {
@@ -574,8 +665,9 @@ function HidePreviousPageInboxMessagesButton() {
     $(".inbox-left-section").css({
         opacity     : "0",
         cursor      : "default",
-    });
+    }).off('mouseenter mouseleave');
 }
+
 
 // Create the panel wich contains
 // individuals messages
