@@ -82,6 +82,13 @@ function FadeOutSquares() {
         opacity     : '0',
         top         : '-40px',
     });
+
+    // info square
+    // is a div not an img
+    // -------------------
+    $("div.square[function='infos']").css({
+        display     : 'none',
+    });
 }
 
 // Show all squares
