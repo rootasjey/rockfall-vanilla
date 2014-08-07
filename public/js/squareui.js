@@ -315,6 +315,21 @@ function SecondPanelEvents() {
                 HideSecondPanelIcons();
             }
     });
+
+    HoverSecondPanelIcons();
+}
+
+function HoverSecondPanelIcons() {
+    $(".second-panel .mini-icon").hover(
+        function () {
+        $(this).css({
+            opacity: "1",
+        });
+    }, function () {
+        $(this).css({
+            opacity: "0.2",
+        });
+    });
 }
 
 // Show second-panel with style
@@ -371,28 +386,44 @@ function CreateSettingsPanel() {
         opacity: "0",
     }).appendTo(".second-panel");
 
+    // settins content
+    $("<div>", {
+        class: "settings-content",
+    }).appendTo(".settings-panel");
+
 
     // Icons
     $("<div>", {
         class: "settings-section",
-        html: "<span> Connexion </span>",
+        function: "connexion",
+        html: "<span> Connexion </span> <img src='../icons/icon_key.png' alt='connexion'/>",
     }).css({
         opacity: "0",
-    }).appendTo(".settings-panel");
+        top: "-10px",
+    }).appendTo(".settings-content");
 
     $("<div>", {
         class: "settings-section",
-        html: "<span> Personal Area </span>",
+        function: "preferences",
+        html: "<span> Preferences </span> <img src='../icons/icon_like.png' alt='like'/>",
     }).css({
         opacity: "0",
-    }).appendTo(".settings-panel");
+        top: "-10px",
+    }).appendTo(".settings-content");
 
     $("<div>", {
         class: "settings-section",
-        html: "<span> About </span>",
+        function: "about",
+        html: "<span> About </span> <img src='../icons/icon_about.png' alt='about'/>",
     }).css({
         opacity: "0",
-    }).appendTo(".settings-panel");
+        top: "-10px",
+    }).appendTo(".settings-content");
+
+
+    // EVENTS
+    HoverSettingsSection();
+    ClickSettingsSection();
 }
 
 // Show Settings panel with style
@@ -416,11 +447,14 @@ function ShowSettingsPanel() {
     ShowSettingsPanelIcons();
 
     // Animate content
-    var delay = 200;
+    var delay = 800;
     $(".settings-section").each(function () {
-        $(this).animate({
+        $(this).css({
+            opacity: "0",
+            top: "-10px"
+        }).animate({
             opacity: "0.5",
-            left: "0",
+            top: "0",
         }, {
             duration: delay,
             queue   : true,
@@ -445,18 +479,69 @@ function HideSettingsPanel() {
     if ($(".settings-panel").css("opacity") === "0")
         return;
 
-    // Hide the settings panel
-    $(".settings-panel").css({
-        opacity: "1",
-    }).animate({
-        opacity: "0",
+    // Animate content
+    var delay = 200;
+    $(".settings-section").each(function () {
+        $(this).css({
+            // opacity: "0",
+            // top: "-10px"
+        }).animate({
+            opacity: "0",
+            top: "-10px",
+        }, {
+            duration: delay,
+            queue   : true,
+        });
+
+        delay += 200;
     });
 
     Delay(function () {
+        // Hide the settings panel
+        $(".settings-panel").css({
+            opacity: "1",
+        }).animate({
+            opacity: "0",
+        });
+    })
+
+
+    Delay(function () {
         $(".settings-panel").css("display", "none");
-    });
+    }, 1000);
 
     HideSecondPanelIcons();
+}
+
+// Hover event on section settings
+// See CSS for other style for this object
+// ------------------------------
+function HoverSettingsSection() {
+    $(".settings-section").hover(function () {
+        $(this).css({
+            top: "-5px",
+        });
+    }, function () {
+        $(this).css({
+            top: "0",
+        });
+    });
+}
+
+function ClickSettingsSection() {
+    $(".settings-section").click(function () {
+        var fun = $(this).attr("function");
+
+        if (fun === "connexion") {
+            console.log(fun);
+        }
+        else if (fun === "preferences") {
+            console.log(fun);
+        }
+        else if (fun === "about") {
+            console.log(fun);
+        }
+    });
 }
 
 // Create message container
@@ -677,7 +762,7 @@ function HoverMessagesCounter() {
             opacity: "0",
             marginLeft: "-5px",
         });
-    })
+    });
 }
 
 // Show the current messsages page

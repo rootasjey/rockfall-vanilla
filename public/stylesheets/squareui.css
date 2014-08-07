@@ -280,14 +280,44 @@
   display: block;
   margin: auto;
 }
-.second-panel .settings-panel .settings-section {
-  height: 100px;
-  width: 100px;
-  background: #fff;
-  color: #000;
+.second-panel .settings-panel .settings-content {
+  height: 200px;
+  width: 600px;
+  margin: auto;
+  margin-top: 40px;
+}
+.second-panel .settings-panel .settings-content .settings-section {
+  height: 160px;
+  width: 160px;
+  background: #000;
+  color: #fff;
+  font-size: 1.5em;
+  text-align: center;
+  cursor: pointer;
   display: inline-block;
   position: relative;
-  left: -10px;
+  padding: 10px;
+  margin: 5px;
+  position: relative;
+  top: 0;
+  transition: 0.5s;
+}
+.second-panel .settings-panel .settings-content .settings-section:hover {
+  -moz-box-shadow: 0 0 20px #000;
+  -webkit-box-shadow: 0 0 20px #000;
+  box-shadow: 0 0 20px #000;
+  transition: 0.5s;
+}
+.second-panel .settings-panel .settings-content .settings-section span {
+  margin-top: 40px;
+  display: inline-block;
+}
+.second-panel .settings-panel .settings-content .settings-section img {
+  height: 50px;
+  width: 50px;
+  display: block;
+  margin: auto;
+  margin-top: 10px;
 }
 @-moz-keyframes glowIcon {
   from {
