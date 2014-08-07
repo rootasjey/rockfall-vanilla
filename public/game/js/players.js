@@ -45,7 +45,7 @@ function Players(id,nom,colorShape,score,weightShapes){
 Players.prototype.getPiece = function(){
     
     for(var i = 0;i<this.weightShapes.length;i++){
-        var shape = new Shape(180 + (150*i), 410, 70, 70,this.weightShapes[i],this.colorShape);
+        var shape = new Shape(180 + (140*i), 410, 100, 100,this.weightShapes[i],this.colorShape);
         shape.image = this.image;
         this.pieces.add(shape);
     }

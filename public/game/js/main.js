@@ -5,8 +5,8 @@ function LoadBoard() {
     /* On créé les joueurs du mode solo ici du 1 vs 1, mais qui peut s'étendre,
     chaque joueur jouera de manière alterné */
     var players = new Array();
-    players.push(new Players(1,"Joueur_1","blue",0,[5,10,15]));
-    players.push(new Players(2,"Joueur_2","red",0,[8,10,20]));
+    players.push(new Players(1,"Joueur_1","black",0,[5,10,15]));
+    players.push(new Players(2,"Joueur_2","black",0,[8,10,20]));
     
     /* On définit les pouvoirs qui seront disponible lors de la partie ici nous avons définit 3 qui seront les mêmes pour chaque joueur */
     var powerPlayerUn = new Array();
@@ -25,8 +25,8 @@ function LoadBoard() {
     
     /* Création du tableau des images par joueur en dur (à mettre à la sélection par le joueur) */
     var sources = {
-        "Joueur_1": './rocher.png',
-        "Joueur_2": './rocher.png'
+        "Joueur_1": './rocher_2.png',
+        "Joueur_2": './rocher_3.png'
       };
     
     /* appel de la fonction qui permet de charger les images et une fois charger lance le jeux*/
@@ -274,7 +274,7 @@ if(_myState.tours.canAdd() == true){
                      _myState.comboMaker.nom = _myState.activePlayers.nom;
                      _myState.comboMaker.id = _myState.activePlayers.identifiant;
                     
-				      var shape = new Shape(_myState.plateau.graphique[i].x, _myState.plateau.graphique[i].y, _myState.selectionPiece.width, _myState.selectionPiece.height, _myState.selectionPiece.weight, _myState.selectionPiece.fill);
+				      var shape = new Shape(_myState.plateau.graphique[i].x-(_myState.plateau.graphique[i].width/2), _myState.plateau.graphique[i].y-(_myState.plateau.graphique[i].height/4.5), _myState.selectionPiece.width, _myState.selectionPiece.height, _myState.selectionPiece.weight, _myState.selectionPiece.fill);
                     shape.image = _myState.activePlayers.image;
                     shape.idProprietaire = _myState.activePlayers.identifiant;
                       _myState.plateau.add(_myState.plateau.graphique[i].matriceX, _myState.plateau.graphique[i].matriceY, shape);

@@ -27,6 +27,7 @@ function Table(sizeX, sizeY, startX, startY, space){
 	/* Dimension des cases du plateau */
 	this.width = 70;
 	this.height = 70;
+    this.dimension = 25;
 	
 	/* Les données de départ qui serviront pour la représentation graphique */
 	this.startX = startX;
@@ -52,7 +53,7 @@ function Table(sizeX, sizeY, startX, startY, space){
 			
 			x = this.startX + i *(this.width+this.space);
 			tabX.push(0);
-			this.graphique.push(new Cell(x,y,this.width,this.height,j,i));
+			this.graphique.push(new Cell(x,y,this.width,this.height,this.dimension,j,i));
 		}
 
 		this.matrice.push(tabX);	
@@ -66,12 +67,13 @@ function Table(sizeX, sizeY, startX, startY, space){
 
 /* La cellule est l'objet contenant les informations sur une case du plateau */
 
-function Cell(x, y, w, h, matriceX, matriceY){
+function Cell(x, y, w, h, dimension, matriceX, matriceY){
 	
 	this.x = x;
 	this.y = y;
 	this.width = w;
 	this.height = h;
+    this.dimension = dimension;
 	this.color = "#CCCCCC";
 	this.selected = false;
 	this.matriceX = matriceX;
@@ -124,7 +126,7 @@ Table.prototype.search = function(matriceX,matriceY){
     return resultat;
 }
 
-/*La fonction gravity permet d'appliquer une certaine gravité au pièce du plateau */
+/*La fonction gravity permet d'appliquer une certaine gravité aux pièces du plateau */
 
 Table.prototype.gravity = function(){
 
@@ -144,8 +146,8 @@ Table.prototype.gravity = function(){
                             this.matrice[k+1][i] = this.matrice[k][i];
                             var objet = this.search(k+1,i);
                             if(objet != null){
-                                this.matrice[k+1][i].x = objet.x;
-                                this.matrice[k+1][i].y = objet.y;
+                                this.matrice[k+1][i].x = objet.x-(objet.width/2);
+                                this.matrice[k+1][i].y = objet.y-(objet.height/4.5);
                             }
                             this.matrice[k][i]= 0;
                             fini =  true;
@@ -305,7 +307,7 @@ Cell.prototype.draw = function(ctx){
         ctx.shadowColor = "black";
         */
     
-        var wide = 25;
+        var wide = this.dimension;
     
         ctx.shadowColor = "black";
 	  

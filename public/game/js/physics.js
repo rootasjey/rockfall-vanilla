@@ -67,7 +67,7 @@ function FallEffectAndForce(stateGame){
                                 
                                 
                                 for(var k = 0;k<findOrNot.box.length;k++){
-                                    stateGame.plateau.matrice[findOrNot.box[k].x][findOrNot.box[k].y].fill = "yellow";
+                                    stateGame.plateau.matrice[findOrNot.box[k].x][findOrNot.box[k].y].fill = "red";
                                 }
                                 stateGame.valid = false;
                                 

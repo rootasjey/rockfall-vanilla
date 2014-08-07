@@ -110,7 +110,11 @@ Shape.prototype.draw = function(ctx) {
     
 
     ctx.font = "italic 30pt "+fontScore;
-    WriteMessage(ctx, this.weight, this.fill, (this.x + (this.width/4)), (this.y + (this.height/1.5)), 5);
+    if(parseInt(this.weight)<10){
+    WriteMessage(ctx, this.weight, this.fill, (this.x + (this.width/2.8)), (this.y + (this.height/1.6)), 1);
+    }else{
+      WriteMessage(ctx, this.weight, this.fill, (this.x + (this.width/3.5)), (this.y + (this.height/1.6)), 1);  
+    }
 
 }
 
