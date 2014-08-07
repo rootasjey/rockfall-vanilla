@@ -115,7 +115,7 @@ function AddMiniIcons() {
         isGlowing: 'false',
     }).css({
         position: 'absolute',
-        right: '50px',
+        right: '60px',
     }).appendTo("#square-ui");
 
     // settings icon
@@ -126,7 +126,7 @@ function AddMiniIcons() {
         function: 'settings'
     }).css({
         position: 'absolute',
-        right: '10px',
+        right: '20px',
     }).appendTo("#square-ui");
 
 }
@@ -147,17 +147,24 @@ function MiniIconEvent() {
     // messages event
     // --------------
     $(".mini-icon[function='messages']").click(function () {
-
+            // Create the second panel
             CreateSecondPanel();
 
-            if ($("div.second-panel").css("opacity") == "1") {
+
+            if ($("div.message-panel").css("opacity") == "1") {
                 HideMessagePanel();
                 HideSecondPanel();
+                // console.log("hide msg");
             }
             else {
+                // and hide all sub-panels
+                // before showing one
+                HideAllSubPanels();
+
                 ShowSecondPanel();
                 CreateMessagePanel();
                 ShowMessagePanel();
+                // console.log("show msg");
             }
 
     });
@@ -165,7 +172,55 @@ function MiniIconEvent() {
     // settings event
     // --------------
     $(".mini-icon[function='settings']").click(function () {
+        // Create the second panel
+        CreateSecondPanel();
 
+
+        if($("div.settings-panel").css("opacity") == "1") {
+            HideSettingsPanel();
+            HideSecondPanel();
+        }
+        else {
+            // and hide all sub-panels
+            // before showing one
+            HideAllSubPanels();
+
+            ShowSecondPanel();
+            CreateSettingsPanel();
+            ShowSettingsPanel();
+        }
+    });
+}
+
+// Hide all sub-panels of .second-panel
+// --------------------------
+function HideAllSubPanels() {
+    // HideMessagePanel();
+    // HideSettingsPanel();
+
+    $(".message-panel").css({
+        opacity: "0",
+        display: "none",
+    });
+
+    $(".settings-panel").css({
+        opacity: "0",
+        display: "none",
+    });
+    HideSecondPanelIcons();
+}
+
+function HideSecondPanelIcons() {
+    $(".second-panel .mini-icon").css({
+        height: "0",
+        width: "0",
+        opacity: "0",
+    });
+
+    $(".messages-counter").css({
+        opacity: '0',
+        height: '0',
+        width: '0',
     });
 }
 
@@ -255,6 +310,9 @@ function SecondPanelEvents() {
         function () {
             if ($("div.second-panel").css("opacity") == "1") {
                 HideSecondPanel();
+                HideMessagePanel();
+                HideSettingsPanel();
+                HideSecondPanelIcons();
             }
     });
 }
@@ -299,32 +357,116 @@ function HideSecondPanel() {
     });
 }
 
+function CreateSettingsPanel() {
+    // Exit if we've already created this object
+    if($(".settings-panel").length > 0) return;
+
+
+    // Create the settings panel
+    // -------------------------
+    $("<div>", {
+        class: "settings-panel",
+        html: "<div class='second-panel-title'> <span> Settings </span> </div>",
+    }).css({
+        opacity: "0",
+    }).appendTo(".second-panel");
+
+
+    // Icons
+    $("<div>", {
+        class: "settings-section",
+        html: "<span> Connexion </span>",
+    }).css({
+        opacity: "0",
+    }).appendTo(".settings-panel");
+
+    $("<div>", {
+        class: "settings-section",
+        html: "<span> Personal Area </span>",
+    }).css({
+        opacity: "0",
+    }).appendTo(".settings-panel");
+
+    $("<div>", {
+        class: "settings-section",
+        html: "<span> About </span>",
+    }).css({
+        opacity: "0",
+    }).appendTo(".settings-panel");
+}
+
+// Show Settings panel with style
+// --------------------------
+function ShowSettingsPanel() {
+    // Show the .message-panel content
+    $(".settings-panel").css({
+        opacity: "0",
+        display:"block",
+    }).animate({
+        opacity: "1",
+    });
+
+
+    // Change the Color's second-panel
+    $(".second-panel").css({
+        background: "#27ae60",
+    });
+
+    // ICONS
+    ShowSettingsPanelIcons();
+
+    // Animate content
+    var delay = 200;
+    $(".settings-section").each(function () {
+        $(this).animate({
+            opacity: "0.5",
+            left: "0",
+        }, {
+            duration: delay,
+            queue   : true,
+        });
+
+        delay += 200;
+    });
+}
+
+function ShowSettingsPanelIcons() {
+    $(".mini-icon[function='collapse']").css({
+    }).animate({
+        opacity: '0.2',
+        height: '30px',
+        width: '30px',
+    });
+}
+
+// Hide Message panel with style
+// --------------------------
+function HideSettingsPanel() {
+    if ($(".settings-panel").css("opacity") === "0")
+        return;
+
+    // Hide the settings panel
+    $(".settings-panel").css({
+        opacity: "1",
+    }).animate({
+        opacity: "0",
+    });
+
+    Delay(function () {
+        $(".settings-panel").css("display", "none");
+    });
+
+    HideSecondPanelIcons();
+}
+
 // Create message container
 // ------------------------
 function CreateMessagePanel() {
     // Exit if we've already created this object
     if($(".message-panel").length > 0) return;
 
-    // Create the message-panel
-    // ---------
-    $("<div>", {
-        class: "message-panel",
-        html : "<div class='second-panel-title'> <span> Messages </span> </div>",
-    }).css({
-        opacity: "0",
-    }).appendTo(".second-panel");
-
-
     // Add icons to the message-panel
     // -------------
-    // Collapse icon
-    // ---------
-    $("<img>", {
-        src: "../icons/icon_plus.png",
-        class: "mini-icon",
-        function: "new-message",
-    }).appendTo(".second-panel-title");
-
     // Inbox icon
     $("<img>", {
         src: "../icons/icon_filledbox.png",
@@ -343,8 +485,105 @@ function CreateMessagePanel() {
         html: "page 1/1",
     }).appendTo(".second-panel");
 
+
+    // Create the message-panel-title
+    // ---------
+    $("<div>", {
+        class: "message-panel",
+        html : "<div class='second-panel-title'> <span> Messages </span> </div>",
+    }).css({
+        opacity: "0",
+    }).appendTo(".second-panel");
+
+    $("<img>", {
+        src: "../icons/icon_plus.png",
+        class: "mini-icon",
+        function: "new-message",
+    }).appendTo(".second-panel-title");
+
+    // EVENTS
     MessagePanelEvents();
 }
+
+// Show Message panel with style
+// --------------------------
+function ShowMessagePanel() {
+    // Show the .message-panel content
+    $(".message-panel").css({
+        opacity: "0",
+        display:"block",
+    }).animate({
+        opacity: "1",
+    });
+
+    // Change the Color's second-panel
+    $(".second-panel").css({
+        background: "#e74c3c",
+    });
+
+    ShowMessagePanelIcons();
+}
+
+function ShowMessagePanelIcons() {
+    // Show the inbox icon
+    // and the pagination info
+    // outside the .message-panel
+    $(".mini-icon[function='inbox']").css({
+    }).animate({
+        opacity: '0.2',
+        height: '30px',
+        width: '30px',
+    });
+
+    $(".mini-icon[function='collapse']").css({
+    }).animate({
+        opacity: '0.2',
+        height: '30px',
+        width: '30px',
+    });
+
+    $(".mini-icon[function='new-message']").css({
+    }).animate({
+        opacity: '0.2',
+        height: '30px',
+        width: '30px',
+    });
+
+    $(".messages-counter").animate({
+        opacity: '0.2',
+        height: '30px',
+        width: '30px',
+    });
+}
+
+// Hide Message panel with style
+// --------------------------
+function HideMessagePanel() {
+    if ($(".message-panel").css("opacity") === "0") return;
+
+    // Hide the message panel
+    $(".message-panel").css({
+        opacity: "1",
+    }).animate({
+        opacity: "0",
+    });
+
+
+    Delay(function () {
+        $(".message-panel").css("display", "none");
+    });
+
+    // Hide the inbox icon
+    // outside the message panel
+    // $(".mini-icon[function='inbox']").css({
+    // }).animate({
+    //     opacity: '0',
+    //     height: '0px',
+    //     width: '0px',
+    // });
+    HideSecondPanelIcons();
+}
+
 
 // Add events on .message-panel
 // ---------------------------
@@ -1069,47 +1308,6 @@ function ShowNewMessageIcon() {
     .css('transform', 'rotate(0deg)');;
 }
 
-// Show Message panel with style
-// --------------------------
-function ShowMessagePanel() {
-    // Show the .message-panel content
-    $(".message-panel").appendTo(".second-panel").css({
-        opacity: "0",
-    }).animate({
-        opacity: "1",
-    });
-
-    // Show the inbox icon
-    // outside the .message-panel
-    // $(".mini-icon[function='inbox']").css({
-    // }).animate({
-    //     opacity: '0.2',
-    //     height: '30px',
-    //     width: '30px',
-    // });
-}
-
-// Hide Message panel with style
-// --------------------------
-function HideMessagePanel() {
-    if ($(".message-panel").css("opacity") === "0") return;
-
-    // Hide the message panel
-    $(".message-panel").appendTo(".second-panel").css({
-        opacity: "1",
-    }).animate({
-        opacity: "0",
-    });
-
-    // Hide the inbox icon
-    // outside the message panel
-    // $(".mini-icon[function='inbox']").css({
-    // }).animate({
-    //     opacity: '0',
-    //     height: '0px',
-    //     width: '0px',
-    // });
-}
 
 function DisplayFullMessage(messageID) {
     // create/show full message box
