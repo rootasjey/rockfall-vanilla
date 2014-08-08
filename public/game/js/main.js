@@ -504,6 +504,8 @@ CanvasState.prototype.drawPointPlayer = function(){
 function WriteMessage (ctx, message, color, x, y, dpth){
     var cnt;
     
+    ctx.shadowBlur = 0;
+    
     ctx.fillStyle = color;
     
     for(cnt = 0;cnt < dpth;cnt++){
