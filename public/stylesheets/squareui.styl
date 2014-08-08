@@ -364,6 +364,76 @@ color-alizarin = #e74c3c
 
         transition 0.5s
     }
+
+    .settings-panel {
+        .second-panel-title {
+            width 100%
+            margin auto
+
+            color white
+            font-size 2em
+            text-align center
+
+            display inline-block
+
+            .mini-icon {
+                display block
+                margin auto
+            }
+        }
+
+        .settings-content {
+            height 200px
+            width 600px
+
+            margin auto
+            margin-top 40px
+
+            .settings-section {
+                height 160px
+                width 160px
+                background black
+
+                color white
+                font-size 1.5em
+                text-align center
+
+                cursor pointer
+                display inline-block
+                position relative
+
+                padding 10px
+                margin 5px
+                position relative
+                top 0
+
+                transition 0.5s
+
+                &:hover {
+                    // See .js for others style for hover
+                    -moz-box-shadow: 0 0 20px #000000;
+                    -webkit-box-shadow: 0 0 20px #000000;
+                    box-shadow: 0 0 20px #000000;
+
+                    transition 0.5s
+                }
+
+                span {
+                    margin-top 40px
+                    display inline-block
+                }
+
+                img {
+                    height 50px
+                    width 50px
+
+                    display block
+                    margin auto
+                    margin-top 10px
+                }
+            }
+        }
+    }
 }
 
 // Glow Animation for icons
