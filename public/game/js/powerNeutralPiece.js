@@ -18,6 +18,8 @@ function powerNeutralPiece (elementListener, price, img){
     
     
     this.img = img;
+    
+    
     /* la variable qui garde en mémoire l'état de l'"objet" dans le listener */
     _saveStateN = this;
 }
@@ -55,8 +57,9 @@ powerNeutralPiece.prototype.listen = function(stateGame){
 powerNeutralPiece.prototype.power = function(shape){
     
     shape.idProprietaire = -1;
-    shape.fill = "grey";
-   
+    if(ImageNeutre != null){
+        shape.image = ImageNeutre;
+    }
     return shape;
 }
 

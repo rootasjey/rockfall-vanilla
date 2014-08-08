@@ -26,7 +26,8 @@ function LoadBoard() {
     /* Création du tableau des images par joueur en dur (à mettre à la sélection par le joueur) */
     var sources = {
         "Joueur_1": './images/rock-red.png',
-        "Joueur_2": './images/rock-sunflower.png'
+        "Joueur_2": './images/rock-ciel.png',
+        "System_Neutre":"./images/rock-grey.png"
       };
 
     /* appel de la fonction qui permet de charger les images et une fois charger lance le jeux*/
@@ -37,6 +38,8 @@ function LoadBoard() {
 }
 /* permet de centraliser la police de l'appli (on peut faire mieux qu'une variable comme sa )*/
 var fontScore = "Calibri";
+
+var ImageNeutre = null;
 
 /*la fonction qui charge toutes les images et une fois terminé qui lance la fonction callback*/
 function loadImages(sources, callback) {
@@ -82,6 +85,8 @@ function CanvasState (players,pointToWin, imageLoad){
     /* contient les images chargées précédement */
     this.imageLoad = imageLoad;
 
+    ImageNeutre = this.imageLoad["System_Neutre"];
+    
     /* assigne à chaque joueur son image de pièce */
     for(var r = 0;r<this.players.length;r++){
         var name = this.players[r].nom;
@@ -503,13 +508,10 @@ CanvasState.prototype.drawPointPlayer = function(){
 /* Fonction qui permet d'écrire sur canvas */
 function WriteMessage (ctx, message, color, x, y, dpth){
     var cnt;
-<<<<<<< HEAD
     
-    ctx.shadowBlur = 0;
+    ctx.shadowBlur = 4;
     
-=======
 
->>>>>>> d031ed5b65693a1dad76f668bfbdc5b96725313d
     ctx.fillStyle = color;
 
     for(cnt = 0;cnt < dpth;cnt++){
