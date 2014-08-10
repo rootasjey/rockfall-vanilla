@@ -527,12 +527,12 @@ Table.prototype.findFour = function(){
                         var test = this.verificationDiagonale(i,j);
 
                         if(test.find){
-
-                           find = true;
+                            
+                            find = true;
                             id = test.id;
                             sommePoint = 0;
                             for(var k = 0;k<test.case.length;k++){
-                                sommePoint += this.matrice[aligner[k].x][aligner[k].y].weight;
+                                sommePoint += this.matrice[test.case[k].x][test.case[k].y].weight;
                                 //this.matrice[test.case[k].x][test.case[k].y] = 0;
                             }
                             aligner = test.case;
