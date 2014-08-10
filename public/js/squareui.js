@@ -316,7 +316,7 @@ function SecondPanelEvents() {
             }
     });
 
-    HoverSecondPanelIcons();
+    // HoverSecondPanelIcons();
 }
 
 function HoverSecondPanelIcons() {
@@ -392,11 +392,12 @@ function CreateSettingsPanel() {
     }).appendTo(".settings-panel");
 
 
-    // Icons
+    // Sections
+    // ---------
     $("<div>", {
         class: "settings-section",
-        function: "connexion",
-        html: "<span> Connexion </span> <img src='../icons/icon_key.png' alt='connexion'/>",
+        function: "connection",
+        html: "<div class='side-side'><span> Connexion </span> <img src='../icons/icon_key.png' alt='connexion'/></div>",
     }).css({
         opacity: "0",
         top: "-10px",
@@ -405,7 +406,7 @@ function CreateSettingsPanel() {
     $("<div>", {
         class: "settings-section",
         function: "preferences",
-        html: "<span> Preferences </span> <img src='../icons/icon_like.png' alt='like'/>",
+        html: "<div class='side-side'><span> Preferences </span> <img src='../icons/icon_like.png' alt='like'/></div>",
     }).css({
         opacity: "0",
         top: "-10px",
@@ -414,7 +415,7 @@ function CreateSettingsPanel() {
     $("<div>", {
         class: "settings-section",
         function: "about",
-        html: "<span> About </span> <img src='../icons/icon_about.png' alt='about'/>",
+        html: "<div class='side-side'><span> About </span> <img src='../icons/icon_about.png' alt='about'/></div>",
     }).css({
         opacity: "0",
         top: "-10px",
@@ -462,7 +463,9 @@ function ShowSettingsPanel() {
 
         delay += 200;
     });
+
 }
+
 
 function ShowSettingsPanelIcons() {
     $(".mini-icon[function='collapse']").css({
@@ -503,7 +506,7 @@ function HideSettingsPanel() {
         }).animate({
             opacity: "0",
         });
-    })
+    });
 
 
     Delay(function () {
@@ -532,15 +535,594 @@ function ClickSettingsSection() {
     $(".settings-section").click(function () {
         var fun = $(this).attr("function");
 
-        if (fun === "connexion") {
-            console.log(fun);
+        if (fun === "connection") {
+            ClickConnection();
         }
         else if (fun === "preferences") {
-            console.log(fun);
+            ClickPreferencesSection();
         }
         else if (fun === "about") {
             console.log(fun);
         }
+    });
+}
+
+// Click Event on Connection sction
+// To show this section
+// -------------------------
+function ClickConnection() {
+    // Get off the initial click event
+    // => We do not want to expend this object again
+    $(".settings-section[function='connection']").off("click");
+
+    // Animate others sections out
+    $(".settings-section[function='preferences']").animate({
+        left: "10px",
+        opacity: "0",
+    });
+    $(".settings-section[function='about']").animate({
+        left: "10px",
+        opacity: "0",
+    });
+
+
+    // Starts a few secs later
+    Delay(function () {
+        // Hide others section (display=none)
+        // -----------------------------------
+        $(".settings-section[function='preferences']").css({
+            display: "none",
+        });
+        $(".settings-section[function='about']").css({
+            display: "none",
+        });
+
+        // Put the section's title (& the image) on the left side
+        // ------------------------------------------------------
+        $(".settings-section[function='connection'] .side-side").css({
+            marginLeft: "0",
+            width: "160px",
+            top: "-20px",
+        });
+
+        // Expend the connection section
+        var conn = $(".settings-section[function='connection']").css({
+        }).animate({
+            width: "550px",
+        });
+
+        // Create th content of the connection section
+        var sc = $("<div>", {
+            class: "side-content",
+        }).css({
+            width: "300px",
+        }).appendTo(conn)
+
+        Delay(function () {
+            // Add buttons
+            // Login
+            $("<div>", {
+                class: "rectangle-button",
+                function: "login",
+                html: "<span> login </span>",
+            })
+                .css({
+                    opacity: "0",
+                })
+                .animate({
+                    opacity: "0.5",
+                })
+                .hover(function () {
+                    $(this).css("opacity", "1");
+                }, function () {
+                    $(this).css("opacity", "0.5");
+                })
+                .appendTo(sc);
+
+            // Signup
+            $("<div>", {
+                class: "rectangle-button",
+                function: "signup",
+                html: "<span> signup </span>",
+            })
+                .css({
+                    opacity: "0",
+                })
+                .animate({
+                    opacity: "0.5",
+                })
+                .hover(function () {
+                    $(this).css("opacity", "1");
+                }, function () {
+                    $(this).css("opacity", "0.5");
+                })
+                .appendTo(sc);
+
+            // Close button
+            // -------------
+            AddCloseRectangleToSetingsSection();
+
+            // Add others events on this section
+            EventConnection();
+
+        }, 1000);
+    });
+}
+
+
+// Click Event to close this section
+// ------------------------------
+function CloseConnectionPanel() {
+        $(".side-content").remove();
+        RemoveCloseRectangle();
+        RemoveLoginForm();
+
+
+        // Put the section's title (& the image) on the left side
+        // ------------------------------------------------------
+        $(".settings-section[function='connection'] .side-side").css({
+            margin: "auto",
+            width: "auto",
+            top: "0",
+        });
+
+        // Reduce the connection section
+        var conn = $(".settings-section[function='connection']").css({
+            left: "10px",
+        }).animate({
+            height: "160px",
+            width: "160px",
+        });
+
+        Delay(function () {
+            // Display others sections
+            $(".settings-section").css({
+                display: "inline-block",
+            }).animate({
+                opacity: "0.5",
+            });
+
+            // Put back the click event on the connection square
+            $(".settings-section[function='connection']").click(function () {
+                ClickConnection();
+            });
+
+            // Reduce the second panel if its height is greater than 440px
+            CheckSecondPanelInitialSize();
+
+        }, 1000);
+}
+
+
+function AddCloseRectangleToSetingsSection() {
+    $("<div>", {
+        class: "close-rectangle-text",
+        function: "close-section",
+        html: "<span> close </span>",
+    })
+    .css({
+    })
+    .animate({
+    })
+    .hover(function () {
+        $(".close-rectangle").css({
+            width: "50px",
+        });
+
+        $(this).css({
+            opacity: "1",
+        });
+    }, function () {
+        $(".close-rectangle").css({
+            width: "30px",
+        });
+
+        $(this).css({
+            opacity: "1",
+        });
+    })
+    .appendTo(".settings-section");
+
+    $("<div>", {
+        class: "close-rectangle",
+    })
+        .css({
+        })
+        .hover(function () {
+            $(this).css("width", "40px");
+        }, function () {
+            $(this).css("width", "30px");
+        })
+        .appendTo(".settings-section");
+}
+
+
+// Events of Connection section
+// -------------------------
+function EventConnection() {
+    $(".rectangle-button[function='login']").click(function () {
+        ShowLoginForm();
+    });
+
+    $(".rectangle-button[function='signup']").click(function () {
+        console.log('popo');
+    });
+
+    // Add click event on close button
+    $(".close-rectangle-text[function='close-section']").click(function () {
+        CloseConnectionPanel();
+    });
+
+    $(".close-rectangle").click(function () {
+        CloseConnectionPanel();
+    });
+}
+
+function ExpendConnectionSection(pixels) {
+    var marge = pixels;
+    var regex = /px/g;
+
+    marge = marge.replace(regex, "");
+    marge = marge/2;
+    marge = marge + "px";
+
+    $(".settings-section[function='connection']").css({
+        height: "+=" + pixels,
+    });
+
+    $(".settings-section[function='connection'] .close-rectangle-text").css({
+        top: "+=" + marge,
+    });
+
+    $(".second-panel").animate({
+        height: "+=" + pixels,
+    });
+}
+
+function ReduceConnectionSection(pixels) {
+    var marge = pixels;
+    var regex = /px/g;
+
+    marge = marge.replace(regex, "");
+    marge = marge/2;
+    marge = marge + "px";
+
+    $(".settings-section[function='connection']").css({
+        height: "-=" + pixels,
+    });
+
+    $(".settings-section[function='connection'] .close-rectangle-text").css({
+        top: "-=" + marge,
+    });
+
+    ReduceSecondPanel(pixels);
+}
+
+function CheckSecondPanelInitialSize() {
+    // Reduce the second panel if its height is greater than 440px
+    if ($(".second-panel").css("height") !== "440px") {
+        ReduceSecondPanel("200px");
+    }
+}
+
+function ReduceSecondPanel(pixels) {
+    $(".second-panel").animate({
+        height: "-=" + pixels,
+    });
+}
+
+// Create and show the login form
+// ------------------------
+function ShowLoginForm() {
+    // Prevent double click bug
+    // => multiple forms
+    $(".rectangle-button").off("click");
+
+    // Verify if a login form is already there
+    if($(".login-block").length > 0) {
+        // Remove the form
+        RemoveLoginForm();
+        // Reduce the panel + section
+        ReduceConnectionSection("200px");
+        // Put back the click events
+        // (we removed at the beggining of this function)
+        EventConnection();
+        return;
+    }
+
+    // Expend connection section
+    ExpendConnectionSection("200px");
+
+    // Starts with a delay
+    Delay(function () {
+
+        // Form container
+        $("<div>", {
+            class: "login-block",
+
+        }).appendTo(".settings-section");
+
+        // Form object
+        $("<form>", {
+            class: "login-form",
+            name: "login_form",
+        }).appendTo(".login-block");
+
+        // Title
+        var title = $("<span>", {
+            class: "form-title",
+            html: "login",
+        }).css({
+            opacity: "0",
+            marginTop: "10px",
+        }).appendTo(".login-form");
+
+        // Login input
+        var login = $("<input>", {
+            name: "login",
+            placeholder: "login",
+            type: "text",
+        })
+            .css({
+                opacity: "0",
+                marginTop: "10px",
+            })
+            .hover(function () {
+                $(this).css({
+                    opacity: "1",
+                });
+            }, function () {
+                $(this).css({
+                    opacity: "0.5",
+                });
+            })
+            .appendTo(".login-form");
+
+        // Password input
+        var password = $("<input>", {
+            name: "password",
+            placeholder: "password",
+            type: "password",
+        })
+            .css({
+                opacity: "0",
+                marginTop: "10px",
+            })
+            .hover(function () {
+                $(this).css({
+                    opacity: "1",
+                });
+            }, function () {
+                $(this).css({
+                    opacity: "0.5",
+                });
+            })
+            .appendTo(".login-form");
+
+        // Validation button
+        var ok = $("<img>", {
+            class: "icon",
+            src: "../icons/icon_checkmark.png",
+        }).css({
+            opacity: "0",
+            marginTop: "10px"
+        })
+        .hover(function () {
+            $(this).css({
+                background: "red",
+            });
+        }, function () {
+            $(this).css({
+                background: "transparent",
+            });
+        })
+        .appendTo(".login-form");
+
+
+        // Animations
+        title.animate({
+            opacity: "1",
+            marginTop: "0",
+        }, {
+            duration: 200,
+            queue   : true,
+        });
+
+        login.animate({
+            opacity: "0.5",
+            marginTop: "0",
+        }, {
+            duration: 300,
+            queue   : true,
+        });
+
+        password.animate({
+            opacity: "0.5",
+            marginTop: "5px",
+        }, {
+            duration: 400,
+            queue   : true,
+        });
+
+        ok.animate({
+            opacity: "1",
+            marginTop: "10px",
+        }, {
+            duration: 500,
+            queue   : true,
+        })
+
+        // Put back the click event
+        // on connection-section
+        // (login & singup)
+        EventConnection();
+
+    });
+
+}
+
+function RemoveLoginForm() {
+    $(".login-block").remove();
+}
+
+function RemoveCloseRectangle() {
+    $(".close-rectangle-text").remove();
+    $(".close-rectangle").remove();
+}
+
+function ClickPreferencesSection() {
+    // Get off the initial click event
+    // => We do not want to expend this object again
+    $(".settings-section[function='preferences']").off("click");
+
+    // Animate others sections out
+    $(".settings-section[function='connection']").animate({
+        opacity : "0",
+        // width   : "0px",
+    });
+    $(".settings-section[function='about']").animate({
+        opacity : "0",
+        // width   : "0px",
+    });
+
+    Delay(function () {
+        // Hide others section (display=none)
+        // ---------------------------------
+        $(".settings-section[function='connection']").css({
+            display: "none",
+        });
+        $(".settings-section[function='about']").css({
+            display: "none",
+        });
+
+        // Put the section's title (& the image) on the left side
+        // ------------------------------------------------------
+        $(".settings-section[function='preferences'] .side-side").css({
+            marginLeft: "0",
+            width: "160px",
+            top: "-20px",
+        });
+
+        // Expend the connection section
+        var prefs = $(".settings-section[function='preferences']").css({
+        }).animate({
+            width: "550px",
+        });
+
+        // Create th content of the connection section
+        var sc = $("<div>", {
+            class: "side-content",
+        }).css({
+            width: "300px",
+        }).appendTo(prefs)
+
+        Delay(function () {
+            // Add buttons
+            $("<div>", {
+                class: "rectangle-button",
+                function: "audio",
+                html: "<span> audio </span>",
+            })
+                .css({
+                    opacity: "0",
+                })
+                .animate({
+                    opacity: "0.5",
+                })
+                .hover(function () {
+                    $(this).css("opacity", "1");
+                }, function () {
+                    $(this).css("opacity", "0.5");
+                })
+                .appendTo(sc);
+
+            $("<div>", {
+                class: "rectangle-button",
+                function: "user",
+                html: "<span> user </span>",
+            })
+                .css({
+                    opacity: "0",
+                })
+                .animate({
+                    opacity: "0.5",
+                })
+                .hover(function () {
+                    $(this).css("opacity", "1");
+                }, function () {
+                    $(this).css("opacity", "0.5");
+                })
+                .appendTo(sc);
+
+            // Close button
+            // -------------
+            AddCloseRectangleToSetingsSection();
+
+            // Add click event on close button
+            ClosePreferencesPanel();
+
+            // Events
+            EventPreferences()
+        }, 1000);
+
+    });
+
+}
+
+// Click Event to close this section
+// ------------------------------
+function ClosePreferencesPanel() {
+    $(".close-rectangle-text[function='close-section']")
+    .click(function () {
+        $(".side-content").remove();
+        RemoveCloseRectangle();
+
+        // Put the section's title (& the image) on the left side
+        // ------------------------------------------------------
+        $(".settings-section[function='preferences'] .side-side").css({
+            margin: "auto",
+            width: "auto",
+            top: "0",
+        });
+
+        // Reduce the preferences section
+        var prefs = $(".settings-section[function='preferences']").css({
+            left: "10px",
+        }).animate({
+            height: "160px",
+            width: "160px",
+        });
+
+        Delay(function () {
+            // Display others sections
+            $(".settings-section").css({
+                display: "inline-block",
+                left: "0",
+            }).animate({
+                opacity: "0.5",
+                // width   : "160px",
+            });
+
+            $(".settings-section[function='preferences']").click(function () {
+                ClickPreferencesSection();
+            });
+
+            // Reduce the second panel if its height is greater than 440px
+            CheckSecondPanelInitialSize();
+
+        }, 1000);
+    });
+}
+
+function EventPreferences() {
+    $(".rectangle-button[function='audio']")
+        .click(function () {
+        console.log('audio');
+    });
+
+    $(".rectangle-button[function='user']")
+        .click(function () {
+        console.log("user");
     });
 }
 
@@ -588,6 +1170,7 @@ function CreateMessagePanel() {
 
     // EVENTS
     MessagePanelEvents();
+    HoverSecondPanelIcons();
 }
 
 // Show Message panel with style
@@ -671,10 +1254,10 @@ function HideMessagePanel() {
 
 
 // Add events on .message-panel
-// ---------------------------
+// -------------------------------
 function MessagePanelEvents() {
     // Click event on new messge icon
-    // ------------------------------
+    // ----------------------------------
     $(".mini-icon[function='new-message']").click(function () {
 
         // This test decides whether we show or hide
