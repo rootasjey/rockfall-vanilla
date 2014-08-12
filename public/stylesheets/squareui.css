@@ -402,6 +402,14 @@
   border-radius: 40px;
   transition: 0.5s;
 }
+.second-panel .settings-panel .settings-content .settings-section .audio-block {
+  margin-top: 20px;
+}
+.second-panel .settings-panel .settings-content .settings-section .audio-block .switcher {
+  cursor: pointer;
+  transition: 0.5s;
+  display: block;
+}
 @-moz-keyframes glowIcon {
   from {
     opacity: 0.2;

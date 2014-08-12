@@ -1,0 +1,39 @@
+{
+    "title" : "Help",
+    "version" : "1.0",
+    "last edited" : "12/08/2014",
+    "Chapters" : [
+        {
+            "index" : "0",
+            "name" : "Introduction",
+            "description" : "Hello, this is a manuel to leard how to play Rockfall.",
+        },
+        {
+            "index" : "1",
+            "name" : "How to win",
+            "description" : "To win a game, you must win a few parties (depending on game settings).
+            And to win a party, you have to align 4 rocks (of yours) horizontally, vertically or in diagonal.
+            During a party, each player makes a move by placing a rock on the board or by using a Power Up.",
+        },
+        {
+            "index" : "2",
+            "name" : "Power Ups",
+            "description" : "During a party you can win points that allow to use Power Ups. These are very useful and usually affect the party.
+            You can only use a Power Up by turn, and if you have the amount of points required.",
+        },
+        {
+            "index" : "3",
+            "name" : "Game modes",
+            "description" : "There are three game mode :
+                -Solo : you play against the CPU.
+                -2 players : You and your oppenent play on the same computer.
+                -Online : You play against the world in online epic battles.",
+        },
+        {
+            "index" : "4",
+            "name" : "Connection/Signup",
+            "description" : "When you have an account, you are able to save your personal settings and compete in online battles.
+             You can test the game without singup, but we recommend that you create an account if you plan to play a lot at this game.",
+        }
+    ],
+}

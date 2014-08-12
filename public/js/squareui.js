@@ -8,11 +8,11 @@ var _messageGlowID = null;
 
 // User's mail box
 var _box = {
-    "count"             : 0,
-    "page"              : 0,
-    "maxPages"          : 0,
+    "count"                     : 0,
+    "page"                     : 0,
+    "maxPages"              : 0,
     "messagesPerPage"   : 6,
-    "messages"          : [],
+    "messages"               : [],
 };
 
 
@@ -154,7 +154,6 @@ function MiniIconEvent() {
             if ($("div.message-panel").css("opacity") == "1") {
                 HideMessagePanel();
                 HideSecondPanel();
-                // console.log("hide msg");
             }
             else {
                 // and hide all sub-panels
@@ -164,7 +163,6 @@ function MiniIconEvent() {
                 ShowSecondPanel();
                 CreateMessagePanel();
                 ShowMessagePanel();
-                // console.log("show msg");
             }
 
     });
@@ -542,11 +540,16 @@ function ClickSettingsSection() {
             ClickPreferencesSection();
         }
         else if (fun === "about") {
-            console.log(fun);
+            ClickAboutSection();
         }
     });
 }
 
+
+// -----------------------
+// CONNECTION SECTION
+// -----------------------
+// -----------------------
 // Click Event on Connection sction
 // To show this section
 // -------------------------
@@ -740,13 +743,8 @@ function AddCloseRectangleToSetingsSection() {
 // Events of Connection section
 // -------------------------
 function EventConnection() {
-    $(".rectangle-button[function='login']").click(function () {
-        ShowLoginForm();
-    });
 
-    $(".rectangle-button[function='signup']").click(function () {
-        console.log('popo');
-    });
+    EventLoginSignupButtons();
 
     // Add click event on close button
     $(".close-rectangle-text[function='close-section']").click(function () {
@@ -757,6 +755,23 @@ function EventConnection() {
         CloseConnectionPanel();
     });
 }
+
+function EventLoginSignupButtons() {
+    $(".rectangle-button[function='login']").click(function () {
+        ShowLoginForm();
+    });
+
+    $(".rectangle-button[function='signup']").click(function () {
+        console.log('popo');
+    });
+}
+
+function RemoveEventsConnection() {
+    $(".rectangle-button[function='login']").off("click");
+
+    $(".rectangle-button[function='signup']").off("click");
+}
+
 
 function ExpendConnectionSection(pixels) {
     var marge = pixels;
@@ -816,17 +831,21 @@ function ReduceSecondPanel(pixels) {
 function ShowLoginForm() {
     // Prevent double click bug
     // => multiple forms
-    $(".rectangle-button").off("click");
+    // $(".rectangle-button").off("click");
+    RemoveEventsConnection();
 
     // Verify if a login form is already there
     if($(".login-block").length > 0) {
         // Remove the form
         RemoveLoginForm();
+
         // Reduce the panel + section
         ReduceConnectionSection("200px");
+
         // Put back the click events
         // (we removed at the beggining of this function)
-        EventConnection();
+        EventLoginSignupButtons();
+
         return;
     }
 
@@ -954,11 +973,8 @@ function ShowLoginForm() {
 
         // Put back the click event
         // on connection-section
-        // (login & singup)
-        EventConnection();
-
+        EventLoginSignupButtons();
     });
-
 }
 
 function RemoveLoginForm() {
@@ -970,6 +986,11 @@ function RemoveCloseRectangle() {
     $(".close-rectangle").remove();
 }
 
+
+// -----------------------
+// PREFERENCES SECTION
+// -----------------------
+// -----------------------
 function ClickPreferencesSection() {
     // Get off the initial click event
     // => We do not want to expend this object again
@@ -1059,10 +1080,10 @@ function ClickPreferencesSection() {
             AddCloseRectangleToSetingsSection();
 
             // Add click event on close button
-            ClosePreferencesPanel();
+            ClosePreferencesSection();
 
             // Events
-            EventPreferences()
+            EventsPreferences()
         }, 1000);
 
     });
@@ -1071,11 +1092,12 @@ function ClickPreferencesSection() {
 
 // Click Event to close this section
 // ------------------------------
-function ClosePreferencesPanel() {
+function ClosePreferencesSection() {
     $(".close-rectangle-text[function='close-section']")
     .click(function () {
         $(".side-content").remove();
         RemoveCloseRectangle();
+        RemoveAudioBlock();
 
         // Put the section's title (& the image) on the left side
         // ------------------------------------------------------
@@ -1114,10 +1136,10 @@ function ClosePreferencesPanel() {
     });
 }
 
-function EventPreferences() {
+function EventsPreferences() {
     $(".rectangle-button[function='audio']")
         .click(function () {
-        console.log('audio');
+        ShowAudioSettings();
     });
 
     $(".rectangle-button[function='user']")
@@ -1126,6 +1148,476 @@ function EventPreferences() {
     });
 }
 
+function RemoveEventsPreferences() {
+    $(".rectangle-button[function='audio']").off("click");
+
+    $(".rectangle-button[function='user']").off("click");
+}
+
+function RemoveAudioBlock() {
+    $(".audio-block").remove();
+}
+
+function ShowAudioSettings() {
+    // Prevent double click bug
+    // => multiple click
+    // $(".rectangle-button").off("click");
+    RemoveEventsPreferences();
+
+    // Check if it isn't already displayed
+    if ($(".audio-block").length > 0) {
+        // Remove the audio block
+        RemoveAudioBlock();
+        // Reduce the settings section
+        ReducePrefenrecesSection("200px");
+        // put back the click event
+        EventsPreferences();
+        return;
+    }
+
+    // Expend the panel
+    ExpendPrefenrecesSection("200px");
+
+    Delay(function () {
+        // Form container
+        $("<div>", {
+            class: "audio-block",
+        }).appendTo(".settings-section[function='preferences']");
+
+        var musicSwitcher = $("<span>", {
+            class: "switcher",
+            html: "music : on",
+        })
+            .css({
+                opacity: "0",
+                marginTop: "10px",
+            })
+            .appendTo(".audio-block");
+
+        var soundsSwitcher = $("<span>", {
+            class: "switcher",
+            html: "sounds : on",
+        })
+            .css({
+                opacity: "0",
+                marginTop: "10px",
+            })
+            .appendTo(".audio-block");
+
+        // Animations
+        musicSwitcher.animate({
+            opacity: "0.5",
+            marginTop: "0px",
+        }, {
+            duration: 200,
+            queue   : true,
+        });
+
+        soundsSwitcher.animate({
+            opacity: "0.5",
+            marginTop: "0px",
+        }, {
+            duration: 400,
+            queue   : true,
+        });
+
+        // Events
+        musicSwitcher.hover(function () {
+            $(this).css({
+                opacity: "1",
+            });
+        }, function () {
+            $(this).css({
+                opacity: "0.5",
+            });
+        }).click(function () {
+            EventSwitcher($(this));
+        });
+
+        soundsSwitcher.hover(function () {
+            $(this).css({
+                opacity: "1",
+            });
+        }, function () {
+            $(this).css({
+                opacity: "0.5",
+            });
+        }).click(function () {
+            EventSwitcher($(this));
+        });
+
+        EventsPreferences();
+    });
+}
+
+function ExpendPrefenrecesSection(pixels) {
+    var marge = pixels;
+    var regex = /px/g;
+
+    marge = marge.replace(regex, "");
+    marge = marge/2;
+    marge = marge + "px";
+
+    $(".settings-section[function='preferences']").css({
+        height: "+=" + pixels,
+    });
+
+    $(".settings-section[function='preferences'] .close-rectangle-text").css({
+        top: "+=" + marge,
+    });
+
+    $(".second-panel").animate({
+        height: "+=" + pixels,
+    });
+}
+
+function ReducePrefenrecesSection(pixels) {
+    var marge = pixels;
+    var regex = /px/g;
+
+    marge = marge.replace(regex, "");
+    marge = marge/2;
+    marge = marge + "px";
+
+    $(".settings-section[function='preferences']").css({
+        height: "-=" + pixels,
+    });
+
+    $(".settings-section[function='preferences'] .close-rectangle-text").css({
+        top: "-=" + marge,
+    });
+
+    ReduceSecondPanel(pixels);
+}
+
+function EventSwitcher(switcher) {
+    if (switcher === undefined || switcher === null)
+        return;
+
+    // Modify the text's switcher
+    var text = switcher.html();
+    text = text.toggleStr("on", "off");
+    switcher.html(text);
+}
+
+
+// -----------------------
+// ABOUT SECTION
+// -----------------------
+// -----------------------
+function ClickAboutSection() {
+    // Get off the initial click event
+    // => We do not want to expend this object again
+    $(".settings-section[function='about']").off("click");
+
+    // Animate others sections out
+    $(".settings-section[function='connection']").animate({
+        opacity : "0",
+    });
+    $(".settings-section[function='preferences']").animate({
+        opacity : "0",
+    });
+
+    Delay(function () {
+        // Hide others section (display=none)
+        // ---------------------------------
+        $(".settings-section[function='connection']").css({
+            display: "none",
+        });
+        $(".settings-section[function='preferences']").css({
+            display: "none",
+        });
+
+        // Put the section's title (& the image) on the left side
+        // ------------------------------------------------------
+        $(".settings-section[function='about'] .side-side").css({
+            marginLeft: "0",
+            width: "160px",
+            top: "-20px",
+        });
+
+        // Expend the connection section
+        var about = $(".settings-section[function='about']").css({
+        }).animate({
+            width: "550px",
+        });
+
+        // Create th content of the connection section
+        var sc = $("<div>", {
+            class: "side-content",
+        }).css({
+            width: "300px",
+        }).appendTo(about)
+
+        Delay(function () {
+            // Add buttons
+            $("<div>", {
+                class: "rectangle-button",
+                function: "help",
+                html: "<span> help </span>",
+            })
+                .css({
+                    opacity: "0",
+                })
+                .animate({
+                    opacity: "0.5",
+                })
+                .hover(function () {
+                    $(this).css("opacity", "1");
+                }, function () {
+                    $(this).css("opacity", "0.5");
+                })
+                .appendTo(sc);
+
+            $("<div>", {
+                class: "rectangle-button",
+                function: "informations",
+                html: "<span> informations </span>",
+            })
+                .css({
+                    opacity: "0",
+                })
+                .animate({
+                    opacity: "0.5",
+                })
+                .hover(function () {
+                    $(this).css("opacity", "1");
+                }, function () {
+                    $(this).css("opacity", "0.5");
+                })
+                .appendTo(sc);
+
+            // Close button
+            // -------------
+            AddCloseRectangleToSetingsSection();
+
+            // Add click event on close button
+            CloseAboutSection();
+
+            // Events
+            EventsAbout();
+        }, 1000);
+
+    });
+
+}
+
+// Click Event to close this section
+// ------------------------------
+function CloseAboutSection() {
+    $(".close-rectangle-text[function='close-section']")
+    .click(function () {
+        $(".side-content").remove();
+        RemoveCloseRectangle();
+        // RemoveAudioBlock();
+
+        // Put the section's title (& the image) in the middle
+        // ------------------------------------------------------
+        $(".settings-section[function='about'] .side-side").css({
+            margin: "auto",
+            width: "auto",
+            top: "0",
+        });
+
+        // Reduce the about section
+        var about = $(".settings-section[function='about']").css({
+            left: "10px",
+        }).animate({
+            height: "160px",
+            width: "160px",
+        });
+
+        Delay(function () {
+            // Display others sections
+            $(".settings-section").css({
+                display: "inline-block",
+                left: "0",
+            }).animate({
+                opacity: "0.5",
+                // width   : "160px",
+            });
+
+            $(".settings-section[function='about']").click(function () {
+                ClickAboutSection();
+            });
+
+            // Reduce the second panel if its height is greater than 440px
+            CheckSecondPanelInitialSize();
+
+        }, 1000);
+    });
+}
+
+function EventsAbout() {
+    $(".rectangle-button[function='help']")
+        .click(function () {
+            ShowHelp();
+    });
+
+    $(".rectangle-button[function='informations']")
+        .click(function () {
+            ShowInformations();
+    });
+}
+
+function RemoveEventsAbout() {
+    $(".rectangle-button[function='help']")
+        .off("click");
+
+    $(".rectangle-button[function='informations']")
+        .off("click");
+}
+
+function RemoveHelpBlock() {
+    $(".help-block").remove();
+}
+
+function RemoveBlock(name) {
+    $("." + name).remove();
+}
+
+
+function ShowHelp() {
+    // Prevent double click bug
+    // => multiple click
+    // $(".rectangle-button").off("click");
+    RemoveEventsAbout();
+
+    // Check if it isn't already displayed
+    if ($(".help-block").length > 0) {
+        // Remove the audio block
+        RemoveBlock("help");
+        // Reduce the settings section
+        ReduceSettingsSection("about", "200px");
+        // put back the click event
+        EventsAbout();
+        return;
+    }
+
+    // Expend the panel
+    ExpendSettingsSection( "about", "200px");
+
+    Delay(function () {
+        // Form container
+        $("<div>", {
+            class: "help-block",
+        }).appendTo(".settings-section[function='about']");
+
+        var musicSwitcher = $("<span>", {
+            class: "switcher",
+            html: "music : on",
+        })
+            .css({
+                opacity: "0",
+                marginTop: "10px",
+            })
+            .appendTo(".audio-block");
+
+        var soundsSwitcher = $("<span>", {
+            class: "switcher",
+            html: "sounds : on",
+        })
+            .css({
+                opacity: "0",
+                marginTop: "10px",
+            })
+            .appendTo(".audio-block");
+
+        // Animations
+        musicSwitcher.animate({
+            opacity: "0.5",
+            marginTop: "0px",
+        }, {
+            duration: 200,
+            queue   : true,
+        });
+
+        soundsSwitcher.animate({
+            opacity: "0.5",
+            marginTop: "0px",
+        }, {
+            duration: 400,
+            queue   : true,
+        });
+
+        // Events
+        musicSwitcher.hover(function () {
+            $(this).css({
+                opacity: "1",
+            });
+        }, function () {
+            $(this).css({
+                opacity: "0.5",
+            });
+        }).click(function () {
+            EventSwitcher($(this));
+        });
+
+        soundsSwitcher.hover(function () {
+            $(this).css({
+                opacity: "1",
+            });
+        }, function () {
+            $(this).css({
+                opacity: "0.5",
+            });
+        }).click(function () {
+            EventSwitcher($(this));
+        });
+
+        EventsAbout();
+    });
+}
+
+function ShowInformations() {
+
+}
+
+function ExpendSettingsSection(sectionName, pixels) {
+    var marge = pixels;
+    var regex = /px/g;
+
+    marge = marge.replace(regex, "");
+    marge = marge/2;
+    marge = marge + "px";
+
+    $(".settings-section[function='" + sectionName + "']").css({
+        height: "+=" + pixels,
+    });
+
+    $(".settings-section[function='" + sectionName + "'] .close-rectangle-text").css({
+        top: "+=" + marge,
+    });
+
+    $(".second-panel").animate({
+        height: "+=" + pixels,
+    });
+}
+
+function ReduceSettingsSection(sectionName, pixels) {
+    var marge = pixels;
+    var regex = /px/g;
+
+    marge = marge.replace(regex, "");
+    marge = marge/2;
+    marge = marge + "px";
+
+    $(".settings-section[function='" + sectionName + "']").css({
+        height: "-=" + pixels,
+    });
+
+    $(".settings-section[function='" + sectionName + "'] .close-rectangle-text").css({
+        top: "-=" + marge,
+    });
+
+    ReduceSecondPanel(pixels);
+}
+
+
+// ----------------------
+// MESSAGE PANEL
+// ----------------------
+// ----------------------
 // Create message container
 // ------------------------
 function CreateMessagePanel() {
