@@ -934,6 +934,9 @@ function ShowLoginForm() {
             $(this).css({
                 background: "transparent",
             });
+        }).click(function(){
+            //faire un emit ici
+            //alert("like that !");
         })
         .appendTo(".login-form");
 

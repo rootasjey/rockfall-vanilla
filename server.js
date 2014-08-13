@@ -18,7 +18,7 @@ var express = require('express'),  // web dev framework
     http = require('http'),
     path = require('path'),
     Matchmaker = require('matchmaker'),
-    io = require('socket.io');
+    io = require('socket.io').listen(8080);
 
 // var fs = require('fs');		// file stream
 
@@ -214,9 +214,28 @@ http.createServer(app).listen(app.get('port'), function(){
 
 //socket
 
-var players = new Array();
+var players = {};
+
+io.sockets.on('connection', function (socket) {
+
+    var hs = socket.handshake;
+    //users[hs.session.username] = socket.id; 
+    players[socket.id] = socket; 
+  
+    socket.on('disconnect', function () {
+        delete clients[socket.id]; 
+        //delete users[hs.session.username];
+    });
+    
+     socket.on('newUser', function () {
+        
+         clients[socket.id]; 
+        //delete users[hs.session.username];
+    });
+}
 
 
+    
 
 // MATCHMAKING
 /*
