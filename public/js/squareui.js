@@ -8,11 +8,11 @@ var _messageGlowID = null;
 
 // User's mail box
 var _box = {
-    "count"                     : 0,
-    "page"                     : 0,
-    "maxPages"              : 0,
+    "count"             : 0,
+    "page"              : 0,
+    "maxPages"          : 0,
     "messagesPerPage"   : 6,
-    "messages"               : [],
+    "messages"          : [],
 };
 
 
@@ -243,19 +243,22 @@ function GameModes() {
     // Create 3 Panes
     // which propose game modes
     // ---------
-    $("<div>", {
+    // SOLO
+    var solo = $("<div>", {
         html: "<img src='../icons/icon_circuit.png'></img> <span> VS CPU </span>" +
                 "<span class='text-info'>Battle against the computer</span>",
         class: "vertiacal-pan",
     }).appendTo(".square-ui-game");
 
-    $("<div>", {
+    // 2 LOCAL PLAYERS
+    var local = $("<div>", {
         html: "<img src='../icons/icon_meeting.png'></img> <span> 2 Players </span>" +
                 "<span class='text-info'>2 players on the same computer</span>",
         class: "vertiacal-pan",
     }).appendTo(".square-ui-game");
 
-    $("<div>", {
+    // ONLINE
+    var online = $("<div>", {
         html: "<img src='../icons/icon_globe.png'></img> <span> Online </span>" +
                 "<span class='text-info'>Challenge players around the world</span>",
         class: "vertiacal-pan",
@@ -264,6 +267,25 @@ function GameModes() {
 
     // Animate square-ui-game
     ShowSquareUIGame();
+
+    // Event
+    solo.click(function () {
+        // Start a Solo game
+    });
+
+    local.click(function () {
+        // Start a 2 local players game
+        var board = $('#canvas');
+        console.log(board);
+
+        $(".square-ui-game").html("");
+        board.appendTo(".square-ui-game");
+        LoadBoard();
+    });
+
+    online.click(function () {
+        // Start an online party
+    });
 }
 
 // Create the second-panel
@@ -756,6 +778,11 @@ function EventConnection() {
     });
 }
 
+function EventCloseButton() {
+
+}
+
+
 function EventLoginSignupButtons() {
     $(".rectangle-button[function='login']").click(function () {
         ShowLoginForm();
@@ -1078,9 +1105,10 @@ function ClickPreferencesSection() {
             // Close button
             // -------------
             AddCloseRectangleToSetingsSection();
+            // EventCloseButton();
 
             // Add click event on close button
-            ClosePreferencesSection();
+            // ClosePreferencesSection();
 
             // Events
             EventsPreferences()
@@ -1093,8 +1121,6 @@ function ClickPreferencesSection() {
 // Click Event to close this section
 // ------------------------------
 function ClosePreferencesSection() {
-    $(".close-rectangle-text[function='close-section']")
-    .click(function () {
         $(".side-content").remove();
         RemoveCloseRectangle();
         RemoveAudioBlock();
@@ -1133,10 +1159,9 @@ function ClosePreferencesSection() {
             CheckSecondPanelInitialSize();
 
         }, 1000);
-    });
 }
 
-function EventsPreferences() {
+function EventsPreferencesButtons() {
     $(".rectangle-button[function='audio']")
         .click(function () {
         ShowAudioSettings();
@@ -1145,6 +1170,20 @@ function EventsPreferences() {
     $(".rectangle-button[function='user']")
         .click(function () {
         console.log("user");
+    });
+}
+
+function EventsPreferences() {
+
+    EventsPreferencesButtons();
+
+    // Add click event on close button
+    $(".close-rectangle-text[function='close-section']").click(function () {
+        ClosePreferencesSection();
+    });
+
+    $(".close-rectangle").click(function () {
+        ClosePreferencesSection();
     });
 }
 
@@ -1157,6 +1196,7 @@ function RemoveEventsPreferences() {
 function RemoveAudioBlock() {
     $(".audio-block").remove();
 }
+
 
 function ShowAudioSettings() {
     // Prevent double click bug
@@ -1171,7 +1211,7 @@ function ShowAudioSettings() {
         // Reduce the settings section
         ReducePrefenrecesSection("200px");
         // put back the click event
-        EventsPreferences();
+        EventsPreferencesButtons();
         return;
     }
 
@@ -1246,7 +1286,7 @@ function ShowAudioSettings() {
             EventSwitcher($(this));
         });
 
-        EventsPreferences();
+        EventsPreferencesButtons();
     });
 }
 
@@ -1392,7 +1432,7 @@ function ClickAboutSection() {
             AddCloseRectangleToSetingsSection();
 
             // Add click event on close button
-            CloseAboutSection();
+            // CloseAboutSection();
 
             // Events
             EventsAbout();
@@ -1405,11 +1445,9 @@ function ClickAboutSection() {
 // Click Event to close this section
 // ------------------------------
 function CloseAboutSection() {
-    $(".close-rectangle-text[function='close-section']")
-    .click(function () {
         $(".side-content").remove();
         RemoveCloseRectangle();
-        // RemoveAudioBlock();
+        RemoveBlock("help-block");
 
         // Put the section's title (& the image) in the middle
         // ------------------------------------------------------
@@ -1445,10 +1483,9 @@ function CloseAboutSection() {
             CheckSecondPanelInitialSize();
 
         }, 1000);
-    });
 }
 
-function EventsAbout() {
+function EventsAboutButtons() {
     $(".rectangle-button[function='help']")
         .click(function () {
             ShowHelp();
@@ -1460,6 +1497,20 @@ function EventsAbout() {
     });
 }
 
+
+function EventsAbout() {
+    EventsAboutButtons();
+
+    // Add click event on close button
+    $(".close-rectangle-text[function='close-section']").click(function () {
+        CloseAboutSection();
+    });
+
+    $(".close-rectangle").click(function () {
+        CloseAboutSection();
+    });
+}
+
 function RemoveEventsAbout() {
     $(".rectangle-button[function='help']")
         .off("click");
@@ -1468,15 +1519,16 @@ function RemoveEventsAbout() {
         .off("click");
 }
 
-function RemoveHelpBlock() {
-    $(".help-block").remove();
-}
-
+// Remove a block class
+// from a settings section
+// -----------------------------
 function RemoveBlock(name) {
     $("." + name).remove();
 }
 
 
+// Show the help manual
+// -------------------
 function ShowHelp() {
     // Prevent double click bug
     // => multiple click
@@ -1486,11 +1538,11 @@ function ShowHelp() {
     // Check if it isn't already displayed
     if ($(".help-block").length > 0) {
         // Remove the audio block
-        RemoveBlock("help");
+        RemoveBlock("help-block");
         // Reduce the settings section
         ReduceSettingsSection("about", "200px");
         // put back the click event
-        EventsAbout();
+        EventsAboutButtons();
         return;
     }
 
@@ -1503,70 +1555,71 @@ function ShowHelp() {
             class: "help-block",
         }).appendTo(".settings-section[function='about']");
 
-        var musicSwitcher = $("<span>", {
-            class: "switcher",
-            html: "music : on",
+        var sum = $("<div>", {
+            class: "help-summary",
+            html: "<hr /> <br />",
         })
-            .css({
-                opacity: "0",
-                marginTop: "10px",
-            })
-            .appendTo(".audio-block");
+            .appendTo(".help-block");
 
-        var soundsSwitcher = $("<span>", {
-            class: "switcher",
-            html: "sounds : on",
-        })
-            .css({
-                opacity: "0",
-                marginTop: "10px",
-            })
-            .appendTo(".audio-block");
-
-        // Animations
-        musicSwitcher.animate({
-            opacity: "0.5",
-            marginTop: "0px",
-        }, {
-            duration: 200,
-            queue   : true,
-        });
-
-        soundsSwitcher.animate({
-            opacity: "0.5",
-            marginTop: "0px",
-        }, {
-            duration: 400,
-            queue   : true,
-        });
 
         // Events
-        musicSwitcher.hover(function () {
-            $(this).css({
-                opacity: "1",
-            });
-        }, function () {
-            $(this).css({
-                opacity: "0.5",
-            });
-        }).click(function () {
-            EventSwitcher($(this));
-        });
-
-        soundsSwitcher.hover(function () {
-            $(this).css({
-                opacity: "1",
-            });
-        }, function () {
-            $(this).css({
-                opacity: "0.5",
-            });
-        }).click(function () {
-            EventSwitcher($(this));
-        });
-
-        EventsAbout();
+        GetManualHelp();
+        EventsAboutButtons();
     });
+}
+
+// Sends an ajax request to the server
+// and get the game manual (.json)
+// --------------------------
+function GetManualHelp() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/helpmanual/');
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var helpManual = xhr.response;
+
+            if (helpManual) {
+                var delay = 0;
+                helpManual = JSON.parse(helpManual);
+
+                for (var i = 0; i < helpManual[0].Chapters.length; i++) {
+                    delay += 200;
+
+                    // Create a title
+                    var title = $("<span>", {
+                        class: "summary-title",
+                        html: helpManual[0].Chapters[i].name,
+                    }).css({
+                        opacity: "0",
+                        marginTop: "10px",
+                    }).appendTo(".help-summary");
+
+                    // Animate
+                    title.animate({
+                        opacity: "0.5",
+                        marginTop: "0",
+                    }, {
+                        queue: true,
+                        duration: delay,
+                    });
+
+                    // Events
+                    title.hover(function () {
+                        $(this).css({
+                            opacity: "1",
+                        });
+                    }, function () {
+                        $(this).css({
+                            opacity: "0.5",
+                        });
+                    });
+                }
+            }
+        }
+    };
+    // Launch the request
+    xhr.send();
 }
 
 function ShowInformations() {

@@ -20,8 +20,7 @@ var express = require('express'),  // web dev framework
     Matchmaker = require('matchmaker'),
     io = require('socket.io');
 
-// var fs = require('fs');		// file stream
-
+var fs = require('fs');		// file stream
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 
@@ -59,27 +58,27 @@ app.use(express.static(__dirname + '/public'));
 // ---------------------------------------------------
 
 
-// ---------------
+// -------------------
 // DATABASE: AZURE
-// ---------------
+// -------------------
 var azure = require('azure-storage');
 var nconf = require('nconf');
 var uuid = require('node-uuid');
 var entGen = azure.TableUtilities.entityGenerator;
-// -----------------------------
-// -----------------------------
+// ----------------------------------------
+// ----------------------------------------
 // configuration for local developpement
-// -----------------------------
+// ----------------------------------------
 nconf.env()
      .file({ file: './public/database/config.json'});
 var tableName = nconf.get("TABLE_NAME");
 var partitionKey = nconf.get("PARTITION_KEY");
 var accountName = nconf.get("STORAGE_NAME");
 var accountKey = nconf.get("STORAGE_KEY");
-// -----------------------------
-// -----------------------------
+// --------------------------------------------
+// --------------------------------------------
 // An object (Table) for table access storage
-// -----------------------------
+// --------------------------------------------
 var Table = require('./public/database/table');
 // var usersTable = new Table(azure.createTableService(accountName, accountKey), tableName, partitionKey);
 
@@ -199,6 +198,22 @@ app.get('/', function(req, res) {
 				res.send(200);
 			}
 			else res.send(404); // error
+	});
+})
+
+.get('/helpmanual/', function (req, res) {
+	var jsonArray = [];
+	var path = __dirname + '/public/docs/help.json';
+
+	// open file
+	fs.readFile(path, function (err, data) {
+		if (err) res.send(404);
+
+		// parse the data as json
+		var content = JSON.parse(data);
+		jsonArray.push(content);
+
+		res.json(200, jsonArray);
 	});
 })
 

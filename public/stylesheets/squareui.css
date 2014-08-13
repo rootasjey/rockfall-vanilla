@@ -410,6 +410,17 @@
   transition: 0.5s;
   display: block;
 }
+.second-panel .settings-panel .settings-content .settings-section .help-block .help-summary {
+  width: 90%;
+  margin: auto;
+  margin-top: 30px;
+  text-align: left;
+}
+.second-panel .settings-panel .settings-content .settings-section .help-block .help-summary .summary-title {
+  display: block;
+  opacity: 0.5;
+  transition: 0.5s;
+}
 @-moz-keyframes glowIcon {
   from {
     opacity: 0.2;
