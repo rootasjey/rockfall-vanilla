@@ -5,6 +5,8 @@
 // ------------
 // Allow to cancel the setInterval
 var _messageGlowID = null;
+var socket = null;//io.connect('http://localhost:8080');
+var scheduleCo = null;
 
 // User's mail box
 var _box = {
@@ -826,6 +828,11 @@ function ReduceSecondPanel(pixels) {
     });
 }
 
+
+function keepSpeak(){
+    
+}
+
 // Create and show the login form
 // ------------------------
 function ShowLoginForm() {
@@ -935,8 +942,33 @@ function ShowLoginForm() {
                 background: "transparent",
             });
         }).click(function(){
-            //faire un emit ici
-            //alert("like that !");
+            
+            var pseudo = $("input[name$='login']" ).val();
+            socket = io.connect('http://localhost:8080');
+            
+            
+            
+            socket.on('newListe', function (tab) {
+                var liste = "";
+                for(var i in tab){
+                    liste += "  "+i+" => "+tab[i];   
+                }
+                console.log(liste);
+            });
+            
+            
+            socket.on('startSync', function () {
+            
+                if(scheduleCo == null){
+                    scheduleCo = setInterval(function(){
+                        socket.emit('Sync');
+                    }, 5000);
+                }
+            });
+            
+            socket.emit('newUser',pseudo);
+            //faire un emit ici//------------------------------------------------
+            //alert("like that !");//--------------------------------------------
         })
         .appendTo(".login-form");
 

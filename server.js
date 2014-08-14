@@ -17,8 +17,8 @@ var express = require('express'),  // web dev framework
 	nib = require('nib'),		  // Stylus utilities
     http = require('http'),
     path = require('path'),
-    Matchmaker = require('matchmaker'),
-    io = require('socket.io').listen(8080);
+    Matchmaker = require('matchmaker');
+    //io = require('socket.io').listen(8080);
 
 // var fs = require('fs');		// file stream
 
@@ -44,7 +44,7 @@ function compile(str, path) {
 // containing templates
 // and the static folder
 // ---------------------------------------
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 8080);
 app.set('views', __dirname + '/views');	// folder templates
 app.set('view engine', 'jade');			// template engine
 app.use(morgan('dev'));					// logging output (will log incoming requests to the console)
@@ -92,7 +92,6 @@ app.get('/', function(req, res) {
 	// new design
 	res.render('index2', {title: 'Home'});
 })
-
 .post('/login/', function (req, res) {
 	// get variables from the form
 	var user 	= req.param('user');
@@ -208,34 +207,70 @@ app.get('/', function(req, res) {
 
 // listen port => server start
 // ---------------------------
-http.createServer(app).listen(app.get('port'), function(){
+var server = http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
 //socket
 
 var players = {};
+var user = {};
+var time_disc = {};
+
+var tamponSetInter = null;
+
+var io = require('socket.io').listen(server);
+
+var hs = null;
 
 io.sockets.on('connection', function (socket) {
 
-    var hs = socket.handshake;
+    hs = socket.handshake;
     //users[hs.session.username] = socket.id; 
-    players[socket.id] = socket; 
+    //players[socket.id] = socket; 
   
     socket.on('disconnect', function () {
-        delete clients[socket.id]; 
+        delete user[hs.session.username]; 
+        delete players[socket.id]; 
+        delete time_disc[hs.session.username];
         //delete users[hs.session.username];
     });
     
-     socket.on('newUser', function () {
+    socket.on('newUser', function (username) {
         
-         clients[socket.id]; 
-        //delete users[hs.session.username];
+        hs.session.username = username;
+        players[socket.id] = socket;
+        user[hs.session.username] = socket.id; 
+        time_disc[hs.session.username] = new Date().getTime(); 
+        players[socket.id].emit('startSync');
+        io.sockets.emit('newListe',players);
     });
-}
+    
+    socket.on('Sync',function(){
+      time_disc[hs.session.username] = new Date().getTime(); 
+    });
+    
+    if(tamponSetInter == null){
+        tamponSetInter = setInterval(function(){
+            verificationConn();
+        }, 10000);
+    }
+});
 
 
     
+function verificationConn(){
+    /* for(var i in time_disc){
+         if(time_disc[i]+30000>(new Date().getTime())){
+            delete players[user[i]];
+            delete user[i];  
+            delete time_disc[i];
+             
+            io.sockets.emit('newListe',players);
+         }
+     }
+    return;*/
+ }
 
 // MATCHMAKING
 /*
