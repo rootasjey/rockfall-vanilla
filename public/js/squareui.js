@@ -274,18 +274,82 @@ function GameModes() {
     });
 
     local.click(function () {
-        // Start a 2 local players game
-        var board = $('#canvas');
-        console.log(board);
-
-        $(".square-ui-game").html("");
-        board.appendTo(".square-ui-game");
-        LoadBoard();
+        TwoPlayers();
     });
 
     online.click(function () {
         // Start an online party
     });
+}
+
+function TwoPlayers() {
+    // Animations
+    $(".vertiacal-pan").animate({
+        opacity: "0",
+        top: "+=20px",
+    });
+    $("#square-ui").css({
+        height: "+=300px",
+    });
+
+
+    // User's avatar
+    // & game buttons
+    $("<div>", {
+        class: "user-pan",
+
+    }).insertBefore(".square-ui-game");
+
+    $("<div>", {
+        class: "user-profil",
+
+    }).appendTo(".user-pan");
+    $("<span>", {
+        class: "user-name",
+        html: "Visitor",
+    }).appendTo(".user-pan");
+
+    // Add icons
+    $("<div>", {
+        class: "buttons-pan",
+    }).appendTo(".user-pan");
+    // Play/Pause Icon
+    // ---------
+    $("<img>", {
+        class   : 'game-icon',
+        src     : '../icons/pause-64.png',
+        function: 'pause'
+    }).css({
+        // position: 'absolute',
+        // top: '80px',
+        // right: '20px',
+    }).appendTo(".buttons-pan");
+
+    // Skip icon
+    $("<img>", {
+        class   : 'game-icon',
+        src     : '../icons/end-64.png',
+        function: 'skipe'
+    }).css({
+        // position: 'absolute',
+        // top: '120px',
+        // right: '20px',
+    }).appendTo(".buttons-pan");
+
+
+    Delay(function () {
+        $(".square-ui-game").css({
+            width: "90%",
+        });
+
+        // Start a 2 local players game
+        var board = $('#canvas');
+
+        $(".square-ui-game").html("");
+        board.appendTo(".square-ui-game");
+        // LoadBoard();
+    }, 1000);
+
 }
 
 // Create the second-panel

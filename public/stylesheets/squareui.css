@@ -16,6 +16,18 @@
   animation-iteration-count: infinite;
   animation-name: glowIcon;
 }
+#square-ui .game-icon {
+  opacity: 0.2;
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+  cursor: pointer;
+  transition: 1s;
+}
+#square-ui .game-icon:hover {
+  opacity: 1;
+  transition: 1s;
+}
 #square-ui .square-ui-game {
   height: 60%;
   width: 67%;
@@ -56,6 +68,35 @@
   margin-top: 10px;
   display: inline-block;
   color: transparent;
+}
+#square-ui .user-pan {
+  width: 300px;
+  margin: auto;
+  text-align: center;
+}
+#square-ui .user-pan .user-profil {
+  height: 60px;
+  width: 60px;
+  margin: auto;
+  margin-bottom: 10px;
+  opacity: 0.5;
+  cursor: pointer;
+  border-radius: 30px;
+  background: #fff;
+  transition: 0.5s;
+}
+#square-ui .user-pan .user-profil:hover {
+  opacity: 1;
+  height: 70px;
+  width: 70px;
+  transition: 0.5s;
+}
+#square-ui .user-pan .user-name {
+  color: #fff;
+}
+#square-ui .user-pan .buttons-pan {
+  width: 100px;
+  margin: auto;
 }
 .second-panel {
   height: 440px;

@@ -1,13 +1,19 @@
 /*
-	Le Table représente le plateau de jeu il est modulable en x et en y. Nous avons différentes méthodes qui nous permette d'ajouter ou de supprimer les éléments de la matrice. les 0 représente une case vide, sinon l'élément contiendra l'objet de type shape.
+	Le Table représente le plateau de jeu il est modulable en x et en y.
+	Nous avons différentes méthodes qui nous permette d'ajouter ou de
+	 supprimer les éléments de la matrice. les 0 représente une case vide,
+	sinon l'élément contiendra l'objet de type shape.
 
-	Les deux arguments représentent la taille de la matrice en x et en y, ensuite nous avons startX et startY qui sont les coordonnées qui indique ou le plateau commencera à être dessiné et le dernier space représente l'écart qu'il existe entre deux cases du plateau.
+	Les deux arguments représentent la taille de la matrice en x et en y,
+	ensuite nous avons startX et startY qui sont les coordonnées qui indique
+	ou le plateau commencera à être dessiné et le dernier space représente
+	 l'écart qu'il existe entre deux cases du plateau.
 */
 
 
 function Table(sizeX, sizeY, startX, startY, space){
 
-	/* La Table du jeu 
+	/* La Table du jeu
 
 		[[0,0,0,0,0],
 		 [0,0,0,0,0],
@@ -25,9 +31,9 @@ function Table(sizeX, sizeY, startX, startY, space){
 	this.color = "#CCCCCC";
 
 	/* Dimension des cases du plateau */
-	this.width = 70;
-	this.height = 70;
-    this.dimension = 25;
+	this.width = 60;
+	this.height = 60;
+    this.dimension = 20;
 
 	/* Les données de départ qui serviront pour la représentation graphique */
 	this.startX = startX;
@@ -97,7 +103,9 @@ Table.prototype.add = function(x,y,shape){
     this.justAdd = true;
 }
 
-/* dessine les cellules ssur le context canvas donné avec comme argument la position x et y de depart, ainsi que l'espacement entre les cellules. */
+/* dessine les cellules ssur le context canvas donné
+avec comme argument la position x et y de depart,
+ainsi que l'espacement entre les cellules. */
 
 Table.prototype.draw = function(ctx){
 
@@ -527,7 +535,7 @@ Table.prototype.findFour = function(){
                         var test = this.verificationDiagonale(i,j);
 
                         if(test.find){
-                            
+
                             find = true;
                             id = test.id;
                             sommePoint = 0;

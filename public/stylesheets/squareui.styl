@@ -30,10 +30,25 @@ color-alizarin = #e74c3c
         }
     }
 
+    .game-icon {
+        opacity 0.2
+        width 40px
+        height 40px
+
+        margin 5px
+
+        cursor pointer
+        transition 1s
+
+        &:hover{
+            opacity 1
+            transition 1s
+        }
+    }
+
     .square-ui-game {
         height 60%
         width 67%
-
         margin auto
     }
 
@@ -81,6 +96,43 @@ color-alizarin = #e74c3c
             color transparent
         }
     }
+
+    .user-pan {
+        // height 100px
+        width 300px
+        margin auto
+
+        text-align center
+
+        .user-profil {
+            height 60px
+            width 60px
+
+            margin auto
+            margin-bottom 10px
+
+            opacity 0.5
+            cursor pointer
+            border-radius 30px
+            background white
+            transition 0.5s
+
+            &:hover {
+                opacity 1
+                height 70px
+                width 70px
+                transition 0.5s
+
+            }
+        }
+        .user-name {
+            color white
+        }
+        .buttons-pan {
+            width 100px
+            margin auto
+        }
+    }
 }
 
 
@@ -123,6 +175,7 @@ color-alizarin = #e74c3c
             transition 1s
         }
     }
+
 
     // Messages container
     .message-panel {

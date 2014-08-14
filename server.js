@@ -17,13 +17,11 @@ var express = require('express'),  // web dev framework
 	nib = require('nib'),		  // Stylus utilities
     http = require('http'),
     path = require('path'),
-    Matchmaker = require('matchmaker'),
-    io = require('socket.io');
+    Matchmaker = require('matchmaker');
 
 var fs = require('fs');		// file stream
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
-
 
 
 // ----------------
@@ -223,12 +221,15 @@ app.get('/', function(req, res) {
 
 // listen port => server start
 // ---------------------------
-http.createServer(app).listen(app.get('port'), function(){
+var server = http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
 //socket
-
+var io = require('socket.io').listen(server);
+io.sockets.on('connection', function (socket) {
+	console.log('Fun client est connecté');
+});
 var players = new Array();
 
 
