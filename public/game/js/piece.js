@@ -1,13 +1,13 @@
 /* La Piece représente l'ensemble des rocks qui seront mis à disposition dans le jeu*/
 function Pieces(){
-    
+
     this.shapes = new Array();
-   
+
 }
 
 /* La fonction permet de dessiner l'ensemble des pieces/rocks contenu dans l'objet */
 Pieces.prototype.draw = function(ctx) {
-    
+
     for(var i =0;i<this.shapes.length;i++){
         if(typeof(this.shapes[i]) != "undefined"){
             this.shapes[i].draw(ctx);
@@ -17,7 +17,7 @@ Pieces.prototype.draw = function(ctx) {
 
 /* La fonction changeColor permet de definir la couleur de l'ensemble des pieces/rocks contenu dans l'objet */
 Pieces.prototype.changeColor = function(color,textColor) {
-    
+
     for(var i =0;i<this.shapes.length;i++){
         if(typeof(this.shapes[i]) != "undefined"){
             this.shapes[i].fill = color;
@@ -35,7 +35,7 @@ Pieces.prototype.add = function(shape){
 
 /* permet de supprimer un rock en précisant l'indice */
 Pieces.prototype.remove = function(indice){
-	
+
     if(indice < this.shapes.length){
         this.shapes.splice(indice,1);
     }
@@ -43,7 +43,7 @@ Pieces.prototype.remove = function(indice){
 
 /* permet de supprimer graphiquement l'ensemble des rocks*/
 Pieces.prototype.clear = function(ctx){
-	
+
     for(var i =0;i<this.shapes.length;i++){
         if(typeof(this.shapes[i]) != "undefined"){
             this.shapes[i].clear(ctx);
@@ -53,8 +53,9 @@ Pieces.prototype.clear = function(ctx){
 
 /*
 	La Shape représente la piece qui permettra à l'utilisateur de jouer au jeu.
-	
-	les arguments x et y représente les coordonnées de la pièce, w et h sont respectivement la largeur et la hauteur et fill la couleur de la pièce
+
+	les arguments x et y représente les coordonnées de la pièce, w et h sont
+    respectivement la largeur et la hauteur et fill la couleur de la pièce
 */
 function Shape(x, y, w, h, weight, fill, img) {
 
@@ -69,24 +70,24 @@ function Shape(x, y, w, h, weight, fill, img) {
     this.fill = fill || "#0128ed";
     this.lineWidth = "1";
     this.textColor = "rgba(121, 195, 201, 0.81)";
-    
+
     this.initialX = x;
     this.initialY = y;
-    
+
     this.image = img || null;
-    
+
 }
 
 /* init est la fonction qui permet de remettre la position d'une shape à l'endroit de sa création */
 Shape.prototype.init = function(){
-    
+
     this.x = this.initialX;
     this.y = this.initialY;
 }
 
 /* draw permet de dessiner une shape */
 Shape.prototype.draw = function(ctx) {
-  
+
     var radius = 20;
     var r = this.x + this.width;
     var b = this.y + this.height;
@@ -98,22 +99,22 @@ Shape.prototype.draw = function(ctx) {
     }else{
          ctx.strokeStyle = this.fill;
     }
-    
-    
+
+
 
     var xImg = parseInt(this.x)+parseInt(this.lineWidth);
     var yImg = parseInt(this.y)+parseInt(this.lineWidth);
     var wImg = parseInt(this.width)-parseInt(this.lineWidth);
     var hImg = parseInt(this.height)-parseInt(this.lineWidth);
-    
+
     ctx.drawImage(this.image, xImg, yImg, wImg, hImg);
-    
+
 
     ctx.font = "italic 30pt "+fontScore;
     if(parseInt(this.weight)<10){
     WriteMessage(ctx, this.weight, this.fill, (this.x + (this.width/2.8)), (this.y + (this.height/1.6)), 1);
     }else{
-      WriteMessage(ctx, this.weight, this.fill, (this.x + (this.width/3.5)), (this.y + (this.height/1.6)), 1);  
+      WriteMessage(ctx, this.weight, this.fill, (this.x + (this.width/3.5)), (this.y + (this.height/1.6)), 1);
     }
 
 }

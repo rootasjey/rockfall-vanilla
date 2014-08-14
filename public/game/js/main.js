@@ -86,7 +86,7 @@ function CanvasState (players,pointToWin, imageLoad){
     this.imageLoad = imageLoad;
 
     ImageNeutre = this.imageLoad["System_Neutre"];
-    
+
     /* assigne à chaque joueur son image de pièce */
     for(var r = 0;r<this.players.length;r++){
         var name = this.players[r].nom;
@@ -508,9 +508,9 @@ CanvasState.prototype.drawPointPlayer = function(){
 /* Fonction qui permet d'écrire sur canvas */
 function WriteMessage (ctx, message, color, x, y, dpth){
     var cnt;
-    
+
     ctx.shadowBlur = 4;
-    
+
 
     ctx.fillStyle = color;
 
@@ -540,7 +540,7 @@ function drawInfo(ctx, canvas, textColor, timeSecondGame){
     /* Ligne de séparation entre le plateau de jeu et les pieces */
 
     ctx.beginPath();
-    ctx.rect(0, 380, canvas.width, 5);
+    ctx.rect(170, 380, canvas.width/2, 5);
     ctx.closePath();
     ctx.fillStyle = textColor;
     ctx.fill();

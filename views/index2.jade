@@ -8,7 +8,6 @@ extend layout
 
 //- page content
 block content
-
   div#welcome-ui
     //- title
     div.title Rockfall
@@ -23,7 +22,7 @@ block content
       div#square-ui.square(function='ui')
 
   //- main user interface
-  div#main-ui(style="display: none")
+  div#main-ui(style='display: none')
     //- side panel with user info, score, settings
     div#side-panel
       div#side-panel-main-content
@@ -58,7 +57,7 @@ block content
       div#opaquePause
       button#button-reprendre.button-effet Start
       span#active-player
-      <canvas id="canvas" width="800px" height="515px">This text is displayed if your browser does not support HTML5 Canvas.</canvas>
+    //-   <canvas id="canvas" width="800px" height="515px">This text is displayed if your browser does not support HTML5 Canvas.</canvas>
       button#button-pause.button-effet pause
       button#button-passe.button-effet passer
       //- other ui
