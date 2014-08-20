@@ -63,18 +63,18 @@ function FallEffectAndForce(stateGame){
                          //console.log(" gravity "+stateGame.plateau.gravity());
                         if(stateGame.endOfForce == false && !stateGame.plateau.gravity()){
                             var findOrNot = stateGame.plateau.findFour();
-<<<<<<< HEAD
+
                             if(findOrNot.find && stateGame.timeEndAnimation){
                                 
                                 
                                 stateGame.timeEndAnimation = false;
                                 
-=======
+
                             if(findOrNot.find){
 
 
 
->>>>>>> 15bc5882ba1dfd615c0d30b4add1e2e29f80cf66
+
                                 for(var k = 0;k<findOrNot.box.length;k++){
                                     stateGame.plateau.matrice[findOrNot.box[k].x][findOrNot.box[k].y].fill = "red";
                                 }
