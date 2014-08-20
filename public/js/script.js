@@ -13,10 +13,8 @@ window.onload = function () {
     // load settings function
     LoadSidePanel();
 
-    // load the board
-    LoadBoard();
-
-    //Connexion();
+    // load the game's board
+    // LoadBoard();
 
     // toggle fullscreen
     Fullscreen();

@@ -10,9 +10,9 @@ function LoadBoard() {
 
     /* On définit les pouvoirs qui seront disponible lors de la partie ici nous avons définit 3 qui seront les mêmes pour chaque joueur */
     var powerPlayerUn = new Array();
-    powerPlayerUn.push(new powerWeightDouble("cadre-un",10,'./fois-deux.png'));
-    powerPlayerUn.push(new powerNeutralPiece("cadre-deux",10,'./neutre.png'));
-    powerPlayerUn.push(new powerWeightLoseHalf("cadre-trois",20,'./diviser-deux.png'));
+    powerPlayerUn.push(new powerWeightDouble("cadre-un",10,'./images/bonus/bonus_double.png'));
+    powerPlayerUn.push(new powerNeutralPiece("cadre-deux",10,'./images/bonus/bonus_neutral.png'));
+    powerPlayerUn.push(new powerWeightLoseHalf("cadre-trois",20,'./images/bonus/bonus_divide2.png'));
 
     /* on assigne le tableau de pouvoir aux personnages */
     for(var i = 0; i < players.length;i++){
@@ -25,9 +25,9 @@ function LoadBoard() {
 
     /* Création du tableau des images par joueur en dur (à mettre à la sélection par le joueur) */
     var sources = {
-        "Joueur_1": './images/rock-red.png',
-        "Joueur_2": './images/rock-ciel.png',
-        "System_Neutre":"./images/rock-grey.png"
+        "Joueur_1": './images/rocks/rock-red.png',
+        "Joueur_2": './images/rocks/rock-ciel.png',
+        "System_Neutre":"./images/rocks/rock-grey.png"
       };
 
     /* appel de la fonction qui permet de charger les images et une fois charger lance le jeux*/
@@ -169,13 +169,13 @@ function CanvasState (players,pointToWin, imageLoad){
     this.tours = new Tours(_myState, 1, 1, 15);
 
     /* lance le début du cycle de jeux*/
-    this.tours.launchCycle(this.ctx, this.textColor, "user-avatar-name-id", "user-sore-points" );
+    this.tours.launchCycle(this.ctx, this.textColor, "user-avatar-name-id", "user-score-points" );
 
     /*détermine le temps d'un tour */
     this.tours.timeCycle(this.timeChange);
 
     /* on initialise le score à 0 */
-    this.plateau.initialiseScore("user-sore-points", "user-avatar-name-id", _myState,0);
+    this.plateau.initialiseScore("user-score-points", "user-avatar-name-id", _myState,0);
 
     /* fonction qui permet de redessiner le canvas si besoin avec une fréquence de 30 millisecondes*/
   var interval = 30;
@@ -326,7 +326,7 @@ if(_myState.tours.canAdd() == true){
 
                                 _myState.plateau.matrice[_myState.plateau.graphique[i].matriceX][_myState.plateau.graphique[i].matriceY] = _myState.powerToUse.power(referenceShape);
                                 _myState.scoreSignal = true;
-                                _myState.activePlayers.changeScore("user-sore-points",-_myState.powerToUse.price,_myState);
+                                _myState.activePlayers.changeScore("user-score-points",-_myState.powerToUse.price,_myState);
                                  _myState.tours.addEffet();
                             }
                         }

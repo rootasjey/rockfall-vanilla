@@ -214,7 +214,7 @@ Table.prototype.force = function(stateGame){
                        pointGagne.point = parseInt(pointGagne.point *  (stateGame.hitCombo/(stateGame.hitCombo - 0.1 * stateGame.hitCombo)));
                     }
 
-                    this.addScore("user-sore-points", stateGame, pointGagne);
+                    this.addScore("user-score-points", stateGame, pointGagne);
                     stateGame.addDrawPoints("+"+pointGagne.point, this.matrice[k][i].x, this.matrice[k][i].y, pointGagne.color);
 
                     this.matrice[k][i] = 0;

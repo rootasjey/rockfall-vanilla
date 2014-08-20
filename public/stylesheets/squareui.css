@@ -1,14 +1,19 @@
+#square-ui .mini-icon-panel {
+  width: 40px;
+  position: absolute;
+  display: inline-block;
+}
 #square-ui .mini-icon {
-  opacity: 0.2;
   width: 30px;
   height: 30px;
-  margin-right: -5px;
+  opacity: 0.2;
+  position: relative;
   cursor: pointer;
-  transition: 1s;
+  transition: 0.5s;
 }
 #square-ui .mini-icon:hover {
   opacity: 1;
-  transition: 1s;
+  transition: 0.5s;
 }
 #square-ui .mini-icon[isGlowing='true'] {
   animation-duration: 1s;
@@ -42,7 +47,7 @@
   cursor: pointer;
   color: #fff;
   margin: auto;
-  margin-top: 10px;
+  margin-top: 20px;
   margin-left: 5px;
   padding: 5px;
   background: #000;
@@ -97,6 +102,48 @@
 #square-ui .user-pan .buttons-pan {
   width: 100px;
   margin: auto;
+}
+#square-ui .score-panel {
+  width: 100px;
+  top: 40px;
+  right: 20px;
+  position: absolute;
+}
+#square-ui .score-panel .score {
+  top: 10px;
+  right: 40px;
+  position: absolute;
+  color: #fff;
+  font-size: 1.3em;
+}
+#square-ui .score-panel .mini-icon {
+  height: 50px;
+  width: 50px;
+  right: 0;
+  position: absolute;
+}
+#square-ui .powers-panel {
+  width: 160px;
+  top: 100px;
+  right: -10px;
+  position: absolute;
+}
+#square-ui .powers-panel .power {
+  height: 30px;
+  width: 30px;
+  padding: 5px;
+  opacity: 0.5;
+  cursor: pointer;
+  border-radius: 40px;
+  background: rgba(0,0,0,0.5);
+  display: inline-block;
+  transition: 0.5s;
+}
+#square-ui .powers-panel .power:hover {
+  height: 50px;
+  width: 50px;
+  opacity: 1;
+  transition: 0.5s;
 }
 .second-panel {
   height: 440px;

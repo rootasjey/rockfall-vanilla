@@ -1,9 +1,9 @@
 /* gravityLaunch est la fonction qui lance à interval régulier la gravité pour faire descendre les rocks */
 
 function GravityLaunch(stateGame){
-    
+
     if(stateGame.launchGravity == null){
-         
+
         stateGame.launchGravity = $.timer(function(){
                 if(!stateGame.plateau.gravity()){
 
@@ -12,7 +12,7 @@ function GravityLaunch(stateGame){
                     stateGame.plateau.verificationGravity = true;
                 }
          });//,250);
-        
+
         stateGame.launchGravity.set({ time : 250, autostart : true });
     }
 }
@@ -20,9 +20,9 @@ function GravityLaunch(stateGame){
 /* FallEffectAndForce permet d'appliquer l'effet de chute sur le plateau de jeu et l'ensemble de ses éléments et de vérifier si le poid ne dépasse pas la limite que peut supporter l'élément porteur */
 
 function FallEffectAndForce(stateGame){
-     
+
     if(stateGame.evenementEffetFall == null){
-        
+
          stateGame.evenementEffetFall = $.timer(function(){
              if(stateGame.plateau.verificationGravity == true){
 
@@ -36,12 +36,12 @@ function FallEffectAndForce(stateGame){
                          if(stateGame.plateau.matrice[g][h] != 0){
                             stateGame.plateau.matrice[g][h].y += 2;
                          }
-                    } 	
+                    }
                 }
-                
+
                  /* On appel valid à false pour redessiner le plateau avec le decallage */
                 stateGame.valid = false;
-                    
+
                  /* puis dans 300 millisecondes on recalle correctement les éléments du plateau */
                 setTimeout(function(){
                      for(var e = 0;e<stateGame.plateau.graphique.length;e++){
@@ -54,7 +54,7 @@ function FallEffectAndForce(stateGame){
                              if(stateGame.plateau.matrice[g][h] != 0){
                                 stateGame.plateau.matrice[g][h].y -= 2;
                              }
-                        } 	
+                        }
                     }
 
 
@@ -63,33 +63,40 @@ function FallEffectAndForce(stateGame){
                          //console.log(" gravity "+stateGame.plateau.gravity());
                         if(stateGame.endOfForce == false && !stateGame.plateau.gravity()){
                             var findOrNot = stateGame.plateau.findFour();
+<<<<<<< HEAD
                             if(findOrNot.find && stateGame.timeEndAnimation){
                                 
                                 
                                 stateGame.timeEndAnimation = false;
                                 
+=======
+                            if(findOrNot.find){
+
+
+
+>>>>>>> 15bc5882ba1dfd615c0d30b4add1e2e29f80cf66
                                 for(var k = 0;k<findOrNot.box.length;k++){
                                     stateGame.plateau.matrice[findOrNot.box[k].x][findOrNot.box[k].y].fill = "red";
                                 }
                                 stateGame.valid = false;
-                                
+
                                 setTimeout(function(){
                                     for(var k = 0;k<findOrNot.box.length;k++){
                                     stateGame.plateau.matrice[findOrNot.box[k].x][findOrNot.box[k].y] = 0;
                                     }
                                     ScreenContinueWithFrame(stateGame);
-                                    
+
                                      var pointGagne = {point:0,proprietaire:"none"};
-                                
+
                                     stateGame.hitCombo += 4;
                                     pointGagne.proprietaire = findOrNot.id;
                                     pointGagne.point = findOrNot.point * 2;
 
                                     if(pointGagne.proprietaire == stateGame.comboMaker.id){
-                                     pointGagne.point = parseInt(pointGagne.point *(stateGame.hitCombo/(stateGame.hitCombo - 0.1 * stateGame.hitCombo)));   
+                                     pointGagne.point = parseInt(pointGagne.point *(stateGame.hitCombo/(stateGame.hitCombo - 0.1 * stateGame.hitCombo)));
                                     }
 
-                                    stateGame.plateau.addScore("user-sore-points", stateGame, pointGagne);                   
+                                    stateGame.plateau.addScore("user-score-points", stateGame, pointGagne);                   
                                     //console.log(stateGame.findPlayerById(stateGame.players,findOrNot.id));
                                     (stateGame.findPlayerById(stateGame.players,findOrNot.id)).point = stateGame.findPlayerById(stateGame.players,findOrNot.id).point + 1 ;
 
@@ -98,17 +105,17 @@ function FallEffectAndForce(stateGame){
                                     }
                                     stateGame.timeEndAnimation = true;
                                 },2000);
-                                
+
                                 ScreenPauseWithFrame(stateGame);
-                                
-                                //console.log("inifity loop...");            
+
+                                //console.log("inifity loop...");
                                 //findOrNot = stateGame.plateau.findFour();
                             }
                         }
                      }
-                    
+
                     if(stateGame.verificationEndGame == null){
-        
+
                         stateGame.verificationEndGame = $.timer(function(){
                             var playersWin = new Array();
                             var playersPoint = -1;
@@ -131,17 +138,17 @@ function FallEffectAndForce(stateGame){
                                 ScreenEndGame(stateGame, playersWin);
                             }
                         });
-                        
+
                         stateGame.verificationEndGame.set({ time : 500, autostart : true });
                     }
-                    
+
                 },300);
-                 
+
                  stateGame.plateau.verificationGravity = false;
             }
 
          });//,200);
-        
+
         stateGame.evenementEffetFall.set({ time : 200, autostart : true });
     }
 }

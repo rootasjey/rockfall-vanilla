@@ -6,19 +6,25 @@ main-font = exothinitalic
 color-alizarin = #e74c3c
 
 #square-ui{
+    .mini-icon-panel {
+        width 40px
+        position absolute
+        display inline-block
+    }
     .mini-icon{
-        opacity 0.2
         width 30px
         height 30px
+        opacity 0.2
 
-        margin-right -5px
+
+        position relative
 
         cursor pointer
-        transition 1s
+        transition 0.5s
 
         &:hover{
             opacity 1
-            transition 1s
+            transition 0.5s
         }
 
         &[isGlowing='true'] {
@@ -63,7 +69,7 @@ color-alizarin = #e74c3c
         color white
 
         margin auto
-        margin-top 10px
+        margin-top 20px
         margin-left 5px
         padding 5px
 
@@ -131,6 +137,61 @@ color-alizarin = #e74c3c
         .buttons-pan {
             width 100px
             margin auto
+        }
+    }
+
+    .score-panel {
+        width 100px
+
+        top 40px
+        right 20px
+        position absolute
+
+        .score {
+            top 10px
+            right 40px
+            position absolute
+
+            color white
+            font-size 1.3em
+        }
+
+        .mini-icon {
+            height 50px
+            width 50px
+
+            right 0
+            position absolute
+        }
+    }
+
+    .powers-panel {
+        width 160px
+
+        top 100px
+        right -10px
+        position absolute
+
+        .power {
+            height 30px
+            width 30px
+            padding 5px
+
+            opacity 0.5
+            cursor pointer
+            border-radius 40px
+            background  rgba(0, 0, 0, 0.5)
+
+            display inline-block
+            transition 0.5s
+
+            &:hover {
+                height 50px
+                width 50px
+
+                opacity 1
+                transition 0.5s
+            }
         }
     }
 }
