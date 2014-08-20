@@ -10,16 +10,15 @@ var scheduleCo = null;
 
 // User's mail box
 var _box = {
-    "count"                    : 0,
-    "page"                    : 0,
-    "maxPages"             : 0,
-    "messagesPerPage"  : 6,
-    "messages"              : [],
+    "count"             : 0,
+    "page"              : 0,
+    "maxPages"          : 0,
+    "messagesPerPage"   : 6,
+    "messages"          : [],
 };
 
 
 // Add elements which compose main UI
-// --------------------------
 function PopulateSquareUI() {
     // if #square-ui is empty
     if($("#square-ui").html() === '')    {
@@ -38,7 +37,6 @@ function PopulateSquareUI() {
 }
 
 // Hide the square-ui's content
-// ----------------------------
 function HideSquareUIContent() {
     HideMiniIcons();
     HideSquareUIGame();
@@ -50,7 +48,6 @@ function HideSquareUIContent() {
 }
 
 // Hide mini icons in square-ui
-// -----------------------
 function HideMiniIcons() {
     // hide mini icons
     $(".mini-icon").css({
@@ -61,6 +58,7 @@ function HideMiniIcons() {
     });
 }
 
+// Hide the the game board
 function HideSquareUIGame() {
     if($(".square-ui-game").css("opacity") === "0") return;
 
@@ -72,10 +70,9 @@ function HideSquareUIGame() {
     });
 }
 
+// Show the game board
 function ShowSquareUIGame() {
-    $(".square-ui-game").css({
-
-    }).animate({
+    $(".square-ui-game").animate({
         marginTop: '0px',
         opacity: '1',
     });
@@ -83,7 +80,6 @@ function ShowSquareUIGame() {
 
 
 // Show the square-ui's content
-// ----------------------------
 function ShowSquareUIContent() {
     // Scroll to the top
     $("#square-ui").scroll();
@@ -91,19 +87,14 @@ function ShowSquareUIContent() {
 }
 
 // Show mini icons in square-ui
-// -----------------------
 function ShowMiniIcons() {
-    // show mini icons
-    $(".mini-icon").css({
-
-    }).animate({
+    $(".mini-icon").animate({
         height: '30px',
         width: '30px',
     });
 }
 
 // Add icons to the square-ui
-// ----------------------
 function AddMiniIcons() {
 
     $("<div>", {
@@ -151,9 +142,7 @@ function AddMiniIcons() {
 }
 
 
-// ---------------
-// MiniIcon Events
-// ---------------
+// Add Events on mini icons
 function MiniIconEvent() {
     // hover event
     $(".mini-icon").hover(function () {
@@ -227,14 +216,12 @@ function MiniIconEvent() {
     });
 }
 
-// Hide mini icons of square ui
-// except the close button
+// Hide mini icons of square ui except the close button
 // (game's icon are not included)
 function AutoHideMiniIcons() {
     $(".mini-icon[function='messages']").animate({
         top: '-10px',
         opacity: '0',
-    }, {
     });
 
     $(".mini-icon[function='settings']").animate({
@@ -250,6 +237,7 @@ function AutoHideMiniIcons() {
     });
 }
 
+// Show mini icons (on second panel) with animation
 function SlideDownMiniIcons() {
     $(".mini-icon[function='settings']").css({
         display: 'inline-block',
@@ -269,11 +257,7 @@ function SlideDownMiniIcons() {
 }
 
 // Hide all sub-panels of .second-panel
-// --------------------------
 function HideAllSubPanels() {
-    // HideMessagePanel();
-    // HideSettingsPanel();
-
     $(".message-panel").css({
         opacity: "0",
         display: "none",
@@ -286,6 +270,7 @@ function HideAllSubPanels() {
     HideSecondPanelIcons();
 }
 
+// Hide icons which belong to the second panel
 function HideSecondPanelIcons() {
     $(".second-panel .mini-icon").css({
         height: "0",
@@ -300,16 +285,11 @@ function HideSecondPanelIcons() {
     });
 }
 
-// Add games modes panes
-// to the square-ui-game
-// and create square-ui-game
+// Add games modes panes to the square-ui-game and create square-ui-game
 // than add it to square-ui
-// -------------------
 function GameModes() {
-    // Create the container
-    // and apply css rules
+    // Create the container and apply css rules
     // for animations (end of this block)
-    // ---------
     $("<div>", {
         class: "square-ui-game",
     }).css({
@@ -361,7 +341,6 @@ function GameModes() {
 }
 
 // Start a game with two local players
-// --------------------
 function TwoPlayers() {
     // Animations
     $(".vertiacal-pan").animate({
@@ -465,6 +444,7 @@ function TwoPlayers() {
     }, 1000);
 }
 
+// Load powers
 function LoadBonus() {
     $("<div>", {
         class: 'powers-panel',
@@ -489,11 +469,13 @@ function LoadBonus() {
     }).appendTo(".powers-panel");
 }
 
+// Starts automatically the game
 function AutoStartGame() {
     screenGoStart(_myState);
     ChangePlayer(_myState);
 }
 
+// Pause the game
 function EventGamePause(button) {
     // console.log(button);
     // Change to Resume
@@ -508,6 +490,7 @@ function EventGamePause(button) {
     });
 }
 
+// Resume the game
 function EventGameResume(button) {
     // Change to Resume
     button.off('click');
@@ -521,11 +504,7 @@ function EventGameResume(button) {
     });
 }
 
-// Create the second-panel
-// which contains
-// others functions
-// like messages, setings
-// --------------------------
+// Create the second-panel which contains others functions (ie. messages, setings)
 function CreateSecondPanel() {
     // exit if we've already created this object
     if($(".second-panel").length > 0) return;
@@ -555,9 +534,7 @@ function CreateSecondPanel() {
     SecondPanelEvents();
 }
 
-// Add events on
-// second-panel's objects
-// --------------------------
+// Add events on second-panel's objects
 function SecondPanelEvents() {
     $(".second-panel .mini-icon[function='collapse']").click(
         function () {
@@ -568,10 +545,9 @@ function SecondPanelEvents() {
                 HideSecondPanelIcons();
             }
     });
-
-    // HoverSecondPanelIcons();
 }
 
+// Hover event on the second panel's icons
 function HoverSecondPanelIcons() {
     $(".second-panel .mini-icon").hover(
         function () {
@@ -586,7 +562,6 @@ function HoverSecondPanelIcons() {
 }
 
 // Show second-panel with style
-// ------------------------
 function ShowSecondPanel() {
     $("div.second-panel").css({
         top: '-50px',
@@ -608,7 +583,6 @@ function ShowSecondPanel() {
 }
 
 // Hide second-panel with style
-// ------------------------
 function HideSecondPanel() {
     if($(".second-panel").css("opacity") === "0") return;
 
@@ -631,6 +605,7 @@ function HideSecondPanel() {
     ScrollVerticallyTo(-500);
 }
 
+// Create the Settings panel
 function CreateSettingsPanel() {
     // Exit if we've already created this object
     if($(".settings-panel").length > 0) return;
@@ -687,7 +662,6 @@ function CreateSettingsPanel() {
 }
 
 // Show Settings panel with style
-// --------------------------
 function ShowSettingsPanel() {
     // Show the .message-panel content
     $(".settings-panel").css({
@@ -724,7 +698,7 @@ function ShowSettingsPanel() {
     });
 }
 
-
+// Display Settings icons
 function ShowSettingsPanelIcons() {
     $(".mini-icon[function='collapse']").css({
     }).animate({
@@ -735,7 +709,6 @@ function ShowSettingsPanelIcons() {
 }
 
 // Hide Message panel with style
-// --------------------------
 function HideSettingsPanel() {
     if ($(".settings-panel").css("opacity") === "0")
         return;
@@ -774,9 +747,7 @@ function HideSettingsPanel() {
     HideSecondPanelIcons();
 }
 
-// Hover event on section settings
-// See CSS for other style for this object
-// ------------------------------
+// Hover event on settings section
 function HoverSettingsSection() {
     $(".settings-section").hover(function () {
         $(this).css({
@@ -789,6 +760,7 @@ function HoverSettingsSection() {
     });
 }
 
+// Click event when the user select settings
 function ClickSettingsSection() {
     $(".settings-section").click(function () {
         var fun = $(this).attr("function");
@@ -810,9 +782,7 @@ function ClickSettingsSection() {
 // CONNECTION SECTION
 // -----------------------
 // -----------------------
-// Click Event on Connection sction
-// To show this section
-// -------------------------
+// Click Event on Connection sction to show this section
 function ClickConnection() {
     // Get off the initial click event
     // => We do not want to expend this object again
@@ -914,7 +884,6 @@ function ClickConnection() {
 
 
 // Click Event to close this section
-// ------------------------------
 function CloseConnectionPanel() {
         $(".side-content").remove();
         RemoveCloseRectangle();
@@ -956,7 +925,7 @@ function CloseConnectionPanel() {
         }, 1000);
 }
 
-
+// Add a close button on Settings section
 function AddCloseRectangleToSetingsSection() {
     $("<div>", {
         class: "close-rectangle-text",
@@ -1001,7 +970,6 @@ function AddCloseRectangleToSetingsSection() {
 
 
 // Events of Connection section
-// -------------------------
 function EventConnection() {
 
     EventLoginSignupButtons();
@@ -1020,7 +988,7 @@ function EventCloseButton() {
 
 }
 
-
+// Add events on login & signup buttons
 function EventLoginSignupButtons() {
     $(".rectangle-button[function='login']").click(function () {
         ShowLoginForm();
@@ -1031,13 +999,14 @@ function EventLoginSignupButtons() {
     });
 }
 
+// Remove events on connection button
 function RemoveEventsConnection() {
     $(".rectangle-button[function='login']").off("click");
 
     $(".rectangle-button[function='signup']").off("click");
 }
 
-
+// Expends the connection section
 function ExpendConnectionSection(pixels) {
     var marge = pixels;
     var regex = /px/g;
@@ -1059,6 +1028,7 @@ function ExpendConnectionSection(pixels) {
     });
 }
 
+// Reduces the connection section
 function ReduceConnectionSection(pixels) {
     var marge = pixels;
     var regex = /px/g;
@@ -1078,6 +1048,7 @@ function ReduceConnectionSection(pixels) {
     ReduceSecondPanel(pixels);
 }
 
+// Check if the second panel height is above normal
 function CheckSecondPanelInitialSize() {
     // Reduce the second panel if its height is greater than 440px
     if ($(".second-panel").css("height") !== "440px") {
@@ -1085,6 +1056,7 @@ function CheckSecondPanelInitialSize() {
     }
 }
 
+// Reduce the second panel of a pixels' amount
 function ReduceSecondPanel(pixels) {
     $(".second-panel").animate({
         height: "-=" + pixels,
@@ -1093,21 +1065,18 @@ function ReduceSecondPanel(pixels) {
 
 
 function keepSpeak(){
-    
+
 }
 
 // Create and show the login form
-// ------------------------
 function ShowLoginForm() {
     // Prevent double click bug
     // => multiple forms
-    // $(".rectangle-button").off("click");
     RemoveEventsConnection();
 
     // Verify if a login form is already there
     if($(".login-block").length > 0) {
-        // Remove the form
-        RemoveLoginForm();
+        RemoveLoginForm(); // Remove the form
 
         // Reduce the panel + section
         ReduceConnectionSection("200px");
@@ -1205,16 +1174,16 @@ function ShowLoginForm() {
                 background: "transparent",
             });
         }).click(function(){
-                
+
                 var pseudo = $("input[name='login']" ).val();
                 socket = io.connect('http://127.0.0.1:3000/multiJoueur');
 
                 socket.on('newListe', function (tab) {
-                   
+
                     console.log("detected client side with ");
                     var liste = "";
                     for(var i in tab){
-                        liste += "  "+i+" => "+tab[i];   
+                        liste += "  "+i+" => "+tab[i];
                     }
                     console.log(liste);
                 });
@@ -1228,23 +1197,23 @@ function ShowLoginForm() {
                         }, 5000);
                     }
                 });
-                        
+
                 socket.on("SyncPlayer",function(){
                     socket.emit('Sync');
                 });
-                    
-                        
+
+
                 socket.on("majEtatPlayer",function(){
-                        
+
                 });
-                        
+
                 socket.on("cancel",function(){
-                        
+
                 });
-                        
+
                 console.log(pseudo);
                 socket.emit('newUser',pseudo);
-            
+
             //aire un emit ici//------------------------------------------------
             //alert("like that !");//--------------------------------------------
         })
@@ -1290,10 +1259,12 @@ function ShowLoginForm() {
     });
 }
 
+// Remove the login form
 function RemoveLoginForm() {
     $(".login-block").remove();
 }
 
+// Remove the close rectangle
 function RemoveCloseRectangle() {
     $(".close-rectangle-text").remove();
     $(".close-rectangle").remove();
@@ -1405,7 +1376,6 @@ function ClickPreferencesSection() {
 }
 
 // Click Event to close this section
-// ------------------------------
 function ClosePreferencesSection() {
         $(".side-content").remove();
         RemoveCloseRectangle();
@@ -1447,6 +1417,7 @@ function ClosePreferencesSection() {
         }, 1000);
 }
 
+// Add events on Preferences' buttons
 function EventsPreferencesButtons() {
     $(".rectangle-button[function='audio']")
         .click(function () {
@@ -1459,6 +1430,7 @@ function EventsPreferencesButtons() {
     });
 }
 
+// Add events on Preferences' objects
 function EventsPreferences() {
 
     EventsPreferencesButtons();
@@ -1473,6 +1445,7 @@ function EventsPreferences() {
     });
 }
 
+// Remove events on the Preferences' block
 function RemoveEventsPreferences() {
     $(".rectangle-button[function='audio']").off("click");
 
@@ -1729,7 +1702,6 @@ function ClickAboutSection() {
 }
 
 // Click Event to close this section
-// ------------------------------
 function CloseAboutSection() {
         $(".side-content").remove();
         RemoveCloseRectangle();
@@ -1771,6 +1743,7 @@ function CloseAboutSection() {
         }, 1000);
 }
 
+// Add event on about block's buttons
 function EventsAboutButtons() {
     $(".rectangle-button[function='help']")
         .click(function () {
@@ -1783,7 +1756,7 @@ function EventsAboutButtons() {
     });
 }
 
-
+// Add events on About block
 function EventsAbout() {
     EventsAboutButtons();
 
@@ -1797,6 +1770,7 @@ function EventsAbout() {
     });
 }
 
+// Remove events on About block
 function RemoveEventsAbout() {
     $(".rectangle-button[function='help']")
         .off("click");
@@ -1807,14 +1781,12 @@ function RemoveEventsAbout() {
 
 // Remove a block class
 // from a settings section
-// -----------------------------
 function RemoveBlock(name) {
     $("." + name).remove();
 }
 
 
 // Show the help manual
-// -------------------
 function ShowHelp() {
     // Prevent double click bug
     // => multiple click
@@ -1856,7 +1828,6 @@ function ShowHelp() {
 
 // Sends an ajax request to the server
 // and get the game manual (.json)
-// --------------------------
 function GetManualHelp() {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/helpmanual/');
@@ -1908,6 +1879,7 @@ function GetManualHelp() {
     xhr.send();
 }
 
+// Show Project's informations
 function ShowInformations() {
 
 }
@@ -2005,7 +1977,6 @@ function CreateMessagePanel() {
 }
 
 // Show Message panel with style
-// --------------------------
 function ShowMessagePanel() {
     // Show the .message-panel content
     $(".message-panel").css({
@@ -2024,7 +1995,6 @@ function ShowMessagePanel() {
 }
 
 // Animate the scroll vertically
-// --------------------------------
 function ScrollVerticallyTo(vertical) {
     var ten  = 10;
     if (vertical < 0) ten = -ten;
@@ -2038,7 +2008,6 @@ function ScrollVerticallyTo(vertical) {
 }
 
 // Show Message panel's icons
-// --------------------------------
 function ShowMessagePanelIcons() {
     // Show the inbox icon
     // and the pagination info
@@ -2072,7 +2041,6 @@ function ShowMessagePanelIcons() {
 }
 
 // Hide Message panel with style
-// -----------------------------
 function HideMessagePanel() {
     if ($(".message-panel").css("opacity") === "0") return;
 
@@ -2093,7 +2061,6 @@ function HideMessagePanel() {
 
 
 // Add events on .message-panel
-// -------------------------------
 function MessagePanelEvents() {
     // Click event on new messge icon
     // ----------------------------------
@@ -2169,10 +2136,8 @@ function MessagePanelEvents() {
     HoverMessagesCounter();
 }
 
-// Event fired when the cursor
-// is over the messages counter
+// Event fired when the cursor is over the messages counter
 // > show on which page we are
-// ----------------------------
 function HoverMessagesCounter() {
     $(".messages-counter").hover(function () {
         $(".rectangle-pagination").css({
@@ -2188,7 +2153,6 @@ function HoverMessagesCounter() {
 }
 
 // Show the current messsages page
-// ---------------------------------------------
 function RefreshAndShowPagination(currentPage) {
     currentPage++;
 
@@ -2210,7 +2174,6 @@ function RefreshAndShowPagination(currentPage) {
 
 
 // Update the messages counter
-// ------------------------------------
 function RefreshMessagesCounter(count) {
     $(".messages-counter").css({
         opacity     : '0',
@@ -2234,7 +2197,6 @@ function RefreshMessagesCounter(count) {
         // that means that we cannont display all
         // so we've to use pagination
         ShowNextPageInboxMessagesButton();
-        // ShowPreviousPageInboxMessagesButton();
 
         // Click events on these icons
         NextInboxPage();
@@ -2244,7 +2206,6 @@ function RefreshMessagesCounter(count) {
 }
 
 // Go to the next messages pages
-// -----------------------
 function NextInboxPage() {
     // Assure that we do not duplicate
     // the click event
@@ -2253,7 +2214,6 @@ function NextInboxPage() {
     // Click event
     $(".inbox-right-section").click(function () {
         // Check that we haven't reached out
-        // ---------------------------------
         var maxPages    = _box.count / _box.messagesPerPage;
 
         if (_box.page   >= maxPages - 1) {
@@ -2311,7 +2271,6 @@ function NextInboxPage() {
 }
 
 // Go to the previous messages pages
-// -----------------------
 function PreviousInboxPage() {
     // Assure that we do not duplicate
     // the click event
@@ -2320,7 +2279,6 @@ function PreviousInboxPage() {
     // Click event
     $(".inbox-left-section").click(function () {
         // Check that we haven't reached out
-        // ---------------------------------
         var maxPages    = _box.count / _box.messagesPerPage;
         if (_box.page <= 0) {
             HidePreviousPageInboxMessagesButton();
@@ -2377,9 +2335,7 @@ function PreviousInboxPage() {
 }
 
 
-// Update the page number of
-// the messages box
-// ---------------------------
+// Update the page number of the messages box
 function UpdatePagination() {
     var p = _box.page + 1;
     $(".rectangle-pagination")
@@ -2387,7 +2343,6 @@ function UpdatePagination() {
 }
 
 // Check if the Next button must be displayed
-// ---------------------------------------------
 function AutoHideNextPageMessagesButton() {
     if (_box.maxPages === (_box.page + 1) ) {
             HideNextPageInboxMessagesButton();
@@ -2395,16 +2350,13 @@ function AutoHideNextPageMessagesButton() {
 }
 
 // Check if the Previous button must be displayed
-// ---------------------------------------------
 function AutoHidePreviousPageMessagesButton() {
     if (_box.page === 0) {
             HidePreviousPageInboxMessagesButton();
         }
 }
 
-// Refresh the max pages available
-// which contains all messages
-// -----------------------------
+// Refresh the max pages available which contains all messages
 function RefreshBoxMaxPages() {
     _box.maxPages = _box.count / _box.messagesPerPage;
 
@@ -2416,7 +2368,6 @@ function RefreshBoxMaxPages() {
 }
 
 // Display the Next Page Button of message panel
-// ---------------------------------------------
 function ShowNextPageInboxMessagesButton() {
     $(".inbox-right-section").css({
         opacity     : "0.5",
@@ -2433,7 +2384,6 @@ function ShowNextPageInboxMessagesButton() {
 }
 
 // Hide the Next Page Button of message panel
-// ---------------------------------------------
 function HideNextPageInboxMessagesButton() {
     $(".inbox-right-section").css({
         opacity     : "0",
@@ -2442,7 +2392,6 @@ function HideNextPageInboxMessagesButton() {
 }
 
 // Display the Previous Page Button of message panel
-// -------------------------------------------------
 function ShowPreviousPageInboxMessagesButton() {
     $(".inbox-left-section").css({
         opacity     : "0.5",
@@ -2459,7 +2408,6 @@ function ShowPreviousPageInboxMessagesButton() {
 }
 
 // Hide the Previous Page Button of message panel
-// ------------------------------------------------
 function HidePreviousPageInboxMessagesButton() {
     $(".inbox-left-section").css({
         opacity     : "0",
@@ -2470,7 +2418,6 @@ function HidePreviousPageInboxMessagesButton() {
 
 // Create the panel wich contains
 // individuals messages
-// -----------------------------
 function CreateInboxMessages() {
     // Verify that this object hasn't been created yet
     if($(".inbox-messages").length > 0) return;
@@ -2509,11 +2456,11 @@ function CreateInboxMessages() {
     }).appendTo(".inbox-right-section");
 }
 
+// Add new messages according to the message counter (to check)
 function RefreshInboxMessages() {
     if ($(".message").length === _box.count) return;
 
     var newAdded = _box.count - $(".message").length;
-
     for (var i = 0; i < newAdded; i++) {
         ReceiveNewMessage();
     }
@@ -2521,14 +2468,12 @@ function RefreshInboxMessages() {
 
 // Retrieve the demanded messages
 // identified by its ID
-// -----------------------------------
 function GetInboxMessages(number) {
     var messageObject = _box.messages[number];
     ReceiveNewMessage(messageObject);
 }
 
 // Add a new message to the .inbox-center-section
-// --------------------------------------------------
 function ReceiveNewMessage(messageParameter) {
     var oldMessage = false;
     var messageObject = null;
@@ -2610,7 +2555,6 @@ function ReceiveNewMessage(messageParameter) {
 }
 
 // Event when the cursor is hover a message
-// -------------------------------
 function HoverInboxMessages() {
     $(".message").each(
         function () {
@@ -2630,7 +2574,6 @@ function HoverInboxMessages() {
 }
 
 // Event when a message is clicked
-// ----------------------------
 function ClickInboxMessages() {
     $(".message").each(
         function () {
@@ -2652,7 +2595,6 @@ function ClickInboxMessages() {
 }
 
 // Get a random message
-// -----------------------------------
 function GenerateRandomMessage() {
     var types       = ["Information", "Friend"] ;
     var expeditors  = ["John", "Root", "Shaw", "Finch", "NameTooooooloooooong"];
@@ -2666,7 +2608,6 @@ function GenerateRandomMessage() {
 }
 
 // Add a message from the server to the local box messages
-// ------------------------------------
 function AddMessageInbox(message) {
     _box.messages.push(message);
 }
@@ -2678,7 +2619,6 @@ function getRandomInt(min, max) {
 }
 
 // Display the message section
-// ----------------------------
 function ShowInboxMessages() {
     if ($(".inbox-messages").css("opacity") === "1")
         return;
@@ -2708,7 +2648,6 @@ function ShowInboxMessages() {
 }
 
 // Hide the message section
-// ----------------------------
 function HideInboxMessages() {
     if ($(".inbox-messages").css("display") === "none")
         return;
@@ -2727,7 +2666,6 @@ function HideInboxMessages() {
 }
 
 // Hide all messages with style
-// ----------------------------
 function HideEachMessage() {
     var delay = 100;
     $(".message").each(function () {
@@ -2747,7 +2685,6 @@ function HideEachMessage() {
 }
 
 // Hide messages displayed with style according to a direction
-// ---------------------------------------------
 function AnimateMessagesOutPage(direction) {
     var delay = 100;
 
@@ -2763,7 +2700,6 @@ function AnimateMessagesOutPage(direction) {
                 queue   : true,
             })
                 .off('mouseenter mouseleave');
-
             delay += 100;
         });
     }
@@ -2779,14 +2715,12 @@ function AnimateMessagesOutPage(direction) {
                 queue   : true,
             })
                 .off('mouseenter mouseleave');
-
             delay += 100;
         });
     }
 }
 
 // Show messages displayed with style according to a direction
-// ---------------------------------------------
 function AnimateMessagesInPage(direction) {
     var delay = 100;
 
@@ -2803,7 +2737,6 @@ function AnimateMessagesInPage(direction) {
                 queue   : true,
             })
                 .off('mouseenter mouseleave');
-
             delay += 100;
         });
     }
@@ -2820,14 +2753,12 @@ function AnimateMessagesInPage(direction) {
                 queue   : true,
             })
                 .off('mouseenter mouseleave');
-
             delay += 100;
         });
     }
 }
 
 // Display New Message's close icon
-// -------------------------------------
 function ShowCloseNewMessageIcon() {
     // Animate the icon with css
     $(".mini-icon[function='new-message']")
@@ -2839,7 +2770,6 @@ function ShowCloseNewMessageIcon() {
 }
 
 // Display New Message's new icon
-// -------------------------------
 function ShowNewMessageIcon() {
     // Animate the icon with css
     $(".mini-icon[function='new-message']")
@@ -2851,7 +2781,6 @@ function ShowNewMessageIcon() {
 }
 
 // Get the message (from ID) and show its full content
-// ---------------------------------------
 function DisplayFullMessage(messageID) {
     // create/show full message box
     // Get the message from the box array
@@ -2896,9 +2825,7 @@ function DisplayFullMessage(messageID) {
     // Fill controls
     headerExpeditor.html(messageObject.expeditor);
     headerDate.html(messageObject.date.toLocaleDateString());
-
     content.html(messageObject.body);
-
 
     // Animations
     $(".full-message").css({
@@ -2916,7 +2843,6 @@ function DisplayFullMessage(messageID) {
 }
 
 // Hide the full screen message's content
-// --------------------------
 function CloseFullMessage() {
     if ($(".full-message").length < 1) return;
 
@@ -2934,11 +2860,9 @@ function CloseFullMessage() {
     Delay(function () {
         $(".full-message").remove();
     }, 1000);
-
 }
 
 // Create a message form
-// ---------------------
 function NewMessage() {
     // Create the form
     var form = document.createElement('form');
@@ -2992,11 +2916,7 @@ function NewMessage() {
 
 
 // Remove the new message form
-// --------------------------
 function CloseNewMessage() {
-    // Animate Form
-    // hide with style
-    // ---------------
     $(".new-message").css({
         opacity: '1',
         marginTop: '0',
@@ -3009,10 +2929,7 @@ function CloseNewMessage() {
     // (close => open)
     ShowNewMessageIcon();
 
-    // Remove the form
-    // after the animation
-    // (so with delay)
-    // ----------------
+    // Remove the form after the animation
     Delay(function () {
         $("form[class='new-message']").remove();
     });
@@ -3021,20 +2938,17 @@ function CloseNewMessage() {
 // Animate messages' icon
 // to notify of new messages
 // >use css attribute
-// ---------------------------
 function NewMessageAlert() {
     $(".mini-icon[function='messages']").attr('isGlowing', 'true');
 }
 
 // Set messages' icon to default
-// -----------------------------
 function NoNewMessageAlert() {
     $(".mini-icon[function='messages']").attr('isGlowing', 'false');
 }
 
 // Put everything to default to
 // minimize processor resources
-// ------------------------------
 function SquareUIBackToNormal() {
     $(".mini-icon[function='messages']").attr('isGlowing', 'false');
 }
