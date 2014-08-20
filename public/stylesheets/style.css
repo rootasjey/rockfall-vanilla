@@ -16,6 +16,9 @@ body {
   min-height: 100%;
   position: relative;
 }
+.html-no-scrollable {
+  overflow-y: hidden;
+}
 #body {
   min-height: 100%;
   position: relative;

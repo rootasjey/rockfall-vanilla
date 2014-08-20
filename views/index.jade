@@ -23,7 +23,7 @@ block content
       div#square-ui.square(function='ui')
 
   //- main user interface
-  div#main-ui
+  div#main-ui(style="display: none")
     //- side panel with user info, score, settings
     div#side-panel
       div#side-panel-main-content
@@ -36,9 +36,9 @@ block content
           span.title Power-Up
           div
             p#active-power.subtitle No Power-Up
-            img#cadre-un.power-up(src='../icons/icon_cross.png' tip='Get 30pts to unlock a level 1 power')
-            img#cadre-deux.power-up(src='../icons/icon_cross.png')
-            img#cadre-trois.power-up(src='../icons/icon_cross.png')
+            //- img#cadre-un.power-up(src='../icons/icon_cross.png' tip='Get 30pts to unlock a level 1 power')
+            //- img#cadre-deux.power-up(src='../icons/icon_cross.png')
+            //- img#cadre-trois.power-up(src='../icons/icon_cross.png')
 
         //- user score
         div.user-score
@@ -59,7 +59,7 @@ block content
       button#button-reprendre.button-effet Start
       span#active-player
       <canvas id="canvas" width="800px" height="515px">This text is displayed if your browser does not support HTML5 Canvas.</canvas>
-      button#button-pause.button-effet pause
-      button#button-passe.button-effet passer
+    //-   button#button-pause.button-effet pause
+    //-   button#button-passe.button-effet passer
       //- other ui
       div#game-panel

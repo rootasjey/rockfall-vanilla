@@ -4,6 +4,13 @@
 function WelcomeIconsMouseEvents() {
     MouseHoverEvent();
     MouseClickEvent();
+
+    // Remove scroll bar to the page
+    // to simulate full screen
+    RemoveScrollFromHTML();
+
+    // Scroll to the top of screen
+    ScrollVerticallyTo(-500);
 }
 
 // Mouse hover event
@@ -51,6 +58,9 @@ function MouseClickEvent() {
 // when the user click on a square
 // ----------------------
 function ExpandMainUI() {
+    // Add scroll bar to the page
+    AddScrollToHMTL();
+
     FadeOutSquares();
     Delay(EnlargeSquaresContainer, 800);
     Delay(ShowSquareUI, 1000);
@@ -65,11 +75,20 @@ function ExpandMainUI() {
 // and show the welcome screen
 // ----------------------
 function MinimizeMainUI() {
-
     ReduceSquareUI();
     Delay(ReduceSquaresContainer, 500);
     Delay(FadeOutSquareUI, 1000);
     Delay(FadeInSquares, 1500);
+
+    RemoveScrollFromHTML();
+}
+
+function AddScrollToHMTL() {
+    $("html").toggleClass("html-no-scrollable");
+}
+
+function RemoveScrollFromHTML() {
+    $("html").addClass("html-no-scrollable");
 }
 
 // Hide all squares

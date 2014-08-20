@@ -1,6 +1,6 @@
- 
+
 #opaquePause{
-    
+
     background-color:rgba(0, 0, 0,0.3);
     border-radius: 5px;
     position:absolute;
@@ -16,12 +16,12 @@
     position:absolute;
     font-size:2.5em;
     z-index:20;
-    
+
     /*background-color: #1270ce ;*/
-    
+
 }
 
-#button-pause{
+/*#button-pause{
     top:420px;
     left: 620px;
     width:100px;
@@ -32,7 +32,7 @@
 }
 
 #button-passe{
-    
+
     top:480px;
     left:620px;
     width:100px;
@@ -40,10 +40,10 @@
     font-size: 1.5em;
     position:absolute;
      z-index:5;
-}
+}*/
 
 .button-effet{
-    
+
     border:2px solid white;
     background-color: #3f90e3;
     color:white;
@@ -51,7 +51,7 @@
     cursor: pointer;
     border-radius: 10px;
 }
- 
+
 .button-effet:hover{
     border:5px solid #62aaef;
     background-color: #0061c7;
@@ -63,7 +63,7 @@
 }
 
 #active-player{
-    
+
     display:none;
     top:30%;
     left:100px;
@@ -81,12 +81,12 @@
 }
 
 .qtip{
-    
+
     border-width: 2px;
     border-style: solid;
     border-color: #ff0000;
     background-color: #FF4A4A;
     color: #FFF;
-    border-radius: 10px; 
+    border-radius: 10px;
     font-size: 16px;
 }
