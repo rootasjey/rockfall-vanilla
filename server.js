@@ -18,12 +18,8 @@ var express = require('express'),  // web dev framework
     http = require('http'),
     path = require('path'),
     Matchmaker = require('matchmaker');
-<<<<<<< HEAD
-    //io = require('socket.io').listen(8080);
 
-// var fs = require('fs');		// file stream
-=======
->>>>>>> ee28754e634f2aa4ed3f57f298c2badf05f4c4c9
+
 
 var fs = require('fs');		// file stream
 var bodyParser = require('body-parser');
@@ -47,7 +43,7 @@ function compile(str, path) {
 // containing templates
 // and the static folder
 // ---------------------------------------
-app.set('port', process.env.PORT || 8080);
+app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');	// folder templates
 app.set('view engine', 'jade');			// template engine
 app.use(morgan('dev'));					// logging output (will log incoming requests to the console)
@@ -230,21 +226,79 @@ var server = http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
+
+// MATCHMAKING
+
+var mymatch = new Matchmaker;
+
+mymatch.policy = function(a,b) {
+    return 100
+};
+
+mymatch.on('match', function(result) {
+    /*console.log(result.a); // match a
+    console.log(result.b); // match b*/
+});
+
+mymatch.start();
+
+//mymatch.push({user:'walter',rank:1450});
+
+function askMatching(idFirstPlayer, idSecondPlayer){
+    
+    io.sockets.socket(idFirstPlayer).leave();
+    io.sockets.socket(idSecondPlayer).leave();
+    
+    var tabPlayer = {};
+    tabPlayer[idFirstPlayer] = {"etat":"attente","nom":"Players1"}; 
+    tabPlayer[idSecondPlayer] = {"etat":"attente","nom":"Players2"}; 
+    
+    
+    io.sockets.socket(idFirstPlayer).join("room-"+idFirstPlayer+"-"+idSecondPlayer);
+    io.sockets.socket(idSecondPlayer).join("room-"+idFirstPlayer+"-"+idSecondPlayer);
+    
+    io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).on('connection', function (socket) {
+        
+        io.to("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("SyncPlayer");
+
+        io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).on("etatPlayersOk",function(){
+
+            tabPlayer[socket.id].etat = "pret";
+            if(tabPlayer[idFirstPlayer].etat == "pret" && tabPlayer[idSecondPlayer].etat == "pret"){
+                nomDeLaFonctionPourDemarrerLeJeu();
+            }else{
+                io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).emit('majEtatPlayer',tabPlayer);  
+            }
+            
+        });
+        
+        io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).on("etatPlayersNo",function(){
+            
+            io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).emit('cancel');
+        });
+        
+    });
+}
+
+
+
 //socket
-<<<<<<< HEAD
+
 
 var players = {};
 var user = {};
 var time_disc = {};
+var matchList = {};
+
 
 var tamponSetInter = null;
 
-var io = require('socket.io').listen(server);
+//var io = require('socket.io').listen(server);
 
-var hs = null;
+//var hs = null;
 
-io.sockets.on('connection', function (socket) {
-
+//io.sockets.on('connection', function (socket) {
+/*
     hs = socket.handshake;
     //users[hs.session.username] = socket.id; 
     //players[socket.id] = socket; 
@@ -275,43 +329,59 @@ io.sockets.on('connection', function (socket) {
             verificationConn();
         }, 10000);
     }
-});
-=======
+});*/
+
 var io = require('socket.io').listen(server);
-io.sockets.on('connection', function (socket) {
+
+io.of("/multiJoueur").on('connection', function (socket) {
 	console.log('Fun client est connecté');
+    
+    socket.on('newUser', function (username) {
+        if(typeof(players[socket.id]) == "undefined"){
+            console.log("detected newUser");
+            socket.username = username;
+            players[socket.id] = socket;
+            user[socket.username] = socket.id; 
+            time_disc[socket.username] = new Date().getTime(); 
+            players[socket.id].emit('startSync');
+            io.of('/multiJoueur').emit('newListe',user);
+        }else{
+            if(typeof(matchList[socket.id]) == "undefined"){
+                console.log("rejoind le matchmaking");
+                matchList[socket.id] = true;
+                mymatch.push({user:socket.username,socketId:socket.id});
+            }
+        }
+    });
+    
+    
+    socket.on('Sync',function(){
+      time_disc[socket.username] = new Date().getTime(); 
+    });
+    
+    if(tamponSetInter == null){
+        tamponSetInter = setInterval(function(){
+            verificationConn();
+        }, 10000);
+    }
 });
-var players = new Array();
->>>>>>> ee28754e634f2aa4ed3f57f298c2badf05f4c4c9
+
+
+
 
 
     
 function verificationConn(){
-    /* for(var i in time_disc){
-         if(time_disc[i]+30000>(new Date().getTime())){
+     for(var i in time_disc){
+         console.log(i+"    "+time_disc[i]);
+         if(time_disc[i]+30000<(new Date().getTime())){
             delete players[user[i]];
-            delete user[i];  
+            delete user[i];
             delete time_disc[i];
-             
-            io.sockets.emit('newListe',players);
+            
+            io.of('/multiJoueur').emit('newListe',user);
          }
      }
-    return;*/
  }
 
-// MATCHMAKING
-/*
-var mymatch = new Matchmaker;
 
-mymatch.policy = function(a,b) {
-    return 100
-};
-
-mymatch.on('match', function(result) {
-    console.log(result.a); // match a
-    console.log(result.b); // match b
-});
-
-mymatch.start();
-*/
-//mymatch.push({user:'walter',rank:1450});

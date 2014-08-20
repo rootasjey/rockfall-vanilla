@@ -60,11 +60,13 @@ function FallEffectAndForce(stateGame){
 
                      if(stateGame.activeForce){
                          stateGame.endOfForce = stateGame.plateau.force(stateGame).end;
-                        if(stateGame.endOfForce == false){
+                         //console.log(" gravity "+stateGame.plateau.gravity());
+                        if(stateGame.endOfForce == false && !stateGame.plateau.gravity()){
                             var findOrNot = stateGame.plateau.findFour();
-                            if(findOrNot.find){
+                            if(findOrNot.find && stateGame.timeEndAnimation){
                                 
                                 
+                                stateGame.timeEndAnimation = false;
                                 
                                 for(var k = 0;k<findOrNot.box.length;k++){
                                     stateGame.plateau.matrice[findOrNot.box[k].x][findOrNot.box[k].y].fill = "red";
@@ -94,6 +96,7 @@ function FallEffectAndForce(stateGame){
                                     for(var i = 0;i<findOrNot.box.length;i++){
                                         stateGame.addDrawPoints("+"+(findOrNot.box[i].point*2), findOrNot.box[i].graphX, findOrNot.box[i].graphY,findOrNot.box[i].color);
                                     }
+                                    stateGame.timeEndAnimation = true;
                                 },2000);
                                 
                                 ScreenPauseWithFrame(stateGame);

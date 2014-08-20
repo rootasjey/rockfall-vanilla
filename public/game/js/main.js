@@ -155,6 +155,9 @@ function CanvasState (players,pointToWin, imageLoad){
     this.valid = false;
 
 
+    
+    this.timeEndAnimation = true;
+    
     /* On conserve l'etat de l'objet dans la variable afin de pouvoir utiliser les différents éléments dans les listeners à venir*/
     _myState = this;
 

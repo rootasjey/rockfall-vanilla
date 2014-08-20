@@ -5,7 +5,7 @@
 // ------------
 // Allow to cancel the setInterval
 var _messageGlowID = null;
-var socket = null;//io.connect('http://localhost:8080');
+var socket = null;
 var scheduleCo = null;
 
 // User's mail box
@@ -1033,32 +1033,47 @@ function ShowLoginForm() {
                 background: "transparent",
             });
         }).click(function(){
+                
+                var pseudo = $("input[name='login']" ).val();
+                socket = io.connect('http://127.0.0.1:3000/multiJoueur');
+
+                socket.on('newListe', function (tab) {
+                   
+                    console.log("detected client side with ");
+                    var liste = "";
+                    for(var i in tab){
+                        liste += "  "+i+" => "+tab[i];   
+                    }
+                    console.log(liste);
+                });
+
+
+                socket.on('startSync', function () {
+                    console.log("detected startS");
+                    if(scheduleCo == null){
+                        scheduleCo = setInterval(function(){
+                            socket.emit('Sync');
+                        }, 5000);
+                    }
+                });
+                        
+                socket.on("SyncPlayer",function(){
+                    socket.emit('Sync');
+                });
+                    
+                        
+                socket.on("majEtatPlayer",function(){
+                        
+                });
+                        
+                socket.on("cancel",function(){
+                        
+                });
+                        
+                console.log(pseudo);
+                socket.emit('newUser',pseudo);
             
-            var pseudo = $("input[name$='login']" ).val();
-            socket = io.connect('http://localhost:8080');
-            
-            
-            
-            socket.on('newListe', function (tab) {
-                var liste = "";
-                for(var i in tab){
-                    liste += "  "+i+" => "+tab[i];   
-                }
-                console.log(liste);
-            });
-            
-            
-            socket.on('startSync', function () {
-            
-                if(scheduleCo == null){
-                    scheduleCo = setInterval(function(){
-                        socket.emit('Sync');
-                    }, 5000);
-                }
-            });
-            
-            socket.emit('newUser',pseudo);
-            //faire un emit ici//------------------------------------------------
+            //aire un emit ici//------------------------------------------------
             //alert("like that !");//--------------------------------------------
         })
         .appendTo(".login-form");
