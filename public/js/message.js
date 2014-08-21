@@ -1,15 +1,15 @@
 // -------------
 // MESSAGE CLASS
 // -------------
-var _ID = 0;
+var _messageID = 0;
 
-function GetID() {
-    return _ID++;
+function GetNextMessageId() {
+    return _messageID++;
 }
 // Clase's constructor
 // -------------------
 function Message(type, expeditor, body) {
-    this.id         = GetID();
+    this.id         = GetNextMessageId();
     this.type       = type;
     this.date       = new Date();
     this.expeditor  = expeditor;
