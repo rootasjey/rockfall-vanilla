@@ -1,9 +1,8 @@
 // ----------------------
-// MESSAGE PANEL
+// MESSAGE PANEL (.JS)
 // ----------------------
 
 // Create message container
-// ------------------------
 function CreateMessagePanel() {
     // Exit if we've already created this object
     if($(".message-panel").length > 0) return;
@@ -30,7 +29,6 @@ function CreateMessagePanel() {
 
 
     // Create the message-panel-title
-    // ---------
     $("<div>", {
         class: "message-panel",
         html : "<div class='second-panel-title'> <span> Messages </span> </div>",
@@ -46,7 +44,40 @@ function CreateMessagePanel() {
 
     // EVENTS
     MessagePanelEvents();
-    HoverSecondPanelIcons();
+    // HoverSecondPanelIcons();
+    HoverMessageIcons();
+
+    AddTooltipToMessagePanel();
+}
+
+function HoverMessageIcons() {
+    $(".mini-icon[function='inbox']").hover(
+        function () {
+        $(this).css({
+            opacity: "1",
+        });
+    }, function () {
+        $(this).css({
+            opacity: "0.2",
+        });
+    });
+
+    $(".mini-icon[function='new-message']").hover(
+        function () {
+        $(this).css({
+            opacity: "1",
+        });
+    }, function () {
+        $(this).css({
+            opacity: "0.2",
+        });
+    });
+}
+
+// Add tooltips to the message panel's icons
+function AddTooltipToMessagePanel() {
+    ApplyTooltipCenterRight($(".mini-icon[function='inbox']"), "Show inbox's messages");
+    ApplyTooltipCenterRight($(".mini-icon[function='new-message']"), "Send a new message");
 }
 
 // Show Message panel with style
@@ -1000,7 +1031,7 @@ function CloseNewMessage() {
     // Remove the form after the animation
     Delay(function () {
         $("form[class='new-message']").remove();
-    });
+    }, 1000);
 }
 
 // Animate messages' icon

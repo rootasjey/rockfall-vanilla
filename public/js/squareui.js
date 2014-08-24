@@ -2,23 +2,6 @@
 // SQUAREUI.JS
 // ---------------
 
-// GLOBALS VARS
-// ------------
-// Allow to cancel the messageGlow's setInterval
-var _messageGlowID = null;
-var socket = null;
-var scheduleCo = null;
-
-// User's mail box
-var _box = {
-    "count"             : 0,
-    "page"              : 0,
-    "maxPages"          : 0,
-    "messagesPerPage"   : 6,
-    "messages"          : [],
-};
-
-
 // Add elements which compose main UI
 function PopulateSquareUI() {
     // if #square-ui is empty
@@ -49,26 +32,6 @@ function HideSquareUIContent() {
     ScrollVerticallyTo(-500);
 }
 
-function AddTooltipToMiniIcons() {
-    $(".mini-icon[function='close']").qtip({
-        style: {
-            classes: 'qtip-light'
-        },
-        content: {
-            text: "close this panel"
-        },
-        show: {
-            effect: function () {
-                $(this).fadeTo(500, 1);
-            }
-        },
-        hide: {
-            effect: function () {
-                $(this).fadeTo(500, 0);
-            }
-        }
-    });
-}
 // Add icons to the square-ui
 function AddMiniIcons() {
     $("<div>", {
@@ -233,6 +196,40 @@ function SlideDownMiniIcons() {
     });
 }
 
+// Add tooltip to the squereui's icons
+function AddTooltipToMiniIcons() {
+    ApplyTooltipCenterRight($(".mini-icon[function='close']"), "Close this panel");
+    ApplyTooltipCenterRight($(".mini-icon[function='messages']"), "Messages");
+    ApplyTooltipCenterRight($(".mini-icon[function='settings']"), "Settings");
+}
+
+// Add a pre-defined tooltip (style) to a jquery object
+function ApplyTooltipCenterRight(jqueryObject, qtipText) {
+    jqueryObject.qtip({
+        style: {
+            classes: 'qtip-light',
+            fontSize: '22px',
+        },
+        position: {
+            my: 'CenterLeft',
+            at: 'CenterRight',
+        },
+        content: {
+            text: qtipText,
+        },
+        show: {
+            effect: function () {
+                $(this).fadeTo(500, 1);
+            }
+        },
+        hide: {
+            effect: function () {
+                $(this).fadeTo(500, 0);
+            }
+        }
+    });
+}
+
 // Show the game board
 function ShowSquareUIGame() {
     $(".square-ui-game").animate({
@@ -300,32 +297,27 @@ function CreateSecondPanel() {
     if($(".second-panel").length > 0) return;
 
     // Create the container
-    // with 0 opacity for animation
-    // and add it to #welcome-ui
-    // ---------
     $("<div>", {
         class: "second-panel",
     }).css({
         opacity: '0',
     }).appendTo("#welcome-ui");
 
-    // Add composants to the
-    // .second-panel
-    // -------------
-    // collapse icon
-    // ---------
+    // Add collapse icon
     $("<img>", {
         class   : 'mini-icon',
         src     : '../icons/icon_arrowup.png',
         function: 'collapse',
     }).appendTo(".second-panel");
 
-    // Add events on .second-panel
-    SecondPanelEvents();
+    SecondPanelEvents(); // add events on .second-panel
+    AddTooltipToSecondPanel();
 }
 
 // Add events on second-panel's objects
 function SecondPanelEvents() {
+    HoverSecondPanelIcons();
+
     $(".second-panel .mini-icon[function='collapse']").click(
         function () {
             if ($("div.second-panel").css("opacity") == "1") {
@@ -349,6 +341,11 @@ function HoverSecondPanelIcons() {
             opacity: "0.2",
         });
     });
+}
+
+// Add tooltips to the second panel's icons
+function AddTooltipToSecondPanel() {
+    ApplyTooltipCenterRight($(".mini-icon[function='collapse']"), "Collapse this panel");
 }
 
 // Show second-panel with style

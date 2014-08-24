@@ -9,7 +9,6 @@ function CreateSettingsPanel() {
 
 
     // Create the settings panel
-    // -------------------------
     $("<div>", {
         class: "settings-panel",
         html: "<div class='second-panel-title'> <span> Settings </span> </div>",
@@ -24,7 +23,6 @@ function CreateSettingsPanel() {
 
 
     // Sections
-    // ---------
     $("<div>", {
         class: "settings-section",
         function: "connection",
@@ -754,7 +752,8 @@ function ClickPreferencesSection() {
 function ClosePreferencesSection() {
         $(".side-content").remove();
         RemoveCloseRectangle();
-        RemoveAudioBlock();
+        // RemoveAudioBlock();
+        RemoveBlock("audio-block");
 
         // Put the section's title (& the image) on the left side
         // ------------------------------------------------------
@@ -796,18 +795,31 @@ function ClosePreferencesSection() {
 function EventsPreferencesButtons() {
     $(".rectangle-button[function='audio']")
         .click(function () {
-        ShowAudioSettings();
+            // Check if others blocks are already displayed
+            if ($(".userSettings-block").length > 0) {
+                // Reduce the settings section
+                // ReducePrefenrecesSection("200px");
+                RemoveBlock("userSettings-block");
+            }
+
+            ShowAudioSettings();
     });
 
     $(".rectangle-button[function='user']")
         .click(function () {
-        console.log("user");
+            // Check if others blocks are already displayed
+            if ($(".audio-block").length > 0) {
+                // Reduce the settings section
+                // ReducePrefenrecesSection("200px");
+                RemoveBlock("audio-block");
+            }
+
+            ShowUserSettings();
     });
 }
 
 // Add events on Preferences' objects
 function EventsPreferences() {
-
     EventsPreferencesButtons();
 
     // Add click event on close button
@@ -827,20 +839,17 @@ function RemoveEventsPreferences() {
     $(".rectangle-button[function='user']").off("click");
 }
 
-function RemoveAudioBlock() {
-    $(".audio-block").remove();
-}
-
+// Show the block wich contains audio settings
 function ShowAudioSettings() {
     // Prevent double click bug
     // => multiple click
-    // $(".rectangle-button").off("click");
     RemoveEventsPreferences();
 
     // Check if it isn't already displayed
     if ($(".audio-block").length > 0) {
         // Remove the audio block
-        RemoveAudioBlock();
+        RemoveBlock("audio-block");
+
         // Reduce the settings section
         ReducePrefenrecesSection("200px");
         // put back the click event
@@ -849,7 +858,9 @@ function ShowAudioSettings() {
     }
 
     // Expend the panel
-    ExpendPrefenrecesSection("200px");
+    if($(".settings-section[function='preferences']").css('height') < '300px') {
+        ExpendPreferencesSection("200px");
+    }
 
     Delay(function () {
         // Form container
@@ -923,7 +934,107 @@ function ShowAudioSettings() {
     });
 }
 
-function ExpendPrefenrecesSection(pixels) {
+// Show the block wich contains user & game settings
+function ShowUserSettings() {
+    // Prevent multiple clicks
+    RemoveEventsPreferences();
+
+    // Check if it isn't already displayed
+    if ($(".userSettings-block").length > 0) {
+        RemoveBlock("userSettings-block");
+
+        // Reduce the settings section
+        ReducePrefenrecesSection("200px");
+        // put back the click event
+        EventsPreferencesButtons();
+        return;
+    }
+
+    if($(".settings-section[function='preferences']").css('height') < '300px') {
+        // Expend the panel
+        ExpendPreferencesSection("200px");
+    }
+
+    Delay(function () {
+        // Form container
+        $("<div>", {
+            class: "userSettings-block",
+        }).appendTo(".settings-section[function='preferences']");
+
+        var autoEndSwitcher = $("<span>", {
+            class: "switcher",
+            html: "auto end turn : off",
+        })
+            .css({
+                opacity: "0",
+                marginTop: "10px",
+            })
+            .appendTo(".userSettings-block");
+
+        var backgroundChooser = $("<span>", {
+            class: "transparentButton",
+            html: "change background",
+        })
+            .css({
+                opacity: "0",
+                marginTop: "10px",
+            })
+            .appendTo(".userSettings-block");
+
+        // Animations
+        autoEndSwitcher.animate({
+            opacity: "0.5",
+            marginTop: "0px",
+        }, {
+            duration: 200,
+            queue   : true,
+        });
+
+        backgroundChooser.animate({
+            opacity: "0.5",
+            marginTop: "0px",
+        }, {
+            duration: 400,
+            queue   : true,
+        });
+
+        // Events
+        autoEndSwitcher.hover(function () {
+            $(this).css({
+                opacity: "1",
+            });
+        }, function () {
+            $(this).css({
+                opacity: "0.5",
+            });
+        }).click(function () {
+            // On click event
+            // Toggle the on and off text
+            EventSwitcher($(this));
+
+            // Set the variable according to the choice
+            if($(this).html().indexOf("on") !== -1) {
+                _settings.autoEndTurn = true;
+            } else _settings.autoEndTurn = false;
+        });
+
+        backgroundChooser.hover(function () {
+            $(this).css({
+                opacity: "1",
+            });
+        }, function () {
+            $(this).css({
+                opacity: "0.5",
+            });
+        }).click(function () {
+            BackgroundChooser();
+        });
+
+        EventsPreferencesButtons();
+    });
+}
+
+function ExpendPreferencesSection(pixels) {
     var marge = pixels;
     var regex = /px/g;
 
@@ -973,6 +1084,9 @@ function EventSwitcher(switcher) {
     switcher.html(text);
 }
 
+function BackgroundChooser() {
+
+}
 
 // -----------------------
 // ABOUT SECTION
