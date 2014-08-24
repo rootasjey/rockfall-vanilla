@@ -63,12 +63,14 @@ function FallEffectAndForce(stateGame){
                          //console.log(" gravity "+stateGame.plateau.gravity());
                         if(stateGame.endOfForce == false && !stateGame.plateau.gravity()){
                             var findOrNot = stateGame.plateau.findFour();
+
                             
                             if(findOrNot.find && stateGame.timeEndAnimation){
                                 
                                 
                                 stateGame.timeEndAnimation = false;
                                 
+
 
                                 for(var k = 0;k<findOrNot.box.length;k++){
                                     stateGame.plateau.matrice[findOrNot.box[k].x][findOrNot.box[k].y].fill = "red";
@@ -91,7 +93,7 @@ function FallEffectAndForce(stateGame){
                                      pointGagne.point = parseInt(pointGagne.point *(stateGame.hitCombo/(stateGame.hitCombo - 0.1 * stateGame.hitCombo)));
                                     }
 
-                                    stateGame.plateau.addScore("user-score-points", stateGame, pointGagne);                   
+                                    stateGame.plateau.addScore("user-score-points", stateGame, pointGagne);
                                     //console.log(stateGame.findPlayerById(stateGame.players,findOrNot.id));
                                     (stateGame.findPlayerById(stateGame.players,findOrNot.id)).point = stateGame.findPlayerById(stateGame.players,findOrNot.id).point + 1 ;
 

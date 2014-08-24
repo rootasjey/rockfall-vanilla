@@ -145,6 +145,9 @@
   opacity: 1;
   transition: 0.5s;
 }
+.qtip-light .qtip-content {
+  font-size: 1.3em;
+}
 .second-panel {
   height: 440px;
   width: 840px;
@@ -494,6 +497,19 @@
   margin-top: 20px;
 }
 .second-panel .settings-panel .settings-content .settings-section .audio-block .switcher {
+  cursor: pointer;
+  transition: 0.5s;
+  display: block;
+}
+.second-panel .settings-panel .settings-content .settings-section .userSettings-block {
+  margin-top: 20px;
+}
+.second-panel .settings-panel .settings-content .settings-section .userSettings-block .switcher {
+  cursor: pointer;
+  transition: 0.5s;
+  display: block;
+}
+.second-panel .settings-panel .settings-content .settings-section .userSettings-block .transparentButton {
   cursor: pointer;
   transition: 0.5s;
   display: block;

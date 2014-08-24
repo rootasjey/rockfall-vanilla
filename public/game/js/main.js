@@ -1,7 +1,5 @@
 function LoadBoard() {
-
-
-    InitStyle();
+    // InitStyle();
     /* On créé les joueurs du mode solo ici du 1 vs 1, mais qui peut s'étendre,
     chaque joueur jouera de manière alterné */
     var players = new Array();
@@ -155,9 +153,9 @@ function CanvasState (players,pointToWin, imageLoad){
     this.valid = false;
 
 
-    
+
     this.timeEndAnimation = true;
-    
+
     /* On conserve l'etat de l'objet dans la variable afin de pouvoir utiliser les différents éléments dans les listeners à venir*/
     _myState = this;
 
@@ -262,40 +260,49 @@ $(canvas).on("mousedown",function(e) {
 
 $(canvas).on("mouseup",function(e) {
 
-        /* la variable succes nous permettra de vérifier si l'utilisateur lors de son drag and drop a bien relacher sur une cellule du plateau vide */
+        /* La variable succes nous permettra de vérifier si l'utilisateur
+           lors de son drag and drop a bien relacher sur une cellule du plateau vide */
         var success = false;
 
 
         var mouse = getMouse(e,_myState.canvas);
         var mx = mouse.x;
         var my = mouse.y;
-        /* vérification de si on à une pièce/rock sélectionner */
+
+        /* Vérifie si on à une pièce/rock sélectionné(e) */
         if(_myState.selectionPiece != null){
 
            /* pour chaque cellule on vérifie si on relache le rock sur une cellule du plateau libre*/
 		  for (var i = 0; i < _myState.plateau.graphique.length; i++) {
             if(typeof(_myState.plateau.graphique[i]) != "undefined"){
-if(_myState.tours.canAdd() == true){
-                if (_myState.plateau.graphique[i].contains(mx, my) && _myState.plateau.matrice[_myState.plateau.graphique[i].matriceX][_myState.plateau.graphique[i].matriceY] == 0) {
+                if(_myState.tours.canAdd() == true){
+                    if (_myState.plateau.graphique[i].contains(mx, my)
+                        && _myState.plateau.matrice[_myState.plateau.graphique[i].matriceX][_myState.plateau.graphique[i].matriceY] == 0) {
 
-                     success = true;
-                     _myState.comboMaker.nom = _myState.activePlayers.nom;
-                     _myState.comboMaker.id = _myState.activePlayers.identifiant;
+                         success = true;
+                         _myState.comboMaker.nom = _myState.activePlayers.nom;
+                         _myState.comboMaker.id = _myState.activePlayers.identifiant;
 
-				      var shape = new Shape(_myState.plateau.graphique[i].x-(_myState.plateau.graphique[i].width/2), _myState.plateau.graphique[i].y-(_myState.plateau.graphique[i].height/4.5), _myState.selectionPiece.width, _myState.selectionPiece.height, _myState.selectionPiece.weight, _myState.selectionPiece.fill);
-                    shape.image = _myState.activePlayers.image;
-                    shape.idProprietaire = _myState.activePlayers.identifiant;
-                      _myState.plateau.add(_myState.plateau.graphique[i].matriceX, _myState.plateau.graphique[i].matriceY, shape);
+    				      var shape = new Shape(_myState.plateau.graphique[i].x-(_myState.plateau.graphique[i].width/2), _myState.plateau.graphique[i].y-(_myState.plateau.graphique[i].height/4.5), _myState.selectionPiece.width, _myState.selectionPiece.height, _myState.selectionPiece.weight, _myState.selectionPiece.fill);
+                        shape.image = _myState.activePlayers.image;
+                        shape.idProprietaire = _myState.activePlayers.identifiant;
+                          _myState.plateau.add(_myState.plateau.graphique[i].matriceX, _myState.plateau.graphique[i].matriceY, shape);
 
-                    /* une fois l'ajout de la pièce dans le plateau on décrémente la quantité et on lance la fonction de gravité de force et on replace la pièce movable à son origine */
-                    GravityLaunch(_myState);
+                        /* une fois l'ajout de la pièce dans le plateau on décrémente la quantité,
+                           on lance la fonction de gravité de force,
+                           et on replace la pièce movable à son origine */
+                        GravityLaunch(_myState);
 
-                    FallEffectAndForce(_myState);
+                        FallEffectAndForce(_myState);
 
-                    _myState.selectionPiece.init();
+                        _myState.selectionPiece.init();
 
-                    _myState.tours.addAction();
+                        _myState.tours.addAction();
 
+                        // Check auto end turn
+                        if (_settings.autoEndTurn) {
+                            PasseTour(_myState);
+                        }
                 }
               }
             }
