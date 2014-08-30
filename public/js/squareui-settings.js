@@ -548,7 +548,10 @@ function ShowLoginForm() {
         }).click(function(){
 
                 var pseudo = $("input[name='login']" ).val();
-                socket = io.connect('http://127.0.0.1:3000/multiJoueur');
+            
+                var infoPartyLocal = null;
+            
+                socket = io.connect('http://127.0.0.1:3000');
 
                 socket.on('newListe', function (tab) {
 
@@ -575,8 +578,21 @@ function ShowLoginForm() {
                 });
 
 
-                socket.on("majEtatPlayer",function(){
-
+                socket.on("majEtatPlayer",function(infoParty){
+                        
+                        //{'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false}
+                        infoPartyLocal = infoParty;
+                        console.log(infoPartyLocal);
+                        /*if(infoParty.idPF == socket.id){
+                            idJoueur = infoParty.idPF;
+                        }else if(infoParty.idPS == socket.id){
+                            idJoueur = infoParty.idPS;
+                        }else{
+                            idJoueur = -1;
+                        }*/
+                        
+                        console.log("je suis prettt");
+                        socket.emit("etatPlayersOk",{'idParty':infoParty.id,'idPlayer':socket.id});
                 });
 
                 socket.on("cancel",function(){
@@ -586,7 +602,7 @@ function ShowLoginForm() {
                 console.log(pseudo);
                 socket.emit('newUser',pseudo);
 
-            //aire un emit ici//------------------------------------------------
+            //faire un emit ici//------------------------------------------------
             //alert("like that !");//--------------------------------------------
         })
         .appendTo(".login-form");

@@ -236,6 +236,8 @@ mymatch.policy = function(a,b) {
 };
 
 mymatch.on('match', function(result) {
+    console.log(result);
+    askMatching(result.a.socketId,result.b.socketId);
     /*console.log(result.a); // match a
     console.log(result.b); // match b*/
 });
@@ -246,26 +248,52 @@ mymatch.start();
 
 function askMatching(idFirstPlayer, idSecondPlayer){
     
-    io.sockets.socket(idFirstPlayer).leave();
-    io.sockets.socket(idSecondPlayer).leave();
     
+    
+    players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
+    players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
+    
+    var retour = addParty(partyInProgress, idFirstPlayer, idSecondPlayer);
+    
+    io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer",retour);
+    //players[idFirstPlayer].leave("multiJoueur");
+    //players[idSecondPlayer].leave("multiJoueur");
+    
+    io.sockets.on('etatPlayersOk', function (majInfo) {
+        
+        var info = tableauP[majInfo.idParty];
+        
+        if(majInfo.idPlayer == info.idPF){
+            tableauP[majInfo.idParty].idPFReady = true;
+            console.log("first player ready l.268");
+        }else if(majInfo.idPlayer == info.idPS){
+            tableauP[majInfo.idParty].idPSReady = true;
+            console.log("second player ready l.271");
+        }
+        
+    });
+    
+   /* 
     var tabPlayer = {};
     tabPlayer[idFirstPlayer] = {"etat":"attente","nom":"Players1"}; 
     tabPlayer[idSecondPlayer] = {"etat":"attente","nom":"Players2"}; 
     
     
-    io.sockets.socket(idFirstPlayer).join("room-"+idFirstPlayer+"-"+idSecondPlayer);
-    io.sockets.socket(idSecondPlayer).join("room-"+idFirstPlayer+"-"+idSecondPlayer);
+    players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
+   
+    players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
     
-    io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).on('connection', function (socket) {
+    console.log(" id est a la romm  :  "+"room-"+idFirstPlayer+"-"+idSecondPlayer);
+    */
+    //io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).on('connection', function (socket) {
         
-        io.to("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("SyncPlayer");
-
+       
+/*
         io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).on("etatPlayersOk",function(){
 
             tabPlayer[socket.id].etat = "pret";
-            if(tabPlayer[idFirstPlayer].etat == "pret" && tabPlayer[idSecondPlayer].etat == "pret"){
-                nomDeLaFonctionPourDemarrerLeJeu();
+            if(tabPlayer[idFirstPlayer].etat == "pret" && tabPlayer[idSecondPlayer].etat == "pret")             {
+                nomDeLaFonctionPourDemarrerLeJeu(tabPlayer,idFirstPlayer,idSecondPlayer);
             }else{
                 io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).emit('majEtatPlayer',tabPlayer);  
             }
@@ -276,19 +304,81 @@ function askMatching(idFirstPlayer, idSecondPlayer){
             
             io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).emit('cancel');
         });
-        
-    });
+        */
+        //console.log("a la room "+"room-"+idFirstPlayer+"-"+idSecondPlayer);
+        //io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer");
+        //console.log("fini room");
+   // });
+    if(tamponCheckTabParty == null){
+        tamponCheckTabParty = setInterval(function(){
+            
+            var i=0;
+            
+            while(i<tableauP.length){
+            
+                var tableCheck = tableauP[i];     
+
+                if(tableCheck.idPSReady && tableCheck.idPFReady && tableCheck.active){
+
+                    console.log("ON EST ARRIVE ENFIN ICI");
+                }
+                i++;
+            }
+            
+        }, 100);
+    }
+    
 }
 
 
 
+
+function addParty(tableauP, idF, idS){
+    
+    idParty = 0;
+    
+    if(tableauP.length == 0){
+        
+        tableauP.push({'id':0,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false});
+        
+    }else{
+        var noOld = false, i=0;
+        
+        while(i<tableauP.length && !noOld){
+            
+            if(!tableauP[i].active){
+                tableauP[i] = {'id':i,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false};
+                idParty = i;
+                noOld = true;
+            }
+            i++;
+        }
+        
+        if(!noOld){
+            tableauP.push({'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false});
+        }
+    }
+    
+    return {'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false};
+     
+}
 //socket
 
+function nomDeLaFonctionPourDemarrerLeJeu(tabPlayer,idFirstPlayer,idSecondPlayer){
+    
+    console.log("pret "+idFirstPlayer+" vs "+idSecondPlayer);
+    
+}
 
 var players = {};
 var user = {};
 var time_disc = {};
 var matchList = {};
+
+var tamponCheckTabParty = null;
+
+
+var partyInProgress = new Array();
 
 
 var tamponSetInter = null;
@@ -333,9 +423,9 @@ var tamponSetInter = null;
 
 var io = require('socket.io').listen(server);
 
-io.of("/multiJoueur").on('connection', function (socket) {
+io.sockets.on('connection', function (socket) {
 	console.log('Fun client est connecté');
-    
+    socket.join('multiJoueur')
     socket.on('newUser', function (username) {
         if(typeof(players[socket.id]) == "undefined"){
             console.log("detected newUser");
@@ -344,7 +434,8 @@ io.of("/multiJoueur").on('connection', function (socket) {
             user[socket.username] = socket.id; 
             time_disc[socket.username] = new Date().getTime(); 
             players[socket.id].emit('startSync');
-            io.of('/multiJoueur').emit('newListe',user);
+            //socket.of('/multiJoueur').emit('newListe',user);
+            io.sockets.in("multiJoueur").emit('newListe',user);
         }else{
             if(typeof(matchList[socket.id]) == "undefined"){
                 console.log("rejoind le matchmaking");
@@ -379,7 +470,7 @@ function verificationConn(){
             delete user[i];
             delete time_disc[i];
             
-            io.of('/multiJoueur').emit('newListe',user);
+            io.sockets.in("multiJoueur").emit('newListe',user);
          }
      }
  }
