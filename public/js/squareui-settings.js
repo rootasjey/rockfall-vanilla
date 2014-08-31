@@ -550,6 +550,9 @@ function ShowLoginForm() {
                 var pseudo = $("input[name='login']" ).val();
             
                 var infoPartyLocal = null;
+                var idSocketClient = null;
+            
+                
             
                 socket = io.connect('http://127.0.0.1:3000');
 
@@ -564,9 +567,10 @@ function ShowLoginForm() {
                 });
 
 
-                socket.on('startSync', function () {
+                socket.on('startSync', function (idClient) {
                     console.log("detected startS");
                     if(scheduleCo == null){
+                        idSocketClient = idClient;
                         scheduleCo = setInterval(function(){
                             socket.emit('Sync');
                         }, 5000);
@@ -580,30 +584,32 @@ function ShowLoginForm() {
 
                 socket.on("majEtatPlayer",function(infoParty){
                         
-                        //{'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false}
-                        infoPartyLocal = infoParty;
-                        console.log(infoPartyLocal);
-                        /*if(infoParty.idPF == socket.id){
-                            idJoueur = infoParty.idPF;
-                        }else if(infoParty.idPS == socket.id){
-                            idJoueur = infoParty.idPS;
-                        }else{
-                            idJoueur = -1;
-                        }*/
+                    //{'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false}
+                    //infoPartyLocal = infoParty;
+                    //console.log(infoPartyLocal);
+                    /*if(infoParty.idPF == socket.id){
+                        idJoueur = infoParty.idPF;
+                    }else if(infoParty.idPS == socket.id){
+                        idJoueur = infoParty.idPS;
+                    }else{
+                        idJoueur = -1; {'idParty':infoParty.id,'idPlayer':socket.id}
+                    }*/
+
+                    console.log("je suis prêt!!");
+                    //alert("ddd :)");
+                    //socket.emit("etatPlayersOk",{'idParty':infoParty.id,'idPlayer':idSocketClient});
+                    
                         
-                        console.log("je suis prettt");
-                        socket.emit("etatPlayersOk",{'idParty':infoParty.id,'idPlayer':socket.id});
                 });
 
-                socket.on("cancel",function(){
-
-                });
+               
+                        
+                
 
                 console.log(pseudo);
                 socket.emit('newUser',pseudo);
 
-            //faire un emit ici//------------------------------------------------
-            //alert("like that !");//--------------------------------------------
+           
         })
         .appendTo(".login-form");
 

@@ -249,6 +249,7 @@ mymatch.start();
 function askMatching(idFirstPlayer, idSecondPlayer){
     
     
+    console.log("once");
     
     players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
     players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
@@ -256,22 +257,24 @@ function askMatching(idFirstPlayer, idSecondPlayer){
     var retour = addParty(partyInProgress, idFirstPlayer, idSecondPlayer);
     
     io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer",retour);
+    
     //players[idFirstPlayer].leave("multiJoueur");
     //players[idSecondPlayer].leave("multiJoueur");
     
-    io.sockets.on('etatPlayersOk', function (majInfo) {
+    /*io.sockets.on('etatPlayersOk', function (majInfo) {
         
-        var info = tableauP[majInfo.idParty];
-        
+        var info = partyInProgress[majInfo.idParty];
+        console.log(majInfo);
+        console.log(info);
         if(majInfo.idPlayer == info.idPF){
-            tableauP[majInfo.idParty].idPFReady = true;
+            partyInProgress[majInfo.idParty].idPFReady = true;
             console.log("first player ready l.268");
         }else if(majInfo.idPlayer == info.idPS){
-            tableauP[majInfo.idParty].idPSReady = true;
+            partyInProgress[majInfo.idParty].idPSReady = true;
             console.log("second player ready l.271");
         }
         
-    });
+    });*/
     
    /* 
     var tabPlayer = {};
@@ -309,24 +312,24 @@ function askMatching(idFirstPlayer, idSecondPlayer){
         //io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer");
         //console.log("fini room");
    // });
-    if(tamponCheckTabParty == null){
-        tamponCheckTabParty = setInterval(function(){
-            
-            var i=0;
-            
-            while(i<tableauP.length){
-            
-                var tableCheck = tableauP[i];     
+        if(tamponCheckTabParty == null){
+            tamponCheckTabParty = setInterval(function(){
 
-                if(tableCheck.idPSReady && tableCheck.idPFReady && tableCheck.active){
+                var i=0;
 
-                    console.log("ON EST ARRIVE ENFIN ICI");
+                while(i<partyInProgress.length){
+
+                    var tableCheck = partyInProgress[i];     
+
+                    if(tableCheck.idPSReady && tableCheck.idPFReady && tableCheck.active){
+
+                        console.log("ON EST ARRIVE ENFIN ICI");
+                    }
+                    i++;
                 }
-                i++;
-            }
-            
-        }, 100);
-    }
+
+            }, 100);
+        }
     
 }
 
@@ -433,7 +436,7 @@ io.sockets.on('connection', function (socket) {
             players[socket.id] = socket;
             user[socket.username] = socket.id; 
             time_disc[socket.username] = new Date().getTime(); 
-            players[socket.id].emit('startSync');
+            players[socket.id].emit('startSync',socket.id);
             //socket.of('/multiJoueur').emit('newListe',user);
             io.sockets.in("multiJoueur").emit('newListe',user);
         }else{
@@ -455,6 +458,23 @@ io.sockets.on('connection', function (socket) {
             verificationConn();
         }, 10000);
     }
+    
+    
+    socket.on('etatPlayersOk', function (majInfo) {
+        /*
+        var info = partyInProgress[majInfo.idParty];
+        console.log(majInfo);
+        console.log(info);
+        if(majInfo.idPlayer == info.idPF){
+            partyInProgress[majInfo.idParty].idPFReady = true;
+            console.log("first player ready l.268");
+        }else if(majInfo.idPlayer == info.idPS){
+            partyInProgress[majInfo.idParty].idPSReady = true;
+            console.log("second player ready l.271");
+        }
+        */
+        console.log(majInfo);
+    });
 });
 
 
