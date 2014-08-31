@@ -6,11 +6,12 @@ function LoadBoard() {
     players.push(new Players(1,"Joueur_1","black",0,[5,10,15]));
     players.push(new Players(2,"Joueur_2","black",0,[8,10,20]));
 
-    /* On définit les pouvoirs qui seront disponible lors de la partie ici nous avons définit 3 qui seront les mêmes pour chaque joueur */
+    /* On définit les pouvoirs qui seront disponible lors de la partie ici
+    nous avons définit 3 qui seront les mêmes pour chaque joueur */
     var powerPlayerUn = new Array();
-    powerPlayerUn.push(new powerWeightDouble("cadre-un",10,'./images/bonus/bonus_double.png'));
-    powerPlayerUn.push(new powerNeutralPiece("cadre-deux",10,'./images/bonus/bonus_neutral.png'));
-    powerPlayerUn.push(new powerWeightLoseHalf("cadre-trois",20,'./images/bonus/bonus_divide2.png'));
+    powerPlayerUn.push(new powerWeightDouble("power-one",10,'./images/powers/power_double.png'));
+    powerPlayerUn.push(new powerNeutralPiece("power-two",10,'./images/powers/power_neutral.png'));
+    powerPlayerUn.push(new powerWeightLoseHalf("power-three",20,'./images/powers/power_divide2.png'));
 
     /* on assigne le tableau de pouvoir aux personnages */
     for(var i = 0; i < players.length;i++){
@@ -357,18 +358,6 @@ $(canvas).on("mouseup",function(e) {
 
 
  });
-
-    /* Ecouteur sur le bouton de pause */
-    $("#button-pause").on("click",function(e){
-        ScreenPause(_myState);
-    });
-
-
-    /* Ecouteur sur le bouton afin de passer son tour*/
-    $("#button-passe").on("click",function(e){
-        PasseTour(_myState);
-    });
-
 }
 
 /* timeChange  la fonction de callback une fois le tour changé  pour réinitialiser */

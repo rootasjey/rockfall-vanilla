@@ -72,7 +72,13 @@ Players.prototype.changeScore = function(idContainer, points, stateGame){
                 }else if(startScore == savePlayer.tamponScore){
                     //clearInterval(this);
                     if(savePlayer.setScore != null){
+                        // Stop the score's animation
                         savePlayer.setScore.stop();
+
+                        // Check (automatically) if powers can be used after score has been set
+                        PowerCansbeActivated($("#power-one"));
+                        PowerCansbeActivated($("#power-two"));
+                        PowerCansbeActivated($("#power-three"));
                     }
                     //savePlayer.setScore = null;
                 }

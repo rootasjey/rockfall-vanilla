@@ -24,6 +24,29 @@
   margin-bottom: 0px;
   margin-top: 100px;
 }
+#welcome-ui .square-infos {
+  position: relative;
+  right: 30px;
+  opacity: 0.8;
+  margin: 5px;
+  padding: 20px;
+  height: 100px;
+  width: 100px;
+  transition: 0.5s;
+  font-size: 2em;
+  color: transparent;
+  text-align: center;
+  position: relative;
+  display: inline-block;
+  background: transparent;
+  top: -98px;
+}
+#welcome-ui .square-infos .square-text {
+  margin-top: 80px;
+  vertical-align: middle;
+  display: inline-block;
+  cursor: default;
+}
 #welcome-ui .square {
   position: relative;
   right: 30px;
@@ -34,7 +57,12 @@
   height: 100px;
   width: 100px;
   background: #000;
+  display: inline-block;
   transition: 0.5s;
+}
+#welcome-ui .square img {
+  height: 100px;
+  width: 100px;
 }
 #welcome-ui .square:hover {
   opacity: 1;
@@ -53,24 +81,11 @@
 #welcome-ui .square[function='about']:hover {
   background: #27ae60;
 }
-#welcome-ui .square[function='infos'] {
-  font-size: 2em;
-  color: transparent;
-  text-align: center;
+#welcome-ui #square-ui {
+  padding: 20px;
   position: relative;
-  display: inline-block;
-  background: transparent;
-  top: -98px;
-}
-#welcome-ui .square[function='infos'] .square-text {
-  margin-top: 80px;
-  vertical-align: middle;
-  display: inline-block;
-}
-#welcome-ui .square[function='ui'] {
   width: 250px;
   height: 250px;
-  position: relative;
   top: -340px;
   z-index: -1;
   cursor: default;

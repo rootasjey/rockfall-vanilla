@@ -11,7 +11,6 @@ function screenGoStart(stateGame){
 }
 
 function ScreenPause(stateGame){
-
     stateGame.pause = true;
     if(stateGame.activePlayers.setScore != null)
         stateGame.activePlayers.setScore.pause();
@@ -29,6 +28,14 @@ function ScreenPause(stateGame){
         stateGame.tours.intervalVerification.pause();
 
     stateGame.frame.pause();
+
+    $("#canvas").css({
+
+    }).animate({
+        opacity: 0.5,
+        height: "500px",
+        width: "785px",
+    });
 }
 
 
@@ -53,6 +60,14 @@ function ScreenResume(stateGame){
 
     stateGame.frame.play();
     //stateGame.tours.time.play();
+
+    $("#canvas").css({
+
+    }).animate({
+        opacity: 1,
+        height: "515px",
+        width: "800px",
+    });
 }
 
 

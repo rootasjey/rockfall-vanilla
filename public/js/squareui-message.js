@@ -98,19 +98,6 @@ function ShowMessagePanel() {
     ShowMessagePanelIcons();
 }
 
-// Animate the scroll vertically
-function ScrollVerticallyTo(vertical) {
-    var ten  = 10;
-    if (vertical < 0) ten = -ten;
-    vertical = Math.abs(vertical);
-
-    for (var i = 0; i < vertical; i += 10) {
-        Delay(function () {
-            window.scrollBy(0, ten);
-        }, 100);
-    }
-}
-
 // Show Message panel's icons
 function ShowMessagePanelIcons() {
     // Show the inbox icon

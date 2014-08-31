@@ -72,17 +72,24 @@ function ShowMiniIcons() {
         height: '30px',
         width: '30px',
     });
+
+    // Test if the user had a game started
+    if (_settings.gameStarted) {
+        ShowGameIcons();
+    }
 }
 
 // Hide mini icons in square-ui
 function HideMiniIcons() {
-    // hide mini icons
-    $(".mini-icon").css({
-
-    }).animate({
+    $(".mini-icon").animate({
         height: '0px',
         width: '0px',
     });
+
+    // Test if the user had a game started
+    if (_settings.gameStarted) {
+        HideGameIcons();
+    }
 }
 
 // Add Events on mini icons
@@ -242,12 +249,17 @@ function ShowSquareUIGame() {
 function HideSquareUIGame() {
     if($(".square-ui-game").css("opacity") === "0") return;
 
-    $(".square-ui-game").css({
-
-    }).animate({
+    $(".square-ui-game")
+    .animate({
         marginTop: '50px',
         opacity: '0',
     });
+
+    // Pause the game fi started
+    if(_settings.gameStarted) {
+        EventGameResume($("#button-pause"));
+        ScreenPause(_myState);
+    }
 }
 
 // Show the square-ui's content
@@ -255,6 +267,11 @@ function ShowSquareUIContent() {
     // Scroll to the top
     $("#square-ui").scroll();
     ShowMiniIcons();
+
+    // Expend square ui if the game was started
+    if (_settings.gameStarted) {
+        ExpendSquareUI('500');
+    }
 }
 
 // Hide all sub-panels of .second-panel
@@ -350,7 +367,7 @@ function AddTooltipToSecondPanel() {
 
 // Show second-panel with style
 function ShowSecondPanel() {
-    $("div.second-panel").css({
+    $(".second-panel").css({
         top: '-50px',
         opacity: '0',
     }).animate({
@@ -390,6 +407,18 @@ function HideSecondPanel() {
 
     // Scroll up
     ScrollVerticallyTo(-500);
+}
+
+function ExpendSquareUI(height) {
+    $("#square-ui").animate({
+        height: "+=" + height + 'px',
+    });
+}
+
+function ShrinkSquareUI(height) {
+    $("#square-ui").animate({
+        height: "-=" + height + 'px',
+    });
 }
 
 // Check if the second panel height is above normal

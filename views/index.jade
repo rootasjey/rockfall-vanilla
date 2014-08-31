@@ -12,12 +12,19 @@ block content
     div.title Rockfall
 
     div.square-group
-      img.square(src='../icons/icon_play.png' function='play')
-      img.square(src='../icons/icon_key.png' function='connect')
-      img.square(src='../icons/icon_about.png' function='about')
-      div.square(function='infos')
+      div.square(function='play')
+        img(src='../icons/icon_play.png')
+
+      div.square(function='connect')
+        img(src='../icons/icon_key.png' function='connect')
+
+      div.square(function='about')
+        img(src='../icons/icon_about.png')
+
+      div.square-infos(function='infos')
         span.square-text infos
-      div#square-ui.square(function='ui')
+
+      div#square-ui(function='ui')
 
   div.ghost-panel
     //- floating game

@@ -4,8 +4,6 @@
 // ------------------
 
 // Allow to cancel the messageGlow's setInterval
-var _messageGlowID = null;
-
 var socket = null;
 var scheduleCo = null;
 
@@ -22,4 +20,5 @@ var _box = {
 var _settings = {
     "autoEndTurn"   : false,
     "background"    : "shattered.png",
+    "gameStarted"   : false,
 }

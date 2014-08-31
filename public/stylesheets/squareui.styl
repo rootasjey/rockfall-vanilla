@@ -32,7 +32,6 @@ color-alizarin = #e74c3c
             animation-direction: alternate
             animation-iteration-count infinite
             animation-name: glowIcon
-
         }
     }
 
@@ -40,15 +39,20 @@ color-alizarin = #e74c3c
         opacity 0.2
         width 40px
         height 40px
-
         margin 5px
-
         cursor pointer
         transition 1s
 
         &:hover{
-            opacity 1
+            // opacity 1
             transition 1s
+        }
+
+        &[isGlowing='true'] {
+            animation-duration: 1s
+            animation-direction: alternate
+            animation-iteration-count infinite
+            animation-name: glowIcon
         }
     }
 
@@ -124,9 +128,9 @@ color-alizarin = #e74c3c
             transition 0.5s
 
             &:hover {
-                opacity 1
-                height 70px
-                width 70px
+                // opacity 1
+                // height 70px
+                // width 70px
                 transition 0.5s
 
             }
@@ -179,25 +183,53 @@ color-alizarin = #e74c3c
 
             opacity 0.5
             cursor pointer
+            border-width 3px
             border-radius 40px
+            border-style solid
+            border-color black
             background  rgba(0, 0, 0, 0.5)
 
             display inline-block
-            transition 0.5s
+            transition 1s
 
             &:hover {
-                height 50px
-                width 50px
-
-                opacity 1
-                transition 0.5s
+                // height 38px
+                // width 38px
+                // border-width 0px
+                // opacity 1
+                transition 1s
             }
         }
     }
 }
 
-.qtip-light .qtip-content {
-    font-size 1.3em
+.qtip-light {
+    .qtip-titlebar {
+        font-size: 2em
+        padding-top 10px
+        padding-bottom 10px
+    }
+    .qtip-content {
+        font-size 1.7em
+    }
+    img {
+        height 40px
+        width 40px
+    }
+}
+.qtip-dark {
+    .qtip-titlebar {
+        font-size: 2em
+        padding-top 10px
+        padding-bottom 10px
+    }
+    .qtip-content {
+        font-size 1.7em
+    }
+    img {
+        height 40px
+        width 40px
+    }
 }
 
 // Second-panel
@@ -205,10 +237,10 @@ color-alizarin = #e74c3c
 // ------------
 .second-panel {
     height 440px
-    width 840px
+    width 838px
 
     position relative
-    left -5px
+    left 20px
 
     margin auto
     margin-top -10px
