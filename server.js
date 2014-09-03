@@ -444,7 +444,7 @@ function StartParty(){
 
                     if(tableCheck.start){
 
-                        checkTurn();
+                        checkTurn(tableCheck);
                         //tableCheck.start = true;
                         
                         
@@ -457,15 +457,74 @@ function StartParty(){
     
 }
 
+
+function checkTurn(tableauDeDonnées){
+    
+    /* La fonction search permet de retrouver la cellule du plateau qui est associée à la matrix  */
+
+Table.prototype.search = function(matriceX,matriceY){
+
+    var resultat = null;
+    for(var i = 0;i < this.graphique.length;i++){
+		 var cell = this.graphique[i];
+        if(cell.matriceX == matriceX && cell.matriceY == matriceY){
+            resultat = cell;
+        }
+    }
+    return resultat;
+}
+
+/*La fonction gravity permet d'appliquer une certaine gravité aux pièces du plateau */
+
+Table.prototype.gravity = function(){
+
+    fini = false;
+	for(var i = 0;i < this.sizeY;i++){
+
+		for(var j = this.sizeX-1;j >= 0;j--){
+            if(this.matrice[j][i] != 0){
+                var end = true;
+                var k = j
+                while(end){
+                    if(k == this.sizeX-1){
+                        end = false;
+                    }else{
+                        if(this.matrice[k+1][i] == 0){
+
+                            this.matrice[k+1][i] = this.matrice[k][i];
+                            var objet = this.search(k+1,i);
+                            if(objet != null){
+                                this.matrice[k+1][i].x = objet.x-(objet.width/2);
+                                this.matrice[k+1][i].y = objet.y-(objet.height/4.5);
+                            }
+                            this.matrice[k][i]= 0;
+                            fini =  true;
+                            end = false;
+                        }
+                    }
+                    k++;
+                }
+            }
+        }
+
+	}
+    if(fini == false && this.justAdd == true){
+        fini = true;
+    }
+    this.justAdd = false;
+    return fini;
+}
+}
+
 function createPlateau(nbrePieceHori,nbrePieceVerti){
     
     var plateau = new Array();
     
-    for(var i = 0 ;i<;i++){
+    for(var i = 0 ;i<nbrePieceVerti;i++){
         
         var ligne = new Array();
         
-        for(var j = 0;j<;j++){
+        for(var j = 0;j<nbrePieceHori;j++){
         
             ligne.push(0);
         
