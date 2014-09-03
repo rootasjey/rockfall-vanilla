@@ -463,6 +463,7 @@ function ShowLoginForm() {
     // Expend connection section
     ExpendConnectionSection("200px");
 
+    
     // Starts with a delay
     Delay(function () {
 
@@ -547,8 +548,10 @@ function ShowLoginForm() {
             });
         }).click(function(){
 
+            if(testClick==0){
+                
                 var pseudo = $("input[name='login']" ).val();
-            
+                tamponPseudo = pseudo;
                 var infoPartyLocal = null;
                 var idSocketClient = null;
             
@@ -581,23 +584,23 @@ function ShowLoginForm() {
                     socket.emit('Sync');
                 });
 
-
+                        
                 socket.on("majEtatPlayer",function(infoParty){
                         
                     //{'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false}
-                    //infoPartyLocal = infoParty;
+                    infoPartyLocal = infoParty;
                     //console.log(infoPartyLocal);
-                    /*if(infoParty.idPF == socket.id){
+                    if(infoParty.idPF == socket.id){
                         idJoueur = infoParty.idPF;
                     }else if(infoParty.idPS == socket.id){
                         idJoueur = infoParty.idPS;
                     }else{
-                        idJoueur = -1; {'idParty':infoParty.id,'idPlayer':socket.id}
-                    }*/
-
+                        idJoueur = -1;
+                    }
+                    
                     console.log("je suis prêt!!");
                     //alert("ddd :)");
-                    //socket.emit("etatPlayersOk",{'idParty':infoParty.id,'idPlayer':idSocketClient});
+                    socket.emit("etatPlayersOk",{'idParty':infoParty.id,'idPlayer':idSocketClient});
                     
                         
                 });
@@ -608,12 +611,18 @@ function ShowLoginForm() {
 
                 console.log(pseudo);
                 socket.emit('newUser',pseudo);
+                testClick++;
+            }else{
+                        
+                socket.emit('newUser',tamponPseudo);            
+            }
 
            
         })
         .appendTo(".login-form");
 
-
+        var testClick = 0;
+        var tamponPseudo = "";             
         // Animations
         title.animate({
             opacity: "1",

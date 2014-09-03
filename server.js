@@ -249,12 +249,14 @@ mymatch.start();
 function askMatching(idFirstPlayer, idSecondPlayer){
     
     
-    console.log("once");
+    //console.log("once");
     
     players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
     players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
     
     var retour = addParty(partyInProgress, idFirstPlayer, idSecondPlayer);
+    
+    
     
     io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer",retour);
     
@@ -321,15 +323,19 @@ function askMatching(idFirstPlayer, idSecondPlayer){
 
                     var tableCheck = partyInProgress[i];     
 
-                    if(tableCheck.idPSReady && tableCheck.idPFReady && tableCheck.active){
+                    if(tableCheck.idPSReady && tableCheck.idPFReady && tableCheck.active && !tableCheck.start){
 
-                        console.log("ON EST ARRIVE ENFIN ICI");
+                        tableCheck.start = true;
+                        
+                        
                     }
                     i++;
                 }
 
             }, 100);
         }
+    
+        StartParty();
     
 }
 
@@ -338,11 +344,32 @@ function askMatching(idFirstPlayer, idSecondPlayer){
 
 function addParty(tableauP, idF, idS){
     
-    idParty = 0;
+    var idParty = 0;
+    var newElement = {};
+    var plateau = createPlateau(4,6);
     
     if(tableauP.length == 0){
         
-        tableauP.push({'id':0,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false});
+        newElement = {
+                        'id':0,
+                        'idPF':idF,
+                        'idPS':idS,
+                        'room':'room-'+idF+'-'+idS,
+                        'active':true,
+                        'idPFReady':false,
+                        'idPSReady':false,
+                        'start':false,
+                        'plateau':plateau,
+                        'idPFPoint':0,
+                        'idPFScore':0,
+                        'idPSScore':0,
+                        'idPSPoint':0,
+                        'idPFPower':"1-2-3",
+                        'idPSPower':"1-2-3",
+                        'newPoint':{}
+                    };
+        
+        tableauP.push(newElement);
         
     }else{
         var noOld = false, i=0;
@@ -350,7 +377,25 @@ function addParty(tableauP, idF, idS){
         while(i<tableauP.length && !noOld){
             
             if(!tableauP[i].active){
-                tableauP[i] = {'id':i,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false};
+                newElement = {
+                                'id':i,
+                                'idPF':idF,
+                                'idPS':idS,
+                                'room':'room-'+idF+'-'+idS,
+                                'active':true,
+                                'idPFReady':false,
+                                'idPSReady':false,
+                                'start':false,
+                                'plateau':plateau,
+                                'idPSScore':0,
+                                'idPFScore':0,
+                                'idPFPoint':0,
+                                'idPSPoint':0,
+                                'idPFPower':"1-2-3",
+                                'idPSPower':"1-2-3",
+                                'newPoint':{}
+                            };
+                tableauP[i] = newElement;
                 idParty = i;
                 noOld = true;
             }
@@ -358,20 +403,82 @@ function addParty(tableauP, idF, idS){
         }
         
         if(!noOld){
-            tableauP.push({'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false});
+            newElement = {
+                            'id':(tableauP.length-1),
+                            'idPF':idF,
+                            'idPS':idS,
+                            'room':'room-'+idF+'-'+idS,
+                            'active':true,
+                            'idPFReady':false,
+                            'idPSReady':false,
+                            'start':false,
+                            'plateau':plateau,
+                            'idPFPoint':0,
+                            'idPFScore':0,
+                            'idPSPoint':0,
+                            'idPSScore':0,
+                            'idPFPower':"1-2-3",
+                            'idPSPower':"1-2-3",
+                            'newPoint':{}
+                        };
+            tableauP.push(newElement);
         }
     }
     
-    return {'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false};
+    return newElement;
+    //return {'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false};
      
 }
 //socket
 
-function nomDeLaFonctionPourDemarrerLeJeu(tabPlayer,idFirstPlayer,idSecondPlayer){
-    
-    console.log("pret "+idFirstPlayer+" vs "+idSecondPlayer);
+function StartParty(){
+  //  ------------------------------------------------------------------
+   if(checkClientParty == null){
+            checkClientParty = setInterval(function(){
+
+                var i=0;
+
+                while(i<partyInProgress.length){
+
+                    var tableCheck = partyInProgress[i];     
+
+                    if(tableCheck.start){
+
+                        checkTurn();
+                        //tableCheck.start = true;
+                        
+                        
+                    }
+                    i++;
+                }
+
+            }, 300);
+        }
     
 }
+
+function createPlateau(nbrePieceHori,nbrePieceVerti){
+    
+    var plateau = new Array();
+    
+    for(var i = 0 ;i<;i++){
+        
+        var ligne = new Array();
+        
+        for(var j = 0;j<;j++){
+        
+            ligne.push(0);
+        
+        }
+        
+        plateau.push(ligne);
+        
+    }
+    
+    
+    return plateau;
+}
+
 
 var players = {};
 var user = {};
@@ -379,10 +486,13 @@ var time_disc = {};
 var matchList = {};
 
 var tamponCheckTabParty = null;
+var checkClientParty = null;
 
 
 var partyInProgress = new Array();
 
+
+var partyAdvance = new Array();
 
 var tamponSetInter = null;
 
@@ -461,10 +571,10 @@ io.sockets.on('connection', function (socket) {
     
     
     socket.on('etatPlayersOk', function (majInfo) {
-        /*
+        
         var info = partyInProgress[majInfo.idParty];
         console.log(majInfo);
-        console.log(info);
+        console.log(partyInProgress);
         if(majInfo.idPlayer == info.idPF){
             partyInProgress[majInfo.idParty].idPFReady = true;
             console.log("first player ready l.268");
@@ -472,8 +582,8 @@ io.sockets.on('connection', function (socket) {
             partyInProgress[majInfo.idParty].idPSReady = true;
             console.log("second player ready l.271");
         }
-        */
-        console.log(majInfo);
+
+        //console.log(majInfo);
     });
 });
 
