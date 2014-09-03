@@ -28,16 +28,7 @@ function ScreenPause(stateGame){
         stateGame.tours.intervalVerification.pause();
 
     stateGame.frame.pause();
-
-    $("#canvas").css({
-
-    }).animate({
-        opacity: 0.5,
-        height: "500px",
-        width: "785px",
-    });
 }
-
 
 function ScreenResume(stateGame){
 
@@ -60,16 +51,25 @@ function ScreenResume(stateGame){
 
     stateGame.frame.play();
     //stateGame.tours.time.play();
+}
 
-    $("#canvas").css({
+function ScreenPauseFadeOut() {
+    ScreenPause(_myState);
+    $("#canvas").animate({
+        opacity: 0.5,
+        height: "500px",
+        width: "785px",
+    });
+}
 
-    }).animate({
+function ScreenResumeFadeIn() {
+    ScreenResume(_myState);
+    $("#canvas").animate({
         opacity: 1,
         height: "515px",
         width: "800px",
     });
 }
-
 
 function PasseTour(stateGame){
     stateGame.tours.endTour = true;
@@ -146,4 +146,8 @@ function ScreenEndGame(stateGame, players){
     }
     stateGame.tours.endCycle();
     // $("#active-player").html(resultat);
+}
+
+function EventGameEndGame() {
+    _myState.tours.endCycle();
 }

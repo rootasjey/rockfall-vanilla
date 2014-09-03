@@ -1,5 +1,5 @@
 // -----------------------
-// SQUAREUI-SETTINGS (.JS)
+// SQUAREUI-SETTINGS.JS
 // -----------------------
 
 // Create the Settings panel
@@ -548,12 +548,12 @@ function ShowLoginForm() {
         }).click(function(){
 
                 var pseudo = $("input[name='login']" ).val();
-            
+
                 var infoPartyLocal = null;
                 var idSocketClient = null;
-            
-                
-            
+
+
+
                 socket = io.connect('http://127.0.0.1:3000');
 
                 socket.on('newListe', function (tab) {
@@ -583,33 +583,38 @@ function ShowLoginForm() {
 
 
                 socket.on("majEtatPlayer",function(infoParty){
-                        
+
                     //{'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false}
-                    //infoPartyLocal = infoParty;
-                    //console.log(infoPartyLocal);
-                    /*if(infoParty.idPF == socket.id){
+                    infoPartyLocal = infoParty;
+                    console.log(infoPartyLocal);
+                    if(infoParty.idPF == socket.id){
                         idJoueur = infoParty.idPF;
                     }else if(infoParty.idPS == socket.id){
                         idJoueur = infoParty.idPS;
                     }else{
-                        idJoueur = -1; {'idParty':infoParty.id,'idPlayer':socket.id}
-                    }*/
+                        idJoueur = -1;
+                        // {'idParty':infoParty.id,'idPlayer':socket.id};
+                        var idParty = {
+                            'infoParty' :infoParty.id,
+                            'idPlayer'  :socket.id,
+                        };
+                    }
 
                     console.log("je suis prêt!!");
-                    //alert("ddd :)");
-                    //socket.emit("etatPlayersOk",{'idParty':infoParty.id,'idPlayer':idSocketClient});
-                    
-                        
+                    // alert("ddd :)");
+                    socket.emit("etatPlayersOk",{'idParty':infoParty.id,'idPlayer':idSocketClient});
+
+
                 });
 
-               
-                        
-                
+
+
+
 
                 console.log(pseudo);
                 socket.emit('newUser',pseudo);
 
-           
+
         })
         .appendTo(".login-form");
 
@@ -774,8 +779,8 @@ function ClickPreferencesSection() {
 function ClosePreferencesSection() {
         $(".side-content").remove();
         RemoveCloseRectangle();
-        // RemoveAudioBlock();
         RemoveBlock("audio-block");
+        RemoveBlock("userSettings-block");
 
         // Put the section's title (& the image) on the left side
         // ------------------------------------------------------
@@ -800,7 +805,6 @@ function ClosePreferencesSection() {
                 left: "0",
             }).animate({
                 opacity: "0.5",
-                // width   : "160px",
             });
 
             $(".settings-section[function='preferences']").click(function () {

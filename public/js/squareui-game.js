@@ -22,21 +22,21 @@ function GameModes() {
     var solo = $("<div>", {
         html: "<img src='../icons/icon_circuit.png'></img> <span> VS CPU </span>" +
                 "<span class='text-info'>Battle against the computer</span>",
-        class: "vertiacal-pan",
+        class: "vertical-pan",
     }).appendTo(".square-ui-game");
 
     // 2 LOCAL PLAYERS
     var local = $("<div>", {
         html: "<img src='../icons/icon_meeting.png'></img> <span> 2 Players </span>" +
                 "<span class='text-info'>2 players on the same computer</span>",
-        class: "vertiacal-pan",
+        class: "vertical-pan",
     }).appendTo(".square-ui-game");
 
     // ONLINE
     var online = $("<div>", {
         html: "<img src='../icons/icon_globe.png'></img> <span> Online </span>" +
                 "<span class='text-info'>Challenge players around the world</span>",
-        class: "vertiacal-pan",
+        class: "vertical-pan",
     }).appendTo(".square-ui-game");
 
 
@@ -44,117 +44,40 @@ function GameModes() {
     ShowSquareUIGame();
 
     // Event
+    HoverGamesMode();
+
     solo.click(function () {
         // Start a Solo game
     });
 
     local.click(function () {
-        TwoPlayers();
+        TwoPlayersMode();
     });
 
     online.click(function () {
         // Start an online party
+        OnlineMode();
+    });
+}
+
+function ShowGameModes() {
+    // Display the game's modes
+    $(".vertical-pan").css({
+        display: 'inline-block',
+        top: "10px",
+    }).animate({
+        opacity: "0.5",
+        top: "0",
     });
 }
 
 // Start a game with two local players
-function TwoPlayers() {
-    // Animations
-    $(".vertiacal-pan").animate({
-        opacity: "0",
-        top: "+=20px",
-    });
-
-    // Expend square ui
+function TwoPlayersMode() {
+    HideGameModes();
     ExpendSquareUI('300');
-
-
-    // User's avatar
-    // & game buttons
-    $("<div>", {
-        class: "user-pan",
-    }).insertBefore(".square-ui-game");
-
-    var profil = $("<div>", {
-        class: "user-profil",
-    }).css({
-        opacity: '0',
-    })
-    .appendTo(".user-pan");
-
-    var userName = $("<span>", {
-        class: "user-name",
-        html: "Visitor",
-    }).css({
-        opacity: '0',
-    }).appendTo(".user-pan");
-
-    // Add icons
-    // ----------
-    // Score
-    var score = $("<div>", {
-        class: 'score-panel',
-    }).appendTo("#square-ui");
-
-    var userScorePoints = $("<span>", {
-        html: "0",
-        class: "score",
-        id : "user-score-points",
-    }).css({
-        opacity: '0',
-    }).appendTo(".score-panel");
-
-    var userScoreIcon = $("<img>", {
-        src : "../icons/icon_award.png",
-        class: "mini-icon",
-    }).css({
-        opacity: '0',
-    }).appendTo(".score-panel");
-
-    // Game buttons
-    $("<div>", {
-        class: "buttons-pan",
-    }).appendTo(".user-pan");
-
-    // Play/Pause Icon
-    var pause = $("<img>", {
-        id      : 'button-pause',
-        class   : 'game-icon',
-        src     : '../icons/icon_pause.png',
-        function: 'pause'
-    }).css({
-        opacity: '0',
-    }).appendTo(".buttons-pan");
-
-    // Skip icon
-    var skip = $("<img>", {
-        id      : 'button-skip',
-        class   : 'game-icon',
-        src     : '../icons/icon_end.png',
-        function: 'skip'
-    }).css({
-        opacity: '0',
-    }).appendTo(".buttons-pan");
-
-    // Add tooltip on points
-    ApplyTooltipCenterRight(userScoreIcon, "your points");
-
-    // Powers
     LoadPowers();
-
-
-    // ANIMATIONS
     ShowGameIcons();
 
-    // EVENTS
-    // Pause event
-    EventGamePause(pause);
-    HoverGameIcons();
-
-    // Skip event
-    skip.click(function () {
-        PasseTour(_myState);
-    });
 
     Delay(function () {
         var squareuiGame = $(".square-ui-game").css({
@@ -164,8 +87,6 @@ function TwoPlayers() {
 
         // Start a 2 local players game
         var board = $('#canvas');
-
-        $(".square-ui-game").html("");
         board.appendTo(".square-ui-game");
 
 
@@ -185,14 +106,229 @@ function TwoPlayers() {
         Delay(function () {
             AutoStartGame();
 
-        }, 1000);
+        }, 500);
     }, 1000);
 
     // Indicated the user's already started a game
     _settings.gameStarted = true;
 }
 
+// Start an online game
+// (Ask against a friend or random?)
+function OnlineMode() {
+    HideGameModes();
+
+    // The user choose which sub-mode
+    var choice = $("<div>", {
+        class: "message-confirmation",
+        html: "<span> Against who do you want to compete? </span>",
+    }).css({
+        opacity: 0,
+        position: 'relative',
+        top: '100px',
+        width: '500px',
+    }).appendTo(".square-ui-game");
+
+    var friendlyButton = $("<div>", {
+        class: 'button',
+        html: "<span> A friend </span>",
+    }).appendTo(choice);
+
+    var unfriendlyButton = $("<div>", {
+        class: 'button',
+        html: "<span> Anyone! </span>",
+    }).appendTo(choice);
+
+    var cancelButton = $("<div>", {
+        class: 'button',
+        html: "<span> Cancel </span>",
+    }).css({
+        display: 'block',
+        width: '240px',
+        margin: 'auto'
+    }).appendTo(choice);
+
+    // Hover events
+    $(".message-confirmation .button").hover(function () {
+        $(this).css({
+            opacity: 1,
+            background: '#3498db',
+        });
+    }, function () {
+        $(this).css({
+            opacity: 0.5,
+            background: 'black',
+        });
+    });
+    cancelButton.hover(function () {
+        $(this).css({
+            opacity: 1,
+            background: '#e74c3c',
+            boxShadow: "0 0 20px #000000",
+        });
+    }, function () {
+        $(this).css({
+            opacity: 0.5,
+            background: 'black',
+            boxShadow: "0 0 0px #000000",
+        });
+    });
+
+    // CLICK EVENTS
+    friendlyButton.click(function () {
+        FriendlyOnlineMode();
+    });
+    unfriendlyButton.click(function () {
+        UnfriendlyOnlineMode
+    });
+    cancelButton.click(function () {
+        var parent = $(this).parent();
+        parent.remove();
+        ShowGameModes();
+    });
+
+    choice.animate({
+        opacity: 1,
+        top: '90px',
+    });
+}
+
+// Battle with a friend
+function FriendlyOnlineMode() {
+
+}
+
+// Compete against a total stranger
+function UnfriendlyOnlineMode() {
+
+}
+
+// This function is explicit
+function HideGameModes() {
+    $(".vertical-pan").animate({
+        opacity: "0",
+        top: "+=20px",
+    }, {
+        complete: function () {
+            $(this).css({
+                display: 'none',
+            })
+        }
+    });
+}
+
 function ShowGameIcons() {
+    // First create objects if they're don't exist
+    if ($(".user-profil").length < 1) {
+        // User's avatar
+        // & game buttons
+        $("<div>", {
+            class: "user-pan",
+        }).insertBefore(".square-ui-game");
+
+        var profil = $("<div>", {
+            class: "user-profil",
+        }).css({
+            opacity: '0',
+        })
+        .appendTo(".user-pan");
+
+        var userName = $("<span>", {
+            class: "user-name",
+            html: "Visitor",
+        }).css({
+            opacity: '0',
+        }).appendTo(".user-pan");
+    }
+
+    if ($(".score-panel").length < 1) {
+        // Score
+        var score = $("<div>", {
+            class: 'score-panel',
+        }).appendTo("#square-ui");
+
+        if ($("#user-score-points").length < 1) {
+            var userScorePoints = $("<span>", {
+                html: "0",
+                class: "score",
+                id : "user-score-points",
+            }).css({
+                opacity: '0',
+            }).appendTo(".score-panel");
+        }
+
+        if ($(".score-panel .mini-icon[action='scoreIcon']").length < 1) {
+            var userScoreIcon = $("<img>", {
+                src : "../icons/icon_award.png",
+                class: "mini-icon",
+                action: "scoreIcon",
+            }).css({
+                opacity: '0',
+            }).appendTo(".score-panel");
+
+            // Add tooltip on points
+            ApplyTooltipCenterRight(userScoreIcon, "your points");
+        }
+    }
+
+    if ($(".user-pan .buttons-pan").length < 1) {
+        // Game buttons
+        $("<div>", {
+            class: "buttons-pan",
+        }).appendTo(".user-pan");
+
+        if ($("#button-pause").length < 1) {
+            // Play/Pause Icon
+            var pause = $("<img>", {
+                id      : 'button-pause',
+                class   : 'game-icon',
+                src     : '../icons/icon_pause.png',
+                function: 'pause'
+            }).css({
+                opacity: '0',
+            }).appendTo(".buttons-pan");
+
+            // EVENTS
+            // Pause event
+            EventGamePause(pause);
+        }
+
+        if ($("#button-skip").length < 1) {
+            // Skip icon
+            var skip = $("<img>", {
+                id      : 'button-skip',
+                class   : 'game-icon',
+                src     : '../icons/icon_end.png',
+                function: 'skip'
+            }).css({
+                opacity: '0',
+            }).appendTo(".buttons-pan");
+
+            // Skip event
+            skip.click(function () {
+                PasseTour(_myState);
+            });
+        }
+
+        if ($("#button-stop").length < 1) {
+            var stop = $("<img>", {
+                id      : 'button-stop',
+                class   : 'game-icon',
+                src     : '../icons/icon_stop.png',
+                function: 'stop'
+            }).css({
+                opacity: '0',
+            }).appendTo(".buttons-pan");
+
+            // Stop event
+            stop.click(function () {
+                EndTheParty();
+            });
+        }
+    }
+
+
+
     $(".power").animate({
         height: '30px',
         width: '30px',
@@ -229,6 +365,8 @@ function ShowGameIcons() {
     $("#user-score-points").animate({
         opacity: 1,
     });
+
+    HoverGameIcons();
 }
 
 function HideGameIcons() {
@@ -262,6 +400,15 @@ function HideGameIcons() {
     });
 }
 
+function RemoveGameIcons() {
+    HideGameIcons();
+
+    Delay(function () {
+        $(".powers-panel").remove();
+        $(".score-panel").remove();
+        $(".user-pan").remove();
+    }, 1000);
+}
 
 // Load powers
 function LoadPowers() {
@@ -298,7 +445,7 @@ function LoadPowers() {
 
     // ANIMATIONS
     one.animate({
-        opacity: 0.5,
+        opacity: 0.9,
         height: '30px',
         width: '30px',
     }, {
@@ -306,7 +453,7 @@ function LoadPowers() {
     });
 
     two.animate({
-        opacity: 0.5,
+        opacity: 0.9,
         height: '30px',
         width: '30px',
     }, {
@@ -314,7 +461,7 @@ function LoadPowers() {
     });
 
     three.animate({
-        opacity: 0.5,
+        opacity: 0.9,
         height: '30px',
         width: '30px',
     }, {
@@ -326,7 +473,7 @@ function LoadPowers() {
 
 // Event activated when the mouse is over a power icon
 function HoverPowersIcons() {
-    $("#power-one").hover(function () {
+    $(".power").hover(function () {
         $(this).css({
             height: '38px',
             width: '38px',
@@ -338,39 +485,7 @@ function HoverPowersIcons() {
             height: '30px',
             width: '30px',
             borderWidth: '3px',
-            opacity: 0.5,
-        });
-    });
-
-    $("#power-two").hover(function () {
-        $(this).css({
-            height: '38px',
-            width: '38px',
-            borderWidth: '0px',
-            opacity: 1,
-        });
-    }, function () {
-        $(this).css({
-            height: '30px',
-            width: '30px',
-            borderWidth: '3px',
-            opacity: 0.5,
-        });
-    });
-
-    $("#power-three").hover(function () {
-        $(this).css({
-            height: '38px',
-            width: '38px',
-            borderWidth: '0px',
-            opacity: 1,
-        });
-    }, function () {
-        $(this).css({
-            height: '30px',
-            width: '30px',
-            borderWidth: '3px',
-            opacity: 0.5,
+            opacity: 0.9,
         });
     });
 }
@@ -412,6 +527,20 @@ function HoverGameIcons() {
     });
 }
 
+function HoverGamesMode() {
+    $(".vertical-pan").hover(function () {
+        $(this).css({
+            opacity: 1,
+            width: "155px",
+        });
+    }, function () {
+        $(this).css({
+            opacity: 0.5,
+            width: "140px",
+        });
+    });
+}
+
 // Test if the player has enough points;
 // if so the power is colored in green.
 // Else the power is red
@@ -443,7 +572,7 @@ function EventGamePause(button) {
     button.click(function () {
         // Pause function in
         // /game/js/main.js
-        ScreenPause(_myState);
+        ScreenPauseFadeOut();
         EventGameResume(button);
     });
 }
@@ -457,8 +586,131 @@ function EventGameResume(button) {
     button.click(function () {
         // Pause function in
         // /game/js/main.js
-        ScreenResume(_myState);
+        ScreenResumeFadeIn();
         EventGamePause(button);
+    });
+}
+
+// End the game
+function EndTheParty() {
+    if($(".message-confirmation").length > 0) return;
+
+    // Fade out the game board
+    $("#canvas").animate({
+        opacity: 0,
+        height: "485px",
+        width: "760px",
+    }, {
+        complete: function () {
+            $(this).css({
+                display: 'none',
+            });
+
+            // Pause the game
+            EventGameResume($("#button-pause"));
+            ScreenPause(_myState);
+
+            // deactivate the resume button
+            $("#button-pause").unbind("click");
+        }
+    });
+
+    // Show confirmation
+    var message = $("<div>", {
+        class: 'message-confirmation',
+        html: "<span> You're going to end this party</span> <br>"
+    }).css({
+        opacity: 0,
+        position: 'absolute',
+        top: '220px',
+        left: '200px',
+    }).appendTo(".square-ui-game");
+
+    var confirm = $("<div>", {
+        class: 'button',
+        html: "<span> quit </span>",
+    }).appendTo(".message-confirmation");
+
+    var cancel = $("<div>", {
+        class: 'button',
+        html: "<span> cancel </span>",
+    }).appendTo(".message-confirmation");
+
+    // ANIMATIONS
+    message.css({
+        height: '190px',
+        width: '280px',
+    }).animate({
+        opacity: 1,
+        height: '140px',
+        width: '400px',
+    }, {
+        delay: 1000,
+    });
+
+    // EVENTS
+    // Hover event
+    confirm.hover(function () {
+        $(this).css({
+            opacity: 1,
+            background: '#2ecc71',
+        });
+    }, function () {
+        $(this).css({
+            opacity: 0.5,
+            background: 'black',
+        });
+    });
+
+    // Hover event
+    cancel.hover(function () {
+        $(this).css({
+            opacity: 1,
+            background: '#e74c3c',
+        });
+    }, function () {
+        $(this).css({
+            opacity: 0.5,
+            background: 'black',
+        });
+    });
+
+    // Confirm the quiting
+    confirm.click(function () {
+        // Delete the message confirmation
+        $(this).parent().remove();
+
+        // Clean the game board
+        _settings.gameStarted = false;
+        EventGameEndGame();
+
+        RemoveGameIcons();
+
+        ShrinkSquareUI('300');
+
+        // Resize the square ui game
+        $(".square-ui-game").css({
+            width: "67%",
+        });
+
+        ShowGameModes();
+    });
+
+    // Cancel the quiting
+    cancel.click(function () {
+        // Delete the message confirmation
+        $(this).parent().remove();
+        // Display the game board
+        $("#canvas").animate({
+            opacity: 1,
+            height: "515px",
+            width: "800px",
+        });
+
+        // Reactivate the pause button &
+        // Resume the game
+        EventGamePause($("#button-pause"));
+        ScreenResume(_myState);
     });
 }
 

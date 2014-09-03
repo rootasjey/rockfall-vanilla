@@ -13,7 +13,7 @@ function PopulateSquareUI() {
         // add game modes
         // with a little delay
         // for a better animation smooth
-        Delay(GameModes, 500);
+        GameModes();
     }
     else {
         ShowSquareUIContent();
@@ -115,7 +115,9 @@ function MiniIconEvent() {
     $(".mini-icon[function='close']").click(function () {
         HideSquareUIContent();
         SquareUIBackToNormal();
-        MinimizeMainUI();
+        Delay(function () {
+            MinimizeMainUI();
+        }, 1000);
     });
 
 
@@ -255,7 +257,7 @@ function HideSquareUIGame() {
         opacity: '0',
     });
 
-    // Pause the game fi started
+    // Pause the game if started
     if(_settings.gameStarted) {
         EventGameResume($("#button-pause"));
         ScreenPause(_myState);
@@ -270,7 +272,7 @@ function ShowSquareUIContent() {
 
     // Expend square ui if the game was started
     if (_settings.gameStarted) {
-        ExpendSquareUI('500');
+        ExpendSquareUI('300');
     }
 }
 
@@ -318,7 +320,7 @@ function CreateSecondPanel() {
         class: "second-panel",
     }).css({
         opacity: '0',
-    }).appendTo("#welcome-ui");
+    }).appendTo(".square-group");
 
     // Add collapse icon
     $("<img>", {
