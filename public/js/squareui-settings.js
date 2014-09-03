@@ -551,11 +551,9 @@ function ShowLoginForm() {
             if(testClick==0){
                 
                 var pseudo = $("input[name='login']" ).val();
-<<<<<<< HEAD
-                tamponPseudo = pseudo;
-=======
 
->>>>>>> 9b71bc729fbb7f33d3e20345f4419069668cd349
+                tamponPseudo = pseudo;
+
                 var infoPartyLocal = null;
                 var idSocketClient = null;
 
@@ -593,39 +591,23 @@ function ShowLoginForm() {
 
                     //{'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false}
                     infoPartyLocal = infoParty;
-<<<<<<< HEAD
+
                     //console.log(infoPartyLocal);
-=======
-                    console.log(infoPartyLocal);
->>>>>>> 9b71bc729fbb7f33d3e20345f4419069668cd349
+
                     if(infoParty.idPF == socket.id){
                         idJoueur = infoParty.idPF;
                     }else if(infoParty.idPS == socket.id){
                         idJoueur = infoParty.idPS;
                     }else{
                         idJoueur = -1;
-<<<<<<< HEAD
+
                     }
                     
                     console.log("je suis prêt!!");
                     //alert("ddd :)");
                     socket.emit("etatPlayersOk",{'idParty':infoParty.id,'idPlayer':idSocketClient});
-                    
-                        
-=======
-                        // {'idParty':infoParty.id,'idPlayer':socket.id};
-                        var idParty = {
-                            'infoParty' :infoParty.id,
-                            'idPlayer'  :socket.id,
-                        };
-                    }
-
-                    console.log("je suis prêt!!");
-                    // alert("ddd :)");
-                    socket.emit("etatPlayersOk",{'idParty':infoParty.id,'idPlayer':idSocketClient});
 
 
->>>>>>> 9b71bc729fbb7f33d3e20345f4419069668cd349
                 });
 
 
