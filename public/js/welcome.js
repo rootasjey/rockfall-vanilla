@@ -8,13 +8,7 @@ function WelcomeIconsMouseEvents() {
     MouseClickEvent();
 
     // Remove scroll bar to the page
-    // to simulate full screen
     RemoveScrollFromHTML();
-
-    // Scroll to the top of screen
-    ScrollVerticallyTo(-500);
-    // check
-    window.scrollBy(0, -1000);
 }
 
 // Mouse hover event
@@ -29,12 +23,10 @@ function MouseHoverEvent() {
                 display: 'inline-block',
             });
 
-            // rotate the image icon
-            $(this).css('-webkit-transform', 'rotate(45deg)');
-            $(this).css('-moz-transform', 'rotate(45deg)');
-            $(this).css('-ms-transform', 'rotate(45deg)');
-            $(this).css('-o-transform', 'rotate(45deg)');
-            $(this).css('transform', 'rotate(45deg)');
+            // Shadow effect
+            $(this).css("box-shadow", "0 0 20px #000000");
+            $(this).css("-moz-box-shadow", "0 0 20px #000000");
+            $(this).css("-webkit-box-shadow", "0 0 20px #000000");
         },
 
         function () {
@@ -44,12 +36,10 @@ function MouseHoverEvent() {
                 display: 'none',
             });
 
-            // rotate the image icon
-            $(this).css('-webkit-transform', 'rotate(0deg)');
-            $(this).css('-moz-transform', 'rotate(0deg)');
-            $(this).css('-ms-transform', 'rotate(0deg)');
-            $(this).css('-o-transform', 'rotate(0deg)');
-            $(this).css('transform', 'rotate(0deg)');
+            // Shadow effect
+            $(this).css("box-shadow", "0 0 0px #000000");
+            $(this).css("-moz-box-shadow", "0 0 0px #000000");
+            $(this).css("-webkit-box-shadow", "0 0 0px #000000");
         }
     )
 }
@@ -58,7 +48,7 @@ function MouseHoverEvent() {
 function MouseClickEvent() {
     $(".square[function='play']").click(function (event) {
         // expend main-ui
-        ExpandMainUI();
+        ExpendSquareui();
     });
 
     $(".square[function='connect']").click(function (event) {
@@ -97,39 +87,95 @@ function MouseClickEvent() {
     });
 }
 
-// Maximize the main ui (hide welcome screen)
-// when the user click on a square
-function ExpandMainUI() {
+// Maximize the main ui when the user click on a square
+function ExpendSquareui() {
     // Add scroll bar to the page
     AddScrollToHMTL();
 
-    FadeOutSquares();
-    Delay(EnlargeSquaresContainer, 800);
-    Delay(ShowSquareUI, 1000);
-    Delay(EnlargeSquareUI, 1500);
+    var squareui = $("#square-ui");
 
-    // add elements to the ui
-    Delay(PopulateSquareUI, 2000);
+    $(".square-group").animate({
+        width: "800px",
+    });
+
+    $("#square-ui .img-square").css({
+        display: 'none',
+    });
+
+    squareui.animate({
+        minWidth    : '450px',
+        width       : '100%',
+        height      : '400px',
+        borderRadius: '5px',
+    });
+
+    // Remove hover() event
+    squareui.off("mouseenter mouseleave click");
+
+    squareui.css({
+        overflow        : "hidden",
+        opacity         : 1,
+        backgroundImage : "-ms-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
+    });
+
+
+    Delay(PopulateSquareUI, 1000);
 }
 
+function DestroyAndRecreateSquareui() {
+    $("#square-ui").remove();
+    $("<div>", {
+        id : "square-ui",
+        class: "square",
+        function: "play",
+        html: "<img class='img-square' src='../icons/icon_play.png' />"
+    }).insertBefore(".square[function='connect']");
+}
 
 // Minimize the main ui
 // and show the welcome screen
 function MinimizeMainUI() {
-    ReduceSquareUI();
-    Delay(ReduceSquaresContainer, 500);
-    Delay(FadeOutSquareUI, 1000);
-    Delay(FadeInSquares, 1500);
+    var squareui = $("#square-ui");
 
-    RemoveScrollFromHTML();
+    // Save the content
+    // console.log(_squareuiContent);
+
+    $("#square-ui .img-square").css({
+        display: 'block',
+    });
+    squareui.animate({
+        minWidth    : '0px',
+        width       : '100px',
+        height      : '100px',
+        borderRadius: '0px',
+    }, {
+        complete:function () {
+            $(".square-group").css({
+                width: "300px",
+            });
+
+            Delay(function () {
+                DestroyAndRecreateSquareui();
+
+                $(".square").off("mouseenter mouseleave click");
+                WelcomeIconsMouseEvents();
+            }, 500);
+        }
+    });
 }
 
 function AddScrollToHMTL() {
     $("html").toggleClass("html-no-scrollable");
+    $(".square-group").css({
+        height: 'auto',
+    });
 }
 
 function RemoveScrollFromHTML() {
     $("html").addClass("html-no-scrollable");
+    $(".square-group").css({
+        height: '290px',
+    });
 }
 
 // Hide all squares
@@ -195,10 +241,6 @@ function ShowSquareUI() {
         display     : 'none',
     });
 
-    // $("div.square").css({
-    //     display     : 'none',
-    // });
-
     // animate the squaure ui
     $("#square-ui").css({
         zIndex      : '1',
@@ -215,7 +257,6 @@ function ShowSquareUI() {
 // Expend square UI
 function EnlargeSquareUI() {
     $("#square-ui").css({
-
     }).animate({
         minWidth    : '450px',
         width       : '100%',
