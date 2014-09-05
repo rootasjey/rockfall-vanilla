@@ -21,4 +21,10 @@ var _settings = {
     "autoEndTurn"   : false,
     "background"    : "shattered.png",
     "gameStarted"   : false,
-}
+    "stats"         : "none",
+};
+
+// Create a sub-container to squareui
+var _squareuiContent = $("<div>", {
+        class: "square-ui-content",
+});

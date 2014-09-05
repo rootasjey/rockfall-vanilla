@@ -4,20 +4,16 @@
 
 // Add elements which compose main UI
 function PopulateSquareUI() {
-    // if #square-ui is empty
-    if($("#square-ui").html() === '')    {
-        AddMiniIcons();
-        MiniIconEvent();
-        AddTooltipToMiniIcons();
+    _squareuiContent.appendTo("#square-ui");
 
-        // add game modes
-        // with a little delay
-        // for a better animation smooth
-        GameModes();
+    AddMiniIcons();
+    ShowSquareUIGame();
+
+    if (_settings.gameStarted) {
+        ExpendSquareUI('300');
     }
     else {
-        ShowSquareUIContent();
-        ShowSquareUIGame();
+        GameModes();
     }
 }
 
@@ -34,9 +30,19 @@ function HideSquareUIContent() {
 
 // Add icons to the square-ui
 function AddMiniIcons() {
+    if( $(".mini-icon-panel").length > 0) {
+        if ($(".mini-icon").css("height") === "0px") {
+            ShowMiniIcons();
+            AutoHideMiniIcons();
+            MiniIconEvent();
+            AddTooltipToMiniIcons();
+            return;
+        }
+    }
+
     $("<div>", {
         class: 'mini-icon-panel',
-    }).appendTo("#square-ui");
+    }).appendTo(_squareuiContent);
 
     // close icon
     $("<img>", {
@@ -64,6 +70,9 @@ function AddMiniIcons() {
     // Hide mini icons execept the close button
     // after a matter of time
     AutoHideMiniIcons();
+
+    MiniIconEvent();
+    AddTooltipToMiniIcons();
 }
 
 // Show mini icons in square-ui
@@ -239,13 +248,6 @@ function ApplyTooltipCenterRight(jqueryObject, qtipText) {
     });
 }
 
-// Show the game board
-function ShowSquareUIGame() {
-    $(".square-ui-game").animate({
-        marginTop: '0px',
-        opacity: '1',
-    });
-}
 
 // Hide the the game board
 function HideSquareUIGame() {
@@ -267,7 +269,7 @@ function HideSquareUIGame() {
 // Show the square-ui's content
 function ShowSquareUIContent() {
     // Scroll to the top
-    $("#square-ui").scroll();
+    // $("#square-ui").scroll();
     ShowMiniIcons();
 
     // Expend square ui if the game was started
@@ -320,7 +322,7 @@ function CreateSecondPanel() {
         class: "second-panel",
     }).css({
         opacity: '0',
-    }).appendTo(".square-group");
+    }).insertAfter("#square-ui");
 
     // Add collapse icon
     $("<img>", {

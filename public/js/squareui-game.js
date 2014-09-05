@@ -5,6 +5,13 @@
 // Add games modes panes to the square-ui-game and create square-ui-game
 // than add it to square-ui
 function GameModes() {
+    if (_settings.stats === "gameModes" || _settings.stats === "playing") {
+        ShowSquareUIGame();
+        return;
+    }
+
+    _settings.stats = "gameModes";
+
     // Create the container and apply css rules
     // for animations (end of this block)
     $("<div>", {
@@ -13,7 +20,7 @@ function GameModes() {
         opacity: '0',
         marginTop: '50px',
     })
-    .appendTo("#square-ui");
+    .appendTo(_squareuiContent);
 
     // Create 3 Panes
     // which propose game modes
@@ -23,6 +30,7 @@ function GameModes() {
         html: "<img src='../icons/icon_circuit.png'></img> <span> VS CPU </span>" +
                 "<span class='text-info'>Battle against the computer</span>",
         class: "vertical-pan",
+        function: "cpu-mode",
     }).appendTo(".square-ui-game");
 
     // 2 LOCAL PLAYERS
@@ -30,6 +38,7 @@ function GameModes() {
         html: "<img src='../icons/icon_meeting.png'></img> <span> 2 Players </span>" +
                 "<span class='text-info'>2 players on the same computer</span>",
         class: "vertical-pan",
+        function: "twoplayers-mode",
     }).appendTo(".square-ui-game");
 
     // ONLINE
@@ -37,6 +46,7 @@ function GameModes() {
         html: "<img src='../icons/icon_globe.png'></img> <span> Online </span>" +
                 "<span class='text-info'>Challenge players around the world</span>",
         class: "vertical-pan",
+        function: "online-mode",
     }).appendTo(".square-ui-game");
 
 
@@ -44,20 +54,7 @@ function GameModes() {
     ShowSquareUIGame();
 
     // Event
-    HoverGamesMode();
-
-    solo.click(function () {
-        // Start a Solo game
-    });
-
-    local.click(function () {
-        TwoPlayersMode();
-    });
-
-    online.click(function () {
-        // Start an online party
-        OnlineMode();
-    });
+    GameModesEvents();
 }
 
 function ShowGameModes() {
@@ -71,8 +68,74 @@ function ShowGameModes() {
     });
 }
 
+// The function's title is explicit
+function HideGameModes() {
+    $(".vertical-pan").animate({
+        opacity: "0",
+        top: "+=20px",
+    }, {
+        complete: function () {
+            $(this).css({
+                display: 'none',
+            })
+        }
+    });
+}
+
+function GameModesEvents() {
+    HoverGameModes();
+    ClickGameModes();
+}
+
+function HoverGameModes() {
+    $(".vertical-pan").hover(function () {
+        $(this).css({
+            opacity: 1,
+            width: "155px",
+        });
+    }, function () {
+        $(this).css({
+            opacity: 0.5,
+            width: "140px",
+        });
+    });
+}
+
+function ClickGameModes() {
+    $(".vertical-pan[function='cpu-mode']").click(function () {
+        // Starts a Solo game
+        CPUMode();
+    });
+
+    $(".vertical-pan[function='twoplayers-mode']").click(function () {
+        // Starts a 2 local players
+        TwoPlayersMode();
+    });
+
+    $(".vertical-pan[function='online-mode']").click(function () {
+        // Starts an online party
+        OnlineMode();
+    });
+}
+
+function GameEvents() {
+    
+}
+
+// Show the game board
+function ShowSquareUIGame() {
+    $(".square-ui-game").animate({
+        marginTop: '0px',
+        opacity: '1',
+    });
+
+    GameModesEvents();
+}
+
 // Start a game with two local players
 function TwoPlayersMode() {
+    _settings.stats = "Playing";
+
     HideGameModes();
     ExpendSquareUI('300');
     LoadPowers();
@@ -102,11 +165,10 @@ function TwoPlayersMode() {
 
         // Load the game's board
         LoadBoard();
-
         Delay(function () {
             AutoStartGame();
+        }, 2000);
 
-        }, 500);
     }, 1000);
 
     // Indicated the user's already started a game
@@ -116,6 +178,8 @@ function TwoPlayersMode() {
 // Start an online game
 // (Ask against a friend or random?)
 function OnlineMode() {
+    _settings.stats = "Playing";
+
     HideGameModes();
 
     // The user choose which sub-mode
@@ -179,7 +243,7 @@ function OnlineMode() {
         FriendlyOnlineMode();
     });
     unfriendlyButton.click(function () {
-        UnfriendlyOnlineMode
+        UnfriendlyOnlineMode();
     });
     cancelButton.click(function () {
         var parent = $(this).parent();
@@ -195,25 +259,100 @@ function OnlineMode() {
 
 // Battle with a friend
 function FriendlyOnlineMode() {
-
+    // Enter your friend's name
 }
 
 // Compete against a total stranger
 function UnfriendlyOnlineMode() {
-
+    // Please waiting while matching
 }
 
-// This function is explicit
-function HideGameModes() {
-    $(".vertical-pan").animate({
-        opacity: "0",
-        top: "+=20px",
-    }, {
-        complete: function () {
-            $(this).css({
-                display: 'none',
-            })
-        }
+function CPUMode() {
+    _settings.stats = "Playing";
+
+    HideGameModes();
+
+    // The user choose which sub-mode
+    var choice = $("<div>", {
+        class: "message-confirmation",
+        html: "<span> Which CPU level do you want to fight? </span>",
+    }).css({
+        opacity: 0,
+        position: 'relative',
+        top: '100px',
+        width: '500px',
+    }).appendTo(".square-ui-game");
+
+    var easyCPUButton = $("<div>", {
+        class: 'button',
+        html: "<span> Easy </span>",
+    }).appendTo(choice);
+
+    var hardCPUButton = $("<div>", {
+        class: 'button',
+        html: "<span> Hard </span>",
+    }).appendTo(choice);
+
+    var cancelButton = $("<div>", {
+        class: 'button',
+        html: "<span> Cancel </span>",
+    }).css({
+        display: 'block',
+        width: '240px',
+        margin: 'auto'
+    }).appendTo(choice);
+
+    // Hover events
+    easyCPUButton.hover(function () {
+        $(this).css({
+            opacity: 1,
+            background: '#2ecc71',
+        });
+    }, function () {
+        $(this).css({
+            opacity: 0.5,
+            background: 'black',
+        });
+    });
+    hardCPUButton.hover(function () {
+        $(this).css({
+            opacity: 1,
+            background: '#ecf0f1',
+        });
+    }, function () {
+        $(this).css({
+            opacity: 0.5,
+            background: 'black',
+        });
+    });
+    cancelButton.hover(function () {
+        $(this).css({
+            opacity: 1,
+            background: '#e74c3c',
+            boxShadow: "0 0 20px #000000",
+        });
+    }, function () {
+        $(this).css({
+            opacity: 0.5,
+            background: 'black',
+            boxShadow: "0 0 0px #000000",
+        });
+    });
+
+    // CLICK EVENTS
+    easyCPUButton.click(function () {
+    });
+    hardCPUButton.click(function () {
+    });
+    cancelButton.click(function () {
+        var parent = $(this).parent();
+        parent.remove();
+        ShowGameModes();
+    });
+
+    choice.animate({
+        opacity: 1,
+        top: '90px',
     });
 }
 
@@ -245,7 +384,7 @@ function ShowGameIcons() {
         // Score
         var score = $("<div>", {
             class: 'score-panel',
-        }).appendTo("#square-ui");
+        }).appendTo(_squareuiContent);
 
         if ($("#user-score-points").length < 1) {
             var userScorePoints = $("<span>", {
@@ -412,39 +551,42 @@ function RemoveGameIcons() {
 
 // Load powers
 function LoadPowers() {
-    $("<div>", {
-        class: 'powers-panel',
-    }).appendTo("#square-ui");
+    if ( $(".powers-panel").length < 1 ) {
+        $("<div>", {
+            class: 'powers-panel',
+        }).appendTo(_squareuiContent);
 
-    var one = $("<img>", {
-        id: 'power-one',
-        class: 'power',
-    }).css({
-        opacity: 0,
-        height: '20px',
-        width: '20px',
-    }).appendTo(".powers-panel");
+        $("<img>", {
+            id: 'power-one',
+            class: 'power',
+        }).css({
+            opacity: 0,
+            height: '20px',
+            width: '20px',
+        }).appendTo(".powers-panel");
 
-    var two = $("<img>", {
-        id: 'power-two',
-        class: 'power',
-    }).css({
-        opacity: 0,
-        height: '20px',
-        width: '20px',
-    }).appendTo(".powers-panel");
+        $("<img>", {
+            id: 'power-two',
+            class: 'power',
+        }).css({
+            opacity: 0,
+            height: '20px',
+            width: '20px',
+        }).appendTo(".powers-panel");
 
-    var three = $("<img>", {
-        id: 'power-three',
-        class: 'power',
-    }).css({
-        opacity: 0,
-        height: '20px',
-        width: '20px',
-    }).appendTo(".powers-panel");
+        $("<img>", {
+            id: 'power-three',
+            class: 'power',
+        }).css({
+            opacity: 0,
+            height: '20px',
+            width: '20px',
+        }).appendTo(".powers-panel");
+    }
+
 
     // ANIMATIONS
-    one.animate({
+    $("#power-one").animate({
         opacity: 0.9,
         height: '30px',
         width: '30px',
@@ -452,7 +594,7 @@ function LoadPowers() {
         delay: 500,
     });
 
-    two.animate({
+    $("#power-two").animate({
         opacity: 0.9,
         height: '30px',
         width: '30px',
@@ -460,7 +602,7 @@ function LoadPowers() {
         delay: 2000,
     });
 
-    three.animate({
+    $("#power-three").animate({
         opacity: 0.9,
         height: '30px',
         width: '30px',
@@ -527,19 +669,6 @@ function HoverGameIcons() {
     });
 }
 
-function HoverGamesMode() {
-    $(".vertical-pan").hover(function () {
-        $(this).css({
-            opacity: 1,
-            width: "155px",
-        });
-    }, function () {
-        $(this).css({
-            opacity: 0.5,
-            width: "140px",
-        });
-    });
-}
 
 // Test if the player has enough points;
 // if so the power is colored in green.

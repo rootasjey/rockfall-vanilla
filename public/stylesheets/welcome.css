@@ -19,6 +19,7 @@
   transition: 0.5s;
 }
 #welcome-ui .square-group {
+  height: 290px;
   width: 300px;
   margin: auto;
   margin-bottom: 0px;
@@ -60,7 +61,7 @@
   display: inline-block;
   transition: 0.5s;
 }
-#welcome-ui .square img {
+#welcome-ui .square .img-square {
   height: 100px;
   width: 100px;
 }
@@ -76,34 +77,9 @@
 }
 #welcome-ui .square[function='about'] {
   position: relative;
-  top: -3px;
 }
 #welcome-ui .square[function='about']:hover {
   background: #27ae60;
-}
-#welcome-ui #square-ui {
-  padding: 20px;
-  position: relative;
-  width: 250px;
-  height: 250px;
-  top: -340px;
-  z-index: -1;
-  cursor: default;
-/* IE10 Consumer Preview */
-  background-image: -ms-radial-gradient(center, circle farthest-side, #3b536a 0%, #12191f 100%);
-/* Mozilla Firefox */
-  background-image: -moz-radial-gradient(center, circle farthest-side, #3b536a 0%, #12191f 100%);
-/* Opera */
-  background-image: -o-radial-gradient(center, circle farthest-side, #3b536a 0%, #12191f 100%);
-/* Webkit (Safari/Chrome 10) */
-  background-image: -webkit-gradient(radial, center center, 0, center center, 486, color-stop(0, #3b536a), color-stop(1, #12191f));
-/* Webkit (Chrome 11+) */
-  background-image: -webkit-radial-gradient(center, circle farthest-side, #3b536a 0%, #12191f 100%);
-/* W3C Markup, IE10 Release Preview */
-  background-image: radial-gradient(circle farthest-side at center, #3b536a 0%, #12191f 100%);
-  -moz-box-shadow: 0 0 20px #000;
-  -webkit-box-shadow: 0 0 20px #000;
-  box-shadow: 0 0 20px #000;
 }
 .ghost-panel {
   display: none;
