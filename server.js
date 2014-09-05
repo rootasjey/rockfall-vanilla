@@ -251,14 +251,16 @@ function askMatching(idFirstPlayer, idSecondPlayer){
     
     //console.log("once");
     
-    players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
-    players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
+    //players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
+    //players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
     
     var retour = addParty(partyInProgress, idFirstPlayer, idSecondPlayer);
     
+    players[idFirstPlayer].emit("majEtatPlayer",retour);
+    players[idSecondPlayer].emit("majEtatPlayer",retour);
     
     
-    io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer",retour);
+    //io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer",retour);
     
     //players[idFirstPlayer].leave("multiJoueur");
     //players[idSecondPlayer].leave("multiJoueur");
@@ -325,10 +327,19 @@ function askMatching(idFirstPlayer, idSecondPlayer){
 
                     if(tableCheck.idPSReady && tableCheck.idPFReady && tableCheck.active && !tableCheck.start){
 
+                        
                         tableCheck.start = true;
+                       /*var customTask = function(obj){
+                            var t = 0;
+                            for(var z=0;z<100;z++){
+                                for(var i=0;i<1000000;i++){
+                                    t+=i%2;
+                                }
+                            }
                         
                         
-                    }
+                    }*/
+                        
                     i++;
                 }
 
@@ -345,14 +356,17 @@ function askMatching(idFirstPlayer, idSecondPlayer){
 function addParty(tableauP, idF, idS){
     
     var idParty = 0;
+    var sizeX = 4;
+    var sizeY = 6;
     var newElement = {};
-    var plateau = createPlateau(4,6);
+    var plateau = createPlateau(sizeX,sizeY);
     
     if(tableauP.length == 0){
         
         newElement = {
                         'id':0,
                         'idPF':idF,
+                        'currentPlayer':idF,
                         'idPS':idS,
                         'room':'room-'+idF+'-'+idS,
                         'active':true,
@@ -366,7 +380,10 @@ function addParty(tableauP, idF, idS){
                         'idPSPoint':0,
                         'idPFPower':"1-2-3",
                         'idPSPower':"1-2-3",
-                        'newPoint':{}
+                        'newPoint':{},
+                        'sizeX':sizeX,
+                        'sizeY':sizeY,
+                        'hitcombo':0
                     };
         
         tableauP.push(newElement);
@@ -381,6 +398,7 @@ function addParty(tableauP, idF, idS){
                                 'id':i,
                                 'idPF':idF,
                                 'idPS':idS,
+                                'currentPlayer':idF,
                                 'room':'room-'+idF+'-'+idS,
                                 'active':true,
                                 'idPFReady':false,
@@ -393,7 +411,10 @@ function addParty(tableauP, idF, idS){
                                 'idPSPoint':0,
                                 'idPFPower':"1-2-3",
                                 'idPSPower':"1-2-3",
-                                'newPoint':{}
+                                'newPoint':{},
+                                'sizeX':sizeX,
+                                'sizeY':sizeY,
+                                'hitcombo':0
                             };
                 tableauP[i] = newElement;
                 idParty = i;
@@ -407,6 +428,7 @@ function addParty(tableauP, idF, idS){
                             'id':(tableauP.length-1),
                             'idPF':idF,
                             'idPS':idS,
+                            'currentPlayer':idF,
                             'room':'room-'+idF+'-'+idS,
                             'active':true,
                             'idPFReady':false,
@@ -419,7 +441,10 @@ function addParty(tableauP, idF, idS){
                             'idPSScore':0,
                             'idPFPower':"1-2-3",
                             'idPSPower':"1-2-3",
-                            'newPoint':{}
+                            'newPoint':{},
+                            'sizeX':sizeX,
+                            'sizeY':sizeY,
+                            'hitcombo':0
                         };
             tableauP.push(newElement);
         }
@@ -445,9 +470,8 @@ function StartParty(){
                     if(tableCheck.start){
 
                         checkTurn(tableCheck);
-                        //tableCheck.start = true;
-                        
-                        
+                        tableCheck.active = false;
+                            
                     }
                     i++;
                 }
@@ -457,33 +481,159 @@ function StartParty(){
     
 }
 
-
-function checkTurn(tableauDeDonnées){
     
-    /* La fonction search permet de retrouver la cellule du plateau qui est associée à la matrix  */
+function applyPhysic(donneesATravailler){
+    
+    var plateau = donneesATravailler.plateau;
+    var sizeX = donneesATravailler.sizeX;
+    var sizeY = donneesATravailler.sizeY;
+    
+    var fini = false;
+    
+    //---------------------------Gravity-----------------------------
+    
+	for(var i = 0;i < sizeY;i++){
 
-Table.prototype.search = function(matriceX,matriceY){
+		for(var j = sizeX-1;j >= 0;j--){
+            
+            if(plateau[j][i].item != 0){
+                var end = true;
+                var k = j
+                while(end){
+                    if(k == sizeX-1){
+                        end = false;
+                    }else{
+                        if(plateau[k+1][i].item == 0){
 
-    var resultat = null;
-    for(var i = 0;i < this.graphique.length;i++){
-		 var cell = this.graphique[i];
-        if(cell.matriceX == matriceX && cell.matriceY == matriceY){
-            resultat = cell;
+                            plateau[k+1][i].item = plateau[k][i].item;
+    
+                            plateau[k][i].item = 0;
+                            
+                            fini =  true;
+                            end = false;
+                        }
+                    }
+                    k++;
+                }
+            }
         }
     }
-    return resultat;
+    
+    //-------------------------------Force----------------------
+    if(!fini){
+        //var pointGagne = {point:0,proprietaire:"none",end:false,color:"grey"};
+
+        for(var i = 0;i < sizeY;i++){
+
+            for(var k = sizeX-1; k>=0 ;k--){
+
+                if(plateau[k][i].item != 0){
+
+                    var itemWheight = plateau[k][i].item.weight;
+
+                    var somme = 0;
+                    for(var j = k;j >=0;j--){
+
+                        if(j-1 >= 0){
+
+                            if(plateau[j-1][i].item != 0){
+
+                                somme += plateau[j-1][i].item.weight;
+                           }
+
+                       }
+
+                    }
+
+                    if((itemWheight * 2) < somme ){
+                        
+                        donneesATravailler.hitcombo += 1;
+                        donneesATravailler.point += plateau[j-1][i].item.weight * 2;
+                        donneesATravailler.color += plateau[j-1][i].item.fill;
+                        donneesATravailler.proprietaire += plateau[j-1][i].item.idProprietaire;
+                        //stateGame.hitCombo += 1;
+                        //pointGagne.end = true;
+                        //pointGagne.point = this.matrice[k][i].weight * 2 ;
+                        //pointGagne.color = this.matrice[k][i].fill;
+                        //pointGagne.proprietaire = this.matrice[k][i].idProprietaire;
+
+                        if(donneesATravailler.proprietaire == donneesATravailler.currentPlayer){
+                            
+                            donneesATravailler.point = parseInt(donneesATravailler.point *  (donneesATravailler.hitcombo/(donneesATravailler.hitcombo - 0.1 * donneesATravailler.hitcombo)));
+                            //   pointGagne.point = parseInt(pointGagne.point *  (stateGame.hitCombo/(stateGame.hitCombo - 0.1 * stateGame.hitCombo)));
+                        }
+
+                        //this.addScore("user-score-points", stateGame, pointGagne);
+                        //stateGame.addDrawPoints("+"+pointGagne.point, this.matrice[k][i].x, this.matrice[k][i].y, pointGagne.color);
+                        plateau[k][i].item = 0;
+                        //this.matrice[k][i] = 0;
+                    }
+                }
+            }
+
+        }
+    }
+    
+    
+    //------------------------------------------------------------------
 }
 
+    
+var customTask = function(donneesDePartie){
+        
+        
+        
+        
+        //io.sockets.in("multiJoueur").emit('newListe',user);
+        var finDeParty = null;
+        var donneesLocales = donneesDePartie; 
+    
+    
+        var party = io.of(donneesLocales.room);
+    
+        party.on('connection', function(socket){
+            
+          console.log('someone connected'):
+          
+        });
+    
+        players[donneesLocales.idPF].join(donneesLocales.room);
+        players[donneesLocales.idPS].join(donneesLocales.room);
+
+    
+        finDeParty = setInterval(function(){
+            
+            donneesLocales = applyPhysic(donneesLocales);
+            party.emit('MiseAJour',donneesLocales);
+            
+        }, 300);
+    
+        //party.emit('MiseAJour',donneesDePartie);
+        
+
+        //players[donneesDePartie.idPF].join(donneesDePartie.room);
+        //players[donneesDePartie.idPS].join(donneesDePartie.room);
+}
+    
+
+function checkTurn(tableauDeDonnees){
+    
+    
+    
 /*La fonction gravity permet d'appliquer une certaine gravité aux pièces du plateau */
-
-Table.prototype.gravity = function(){
-
+/*
     fini = false;
-	for(var i = 0;i < this.sizeY;i++){
+    var plateau = tableauDeDonnees.plateau;
+    var sizeX = tableauDeDonnees.sizeX;
+    var sizeY = tableauDeDonnees.sizeY;
+    
+    
+	for(var i = 0;i < sizeY;i++){
 
-		for(var j = this.sizeX-1;j >= 0;j--){
-            if(this.matrice[j][i] != 0){
-                var end = true;
+		for(var j = sizeX-1;j >= 0;j--){
+            
+            if(this.plateau[j][i] != 0){
+               /* var end = true;
                 var k = j
                 while(end){
                     if(k == this.sizeX-1){
@@ -503,8 +653,8 @@ Table.prototype.gravity = function(){
                         }
                     }
                     k++;
-                }
-            }
+                }*/
+          /*  }
         }
 
 	}
@@ -513,7 +663,7 @@ Table.prototype.gravity = function(){
     }
     this.justAdd = false;
     return fini;
-}
+*/
 }
 
 function createPlateau(nbrePieceHori,nbrePieceVerti){
@@ -526,7 +676,9 @@ function createPlateau(nbrePieceHori,nbrePieceVerti){
         
         for(var j = 0;j<nbrePieceHori;j++){
         
-            ligne.push(0);
+            ligne.push({
+                            "item":0
+                        });
         
         }
         
