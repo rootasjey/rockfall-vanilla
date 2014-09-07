@@ -1,149 +1,147 @@
 // -----------------------
-// SQUAREUI-SETTINGS.JS
+// SUPERSQUARE-SETTINGS.JS
 // -----------------------
 
-// Create the Settings panel
-function CreateSettingsPanel() {
-    // Exit if we've already created this object
-    if($(".settings-panel").length > 0) return;
+SuperSquare.prototype.SettingsToggleVisibility = function () {
+    var scp = ".second-panel";
+    var stp = ".settings-panel";
+    var stc = ".settings-content";
+    var sts = "settings-section";
 
-
-    // Create the settings panel
-    $("<div>", {
-        class: "settings-panel",
-        html: "<div class='second-panel-title'> <span> Settings </span> </div>",
-    }).css({
-        opacity: "0",
-    }).appendTo(".second-panel");
-
-    // settins content
-    $("<div>", {
-        class: "settings-content",
-    }).appendTo(".settings-panel");
-
-
-    // Sections
-    $("<div>", {
-        class: "settings-section",
-        function: "connection",
-        html: "<div class='side-side'><span> Connexion </span> <img src='../icons/icon_key.png' alt='connexion'/></div>",
-    }).css({
-        opacity: "0",
-        top: "-10px",
-    }).appendTo(".settings-content");
-
-    $("<div>", {
-        class: "settings-section",
-        function: "preferences",
-        html: "<div class='side-side'><span> Preferences </span> <img src='../icons/icon_like.png' alt='like'/></div>",
-    }).css({
-        opacity: "0",
-        top: "-10px",
-    }).appendTo(".settings-content");
-
-    $("<div>", {
-        class: "settings-section",
-        function: "about",
-        html: "<div class='side-side'><span> About </span> <img src='../icons/icon_about.png' alt='about'/></div>",
-    }).css({
-        opacity: "0",
-        top: "-10px",
-    }).appendTo(".settings-content");
-
-
-    // EVENTS
-    HoverSettingsSection();
-    ClickSettingsSection();
-}
-
-// Show Settings panel with style
-function ShowSettingsPanel() {
-    // Show the .message-panel content
-    $(".settings-panel").css({
-        opacity: "0",
-        display:"block",
-    }).animate({
-        opacity: "1",
-    });
-
-
-    // Change the Color's second-panel
-    $(".second-panel").css({
-        background: "#27ae60",
-    });
-
-    // ICONS
-    ShowSettingsPanelIcons();
-
-    // Animate content
-    var delay = 800;
-    $(".settings-section").each(function () {
-        $(this).css({
+    // If the control doesn't exist
+    if ($(stp).length < 1) {
+        // Create the settings panel
+        $("<div>", {
+            class: "settings-panel",
+            html: "<div class='second-panel-title'> <span> Settings </span> </div>",
+        }).css({
             opacity: "0",
-            top: "-10px"
+        }).appendTo(scp);
+
+        // settins content
+        $("<div>", {
+            class: "settings-content",
+        }).appendTo(stp);
+
+
+        // Sections
+        $("<div>", {
+            class: sts,
+            function: "connection",
+            html: "<div class='side-side'><span> Connexion </span> <img src='../icons/icon_key.png' alt='connexion'/></div>",
+        }).css({
+            opacity: "0",
+            top: "-10px",
+        }).appendTo(stc);
+
+        $("<div>", {
+            class: sts,
+            function: "preferences",
+            html: "<div class='side-side'><span> Preferences </span> <img src='../icons/icon_like.png' alt='like'/></div>",
+        }).css({
+            opacity: "0",
+            top: "-10px",
+        }).appendTo(stc);
+
+        $("<div>", {
+            class: sts,
+            function: "about",
+            html: "<div class='side-side'><span> About </span> <img src='../icons/icon_about.png' alt='about'/></div>",
+        }).css({
+            opacity: "0",
+            top: "-10px",
+        }).appendTo(stc);
+
+
+        // EVENTS
+        this.SettingsHoverSettingsSection();
+        this.SettingsClickSettingsSection();
+    }
+
+    // Show OR Hide
+    if ($(stp).css("display") === "block") {
+        // Show the .message-panel content
+        $(stp).css({
+            opacity: "0",
+            display:"block",
         }).animate({
-            opacity: "0.5",
-            top: "0",
-        }, {
-            duration: delay,
-            queue   : true,
+            opacity: "1",
         });
 
-        delay += 200;
-    });
-}
+
+        // Change the Color's second-panel
+        $(scp).css({
+            background: "#27ae60",
+        });
+
+        // ICONS
+        // this.SettingsShowSettingsPanelIcons();
+
+        // Animate content
+        var delay = 800;
+        $("." + sts).each(function () {
+            $(this).css({
+                opacity: "0",
+                top: "-10px"
+            }).animate({
+                opacity: "0.5",
+                top: "0",
+            }, {
+                duration: delay,
+                queue   : true,
+            });
+
+            delay += 200;
+        });
+    }
+    else {
+        // Animate content
+        var delay = 200;
+        $("." + sts).each(function () {
+            $(this).css({
+                // opacity: "0",
+                // top: "-10px"
+            }).animate({
+                opacity: "0",
+                top: "-10px",
+            }, {
+                duration: delay,
+                queue   : true,
+            });
+
+            delay += 200;
+        });
+
+        window.setTimeout(function () {
+            // Hide the settings panel
+            $(".settings-panel").css({
+                opacity: "1",
+            }).animate({
+                opacity: "0",
+            });
+        }, 500);
+
+
+        window.setTimeout(function (stp) {
+            $(stp).css("display", "none");
+        }, 1000, stp);
+
+        // HideSecondPanelIcons();
+    }
+};
 
 // Display Settings icons
-function ShowSettingsPanelIcons() {
+SuperSquare.prototype.SettingsShowSettingsPanelIcons = function () {
     $(".mini-icon[function='collapse']").css({
     }).animate({
         opacity: '0.2',
         height: '30px',
         width: '30px',
     });
-}
-
-// Hide Message panel with style
-function HideSettingsPanel() {
-    if ($(".settings-panel").css("opacity") === "0")
-        return;
-
-    // Animate content
-    var delay = 200;
-    $(".settings-section").each(function () {
-        $(this).css({
-            // opacity: "0",
-            // top: "-10px"
-        }).animate({
-            opacity: "0",
-            top: "-10px",
-        }, {
-            duration: delay,
-            queue   : true,
-        });
-
-        delay += 200;
-    });
-
-    Delay(function () {
-        // Hide the settings panel
-        $(".settings-panel").css({
-            opacity: "1",
-        }).animate({
-            opacity: "0",
-        });
-    });
-
-
-    Delay(function () {
-        $(".settings-panel").css("display", "none");
-    }, 1000);
-
-    HideSecondPanelIcons();
-}
+};
 
 // Hover event on settings section
-function HoverSettingsSection() {
+SuperSquare.prototype.SettingsHoverSettingsSection = function () {
     $(".settings-section").hover(function () {
         $(this).css({
             top: "-5px",
@@ -153,31 +151,54 @@ function HoverSettingsSection() {
             top: "0",
         });
     });
-}
+};
 
 // Click event when the user select settings
-function ClickSettingsSection() {
+SuperSquare.prototype.SettingsClickSettingsSection = function () {
     $(".settings-section").click(function () {
+        var ss = FindSuperSquare("play");
+
         var fun = $(this).attr("function");
 
         if (fun === "connection") {
-            ClickConnection();
+            ss.SettingsClickConnection();
         }
         else if (fun === "preferences") {
-            ClickPreferencesSection();
+            ss.SettingsClickPreferencesSection();
         }
         else if (fun === "about") {
-            ClickAboutSection();
+            ss.SettingsClickAboutSection();
         }
     });
-}
+};
 
 
-// -----------------------
 // CONNECTION SECTION
-// -----------------------
-// Click Event on Connection sction to show this section
-function ClickConnection() {
+// ------------------
+// Expends the connection section
+SuperSquare.prototype.SettingsExpendConnectionSection = function (pixels) {
+    var marge = pixels;
+    var regex = /px/g;
+
+    marge = marge.replace(regex, "");
+    marge = marge/2;
+    marge = marge + "px";
+
+    $(".settings-section[function='connection']").css({
+        height: "+=" + pixels,
+    });
+
+    $(".settings-section[function='connection'] .close-rectangle-text").css({
+        top: "+=" + marge,
+    });
+
+    $(".second-panel").animate({
+        height: "+=" + pixels,
+    });
+};
+
+
+SuperSquare.prototype.SettingsClickConnection = function () {
     // Get off the initial click event
     // => We do not want to expend this object again
     $(".settings-section[function='connection']").off("click");
@@ -194,9 +215,8 @@ function ClickConnection() {
 
 
     // Starts a few secs later
-    Delay(function () {
+    window.setTimeout(function () {
         // Hide others section (display=none)
-        // -----------------------------------
         $(".settings-section[function='preferences']").css({
             display: "none",
         });
@@ -205,7 +225,6 @@ function ClickConnection() {
         });
 
         // Put the section's title (& the image) on the left side
-        // ------------------------------------------------------
         $(".settings-section[function='connection'] .side-side").css({
             marginLeft: "0",
             width: "160px",
@@ -225,7 +244,8 @@ function ClickConnection() {
             width: "300px",
         }).appendTo(conn)
 
-        Delay(function () {
+        window.setTimeout(function () {
+            var ss = FindSuperSquare("play");
             // Add buttons
             // Login
             $("<div>", {
@@ -266,25 +286,23 @@ function ClickConnection() {
                 .appendTo(sc);
 
             // Close button
-            // -------------
-            AddCloseRectangleToSetingsSection();
+            ss.SettingsAddCloseRectangleToSetingsSection();
 
             // Add others events on this section
-            EventConnection();
+            ss.SettingsEventConnection();
 
         }, 1000);
-    });
-}
+    }, 500);
+};
 
 // Click Event to close this section
-function CloseConnectionPanel() {
+SuperSquare.prototype.SettingsMinimizeConnectionSection = function () {
         $(".side-content").remove();
-        RemoveCloseRectangle();
-        RemoveLoginForm();
+        this.SettingsRemoveCloseRectangle();
+        this.RemoveBlock("login-block");
 
 
         // Put the section's title (& the image) on the left side
-        // ------------------------------------------------------
         $(".settings-section[function='connection'] .side-side").css({
             margin: "auto",
             width: "auto",
@@ -299,7 +317,7 @@ function CloseConnectionPanel() {
             width: "160px",
         });
 
-        Delay(function () {
+        window.setTimeout(function (ss) {
             // Display others sections
             $(".settings-section").css({
                 display: "inline-block",
@@ -309,17 +327,17 @@ function CloseConnectionPanel() {
 
             // Put back the click event on the connection square
             $(".settings-section[function='connection']").click(function () {
-                ClickConnection();
+                ss.SettingsClickConnection();
             });
 
             // Reduce the second panel if its height is greater than 440px
-            CheckSecondPanelInitialSize();
+            ss.SecondPanelCheckSecondPanelInitialSize();
 
-        }, 1000);
-}
+        }, 1000, this);
+};
 
 // Add a close button on Settings section
-function AddCloseRectangleToSetingsSection() {
+SuperSquare.prototype.SettingsAddCloseRectangleToSetingsSection = function () {
     $("<div>", {
         class: "close-rectangle-text",
         function: "close-section",
@@ -359,113 +377,61 @@ function AddCloseRectangleToSetingsSection() {
             $(this).css("width", "30px");
         })
         .appendTo(".settings-section");
-}
+};
 
 // Events of Connection section
-function EventConnection() {
-
-    EventLoginSignupButtons();
+SuperSquare.prototype.SettingsEventConnection = function () {
+    this.SettingsEventLoginSignupButtons();
 
     // Add click event on close button
     $(".close-rectangle-text[function='close-section']").click(function () {
-        CloseConnectionPanel();
+        var ss = FindSuperSquare("play");
+        ss.SettingsMinimizeConnectionSection();
     });
 
     $(".close-rectangle").click(function () {
-        CloseConnectionPanel();
+        var ss = FindSuperSquare("play");
+        ss.SettingsMinimizeConnectionSection();
     });
-}
-
-function EventCloseButton() {
-
-}
+};
 
 // Add events on login & signup buttons
-function EventLoginSignupButtons() {
+SuperSquare.prototype.SettingsEventLoginSignupButtons = function () {
     $(".rectangle-button[function='login']").click(function () {
-        ShowLoginForm();
+        var ss = FindSuperSquare("play");
+        ss.SettingsShowLoginForm();
     });
 
     $(".rectangle-button[function='signup']").click(function () {
         console.log('popo');
     });
-}
-
-// Remove events on connection button
-function RemoveEventsConnection() {
-    $(".rectangle-button[function='login']").off("click");
-
-    $(".rectangle-button[function='signup']").off("click");
-}
-
-// Expends the connection section
-function ExpendConnectionSection(pixels) {
-    var marge = pixels;
-    var regex = /px/g;
-
-    marge = marge.replace(regex, "");
-    marge = marge/2;
-    marge = marge + "px";
-
-    $(".settings-section[function='connection']").css({
-        height: "+=" + pixels,
-    });
-
-    $(".settings-section[function='connection'] .close-rectangle-text").css({
-        top: "+=" + marge,
-    });
-
-    $(".second-panel").animate({
-        height: "+=" + pixels,
-    });
-}
-
-// Reduces the connection section
-function ReduceConnectionSection(pixels) {
-    var marge = pixels;
-    var regex = /px/g;
-
-    marge = marge.replace(regex, "");
-    marge = marge/2;
-    marge = marge + "px";
-
-    $(".settings-section[function='connection']").css({
-        height: "-=" + pixels,
-    });
-
-    $(".settings-section[function='connection'] .close-rectangle-text").css({
-        top: "-=" + marge,
-    });
-
-    ReduceSecondPanel(pixels);
-}
+};
 
 // Create and show the login form
-function ShowLoginForm() {
-    // Prevent double click bug
-    // => multiple forms
-    RemoveEventsConnection();
+SuperSquare.prototype.SettingsShowLoginForm = function () {
+    // Prevent double click bug => multiple forms
+    this.SettingsRemoveEventsConnection();
 
     // Verify if a login form is already there
     if($(".login-block").length > 0) {
-        RemoveLoginForm(); // Remove the form
+        this.RemoveBlock("login-block"); // Remove the form
 
         // Reduce the panel + section
-        ReduceConnectionSection("200px");
+        this.SettingsReduceConnectionSection("200px");
 
         // Put back the click events
         // (we removed at the beggining of this function)
-        EventLoginSignupButtons();
+        this.SettingsEventLoginSignupButtons();
 
         return;
     }
 
     // Expend connection section
-    ExpendConnectionSection("200px");
+    this.SettingsExpendConnectionSection("200px");
 
-    
+
     // Starts with a delay
-    Delay(function () {
+    window.setTimeout(function (ss) {
 
         // Form container
         $("<div>", {
@@ -549,7 +515,7 @@ function ShowLoginForm() {
         }).click(function(){
 
             if(testClick==0){
-                
+
                 var pseudo = $("input[name='login']" ).val();
 
                 tamponPseudo = pseudo;
@@ -586,7 +552,7 @@ function ShowLoginForm() {
                     socket.emit('Sync');
                 });
 
-                        
+
                 socket.on("majEtatPlayer",function(infoParty){
 
                     //{'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false}
@@ -602,7 +568,7 @@ function ShowLoginForm() {
                         idJoueur = -1;
 
                     }
-                    
+
                     console.log("je suis prêt!!");
                     //alert("ddd :)");
                     socket.emit("etatPlayersOk",{'idParty':infoParty.id,'idPlayer':idSocketClient});
@@ -610,16 +576,12 @@ function ShowLoginForm() {
 
                 });
 
-
-
-
-
                 console.log(pseudo);
                 socket.emit('newUser',pseudo);
                 testClick++;
             }else{
-                        
-                socket.emit('newUser',tamponPseudo);            
+
+                socket.emit('newUser',tamponPseudo);
             }
 
 
@@ -627,7 +589,7 @@ function ShowLoginForm() {
         .appendTo(".login-form");
 
         var testClick = 0;
-        var tamponPseudo = "";             
+        var tamponPseudo = "";
         // Animations
         title.animate({
             opacity: "1",
@@ -663,28 +625,44 @@ function ShowLoginForm() {
 
         // Put back the click event
         // on connection-section
-        EventLoginSignupButtons();
-    });
-}
+        ss.SettingsEventLoginSignupButtons();
+    }, 500, this);
+};
 
-// Remove the login form
-function RemoveLoginForm() {
-    $(".login-block").remove();
-}
+// Remove events on connection button
+SuperSquare.prototype.SettingsRemoveEventsConnection = function () {
+    $(".rectangle-button[function='login']").off("click");
+    $(".rectangle-button[function='signup']").off("click");
+};
+
+// Reduces the connection section
+SuperSquare.prototype.SettingsReduceConnectionSection = function (pixels) {
+    var marge = pixels;
+    var regex = /px/g;
+
+    marge = marge.replace(regex, "");
+    marge = marge/2;
+    marge = marge + "px";
+
+    $(".settings-section[function='connection']").css({
+        height: "-=" + pixels,
+    });
+
+    $(".settings-section[function='connection'] .close-rectangle-text").css({
+        top: "-=" + marge,
+    });
+
+    this.SecondPanelReduceSecondPanel(pixels);
+};
 
 // Remove the close rectangle
-function RemoveCloseRectangle() {
+SuperSquare.prototype.SettingsRemoveCloseRectangle = function () {
     $(".close-rectangle-text").remove();
     $(".close-rectangle").remove();
-}
-
-
-// -----------------------
-// PREFERENCES SECTION
-// -----------------------
+};
 
 // Click event on preferences
-function ClickPreferencesSection() {
+SuperSquare.prototype.SettingsClickPreferencesSection = function () {
     // Get off the initial click event
     // => We do not want to expend this object again
     $(".settings-section[function='preferences']").off("click");
@@ -692,16 +670,13 @@ function ClickPreferencesSection() {
     // Animate others sections out
     $(".settings-section[function='connection']").animate({
         opacity : "0",
-        // width   : "0px",
     });
     $(".settings-section[function='about']").animate({
         opacity : "0",
-        // width   : "0px",
     });
 
-    Delay(function () {
+    window.setTimeout(function () {
         // Hide others section (display=none)
-        // ---------------------------------
         $(".settings-section[function='connection']").css({
             display: "none",
         });
@@ -730,7 +705,7 @@ function ClickPreferencesSection() {
             width: "300px",
         }).appendTo(prefs)
 
-        Delay(function () {
+        window.setTimeout(function () {
             // Add buttons
             $("<div>", {
                 class: "rectangle-button",
@@ -769,135 +744,96 @@ function ClickPreferencesSection() {
                 .appendTo(sc);
 
             // Close button
-            // -------------
-            AddCloseRectangleToSetingsSection();
+            var ss = FindSuperSquare("play");
+            ss.SettingsAddCloseRectangleToSetingsSection();
             // EventCloseButton();
 
             // Add click event on close button
             // ClosePreferencesSection();
 
             // Events
-            EventsPreferences()
+            ss.SettingsEventsPreferences()
         }, 1000);
 
     });
 
-}
+};
 
-// Click Event to close this section
-function ClosePreferencesSection() {
-        $(".side-content").remove();
-        RemoveCloseRectangle();
-        RemoveBlock("audio-block");
-        RemoveBlock("userSettings-block");
+// Add events on Preferences' objects
+SuperSquare.prototype.SettingsEventsPreferences = function () {
+    this.SettingsEventsPreferencesButtons();
 
-        // Put the section's title (& the image) on the left side
-        // ------------------------------------------------------
-        $(".settings-section[function='preferences'] .side-side").css({
-            margin: "auto",
-            width: "auto",
-            top: "0",
-        });
+    // Add click event on close button
+    $(".close-rectangle-text[function='close-section']").click(function () {
+        var ss = FindSuperSquare("play");
+        ss.SettingsClosePreferencesSection();
+    });
 
-        // Reduce the preferences section
-        var prefs = $(".settings-section[function='preferences']").css({
-            left: "10px",
-        }).animate({
-            height: "160px",
-            width: "160px",
-        });
+    $(".close-rectangle").click(function () {
+        var ss = FindSuperSquare("play");
+        ss.SettingsClosePreferencesSection();
+    });
+};
 
-        Delay(function () {
-            // Display others sections
-            $(".settings-section").css({
-                display: "inline-block",
-                left: "0",
-            }).animate({
-                opacity: "0.5",
-            });
-
-            $(".settings-section[function='preferences']").click(function () {
-                ClickPreferencesSection();
-            });
-
-            // Reduce the second panel if its height is greater than 440px
-            CheckSecondPanelInitialSize();
-
-        }, 1000);
-}
+// Remove events on the Preferences' block
+SuperSquare.prototype.SettingsRemoveEventsPreferences = function () {
+    $(".rectangle-button[function='audio']").off("click");
+    $(".rectangle-button[function='user']").off("click");
+};
 
 // Add events on Preferences' buttons
-function EventsPreferencesButtons() {
+SuperSquare.prototype.SettingsEventsPreferencesButtons = function () {
     $(".rectangle-button[function='audio']")
         .click(function () {
+            var ss = FindSuperSquare("play");
+
             // Check if others blocks are already displayed
             if ($(".userSettings-block").length > 0) {
                 // Reduce the settings section
-                // ReducePrefenrecesSection("200px");
-                RemoveBlock("userSettings-block");
+                ss.RemoveBlock("userSettings-block");
             }
 
-            ShowAudioSettings();
+            ss.SettingsShowAudioSettings();
     });
 
     $(".rectangle-button[function='user']")
         .click(function () {
+            var ss = FindSuperSquare("play");
+
             // Check if others blocks are already displayed
             if ($(".audio-block").length > 0) {
                 // Reduce the settings section
                 // ReducePrefenrecesSection("200px");
-                RemoveBlock("audio-block");
+                ss.RemoveBlock("audio-block");
             }
 
-            ShowUserSettings();
+            ss.SettingsShowUserSettings();
     });
-}
-
-// Add events on Preferences' objects
-function EventsPreferences() {
-    EventsPreferencesButtons();
-
-    // Add click event on close button
-    $(".close-rectangle-text[function='close-section']").click(function () {
-        ClosePreferencesSection();
-    });
-
-    $(".close-rectangle").click(function () {
-        ClosePreferencesSection();
-    });
-}
-
-// Remove events on the Preferences' block
-function RemoveEventsPreferences() {
-    $(".rectangle-button[function='audio']").off("click");
-
-    $(".rectangle-button[function='user']").off("click");
-}
+};
 
 // Show the block wich contains audio settings
-function ShowAudioSettings() {
-    // Prevent double click bug
-    // => multiple click
-    RemoveEventsPreferences();
+SuperSquare.prototype.SettingsShowAudioSettings = function () {
+    // Prevent double click bug => multiple click
+    this.SettingsRemoveEventsPreferences();
 
     // Check if it isn't already displayed
     if ($(".audio-block").length > 0) {
         // Remove the audio block
-        RemoveBlock("audio-block");
+        this.RemoveBlock("audio-block");
 
         // Reduce the settings section
-        ReducePrefenrecesSection("200px");
+        this.SettingsReducePrefenrecesSection("200px");
         // put back the click event
-        EventsPreferencesButtons();
+        this.SettingsEventsPreferencesButtons();
         return;
     }
 
     // Expend the panel
     if($(".settings-section[function='preferences']").css('height') < '300px') {
-        ExpendPreferencesSection("200px");
+        this.SettingsExpendPreferencesSection("200px");
     }
 
-    Delay(function () {
+    window.setTimeout(function (ss) {
         // Form container
         $("<div>", {
             class: "audio-block",
@@ -950,47 +886,83 @@ function ShowAudioSettings() {
                 opacity: "0.5",
             });
         }).click(function () {
-            EventSwitcher($(this));
+            ss.EventSwitcher($(this));
         });
 
         soundsSwitcher.hover(function () {
-            $(this).css({
-                opacity: "1",
-            });
+            $(this).css({ opacity: "1"});
         }, function () {
-            $(this).css({
-                opacity: "0.5",
-            });
+            $(this).css({ opacity: "0.5" });
         }).click(function () {
-            EventSwitcher($(this));
+            ss.EventSwitcher($(this));
         });
 
-        EventsPreferencesButtons();
+        ss.SettingsEventsPreferencesButtons();
+    }, 500, this);
+};
+
+SuperSquare.prototype.SettingsReducePrefenrecesSection = function (pixels) {
+    var marge = pixels;
+    var regex = /px/g;
+
+    marge = marge.replace(regex, "");
+    marge = marge/2;
+    marge = marge + "px";
+
+    $(".settings-section[function='preferences']").css({
+        height: "-=" + pixels,
     });
-}
+
+    $(".settings-section[function='preferences'] .close-rectangle-text").css({
+        top: "-=" + marge,
+    });
+
+    this.SecondPanelReduceSecondPanel(pixels);
+};
+
+SuperSquare.prototype.SettingsExpendPreferencesSection = function (pixels) {
+    var marge = pixels;
+    var regex = /px/g;
+
+    marge = marge.replace(regex, "");
+    marge = marge/2;
+    marge = marge + "px";
+
+    $(".settings-section[function='preferences']").css({
+        height: "+=" + pixels,
+    });
+
+    $(".settings-section[function='preferences'] .close-rectangle-text").css({
+        top: "+=" + marge,
+    });
+
+    $(".second-panel").animate({
+        height: "+=" + pixels,
+    });
+};
 
 // Show the block wich contains user & game settings
-function ShowUserSettings() {
+SuperSquare.prototype.SettingsShowUserSettings = function () {
     // Prevent multiple clicks
-    RemoveEventsPreferences();
+    this.SettingsRemoveEventsPreferences();
 
     // Check if it isn't already displayed
     if ($(".userSettings-block").length > 0) {
-        RemoveBlock("userSettings-block");
+        this.RemoveBlock("userSettings-block");
 
         // Reduce the settings section
-        ReducePrefenrecesSection("200px");
+        this.SettingsReducePrefenrecesSection("200px");
         // put back the click event
-        EventsPreferencesButtons();
+        this.SettingsEventsPreferencesButtons();
         return;
     }
 
     if($(".settings-section[function='preferences']").css('height') < '300px') {
         // Expend the panel
-        ExpendPreferencesSection("200px");
+        this.SettingsExpendPreferencesSection("200px");
     }
 
-    Delay(function () {
+    window.setTimeout(function (ss) {
         // Form container
         $("<div>", {
             class: "userSettings-block",
@@ -1045,12 +1017,12 @@ function ShowUserSettings() {
         }).click(function () {
             // On click event
             // Toggle the on and off text
-            EventSwitcher($(this));
+            ss.EventSwitcher($(this));
 
             // Set the variable according to the choice
             if($(this).html().indexOf("on") !== -1) {
-                _settings.autoEndTurn = true;
-            } else _settings.autoEndTurn = false;
+                ss.settings.autoEndTurn = true;
+            } else ss.settings.autoEndTurn = false;
         });
 
         backgroundChooser.hover(function () {
@@ -1065,72 +1037,58 @@ function ShowUserSettings() {
             BackgroundChooser();
         });
 
-        EventsPreferencesButtons();
-    });
-}
+        ss.SettingsEventsPreferencesButtons();
+    }, 500, this);
+};
 
-function ExpendPreferencesSection(pixels) {
-    var marge = pixels;
-    var regex = /px/g;
+// Click Event to close this section
+SuperSquare.prototype.SettingsClosePreferencesSection = function () {
+        $(".side-content").remove();
+        this.SettingsRemoveCloseRectangle();
+        this.RemoveBlock("audio-block");
+        this.RemoveBlock("userSettings-block");
 
-    marge = marge.replace(regex, "");
-    marge = marge/2;
-    marge = marge + "px";
+        // Put the section's title (& the image) on the left side
+        $(".settings-section[function='preferences'] .side-side").css({
+            margin: "auto",
+            width: "auto",
+            top: "0",
+        });
 
-    $(".settings-section[function='preferences']").css({
-        height: "+=" + pixels,
-    });
+        // Reduce the preferences section
+        var prefs = $(".settings-section[function='preferences']").css({
+            left: "10px",
+        }).animate({
+            height: "160px",
+            width: "160px",
+        });
 
-    $(".settings-section[function='preferences'] .close-rectangle-text").css({
-        top: "+=" + marge,
-    });
+        window.setTimeout(function () {
+            var ss = FindSuperSquare("play");
+            // Display others sections
+            $(".settings-section").css({
+                display: "inline-block",
+                left: "0",
+            }).animate({
+                opacity: "0.5",
+            });
 
-    $(".second-panel").animate({
-        height: "+=" + pixels,
-    });
-}
+            $(".settings-section[function='preferences']").click(function () {
+                // var ss = FindSuperSquare("play");
+                ss.SettingsClickPreferencesSection();
+            });
 
-function ReducePrefenrecesSection(pixels) {
-    var marge = pixels;
-    var regex = /px/g;
+            // Reduce the second panel if its height is greater than 440px
+            ss.SecondPanelCheckSecondPanelInitialSize();
 
-    marge = marge.replace(regex, "");
-    marge = marge/2;
-    marge = marge + "px";
+        }, 1000);
+};
 
-    $(".settings-section[function='preferences']").css({
-        height: "-=" + pixels,
-    });
 
-    $(".settings-section[function='preferences'] .close-rectangle-text").css({
-        top: "-=" + marge,
-    });
-
-    ReduceSecondPanel(pixels);
-}
-
-function EventSwitcher(switcher) {
-    if (switcher === undefined || switcher === null)
-        return;
-
-    // Modify the text's switcher
-    var text = switcher.html();
-    text = text.toggleStr("on", "off");
-    switcher.html(text);
-}
-
-function BackgroundChooser() {
-
-}
-
-// -----------------------
 // ABOUT SECTION
-// -----------------------
-
 // Click event on About section
-function ClickAboutSection() {
-    // Get off the initial click event
-    // => We do not want to expend this object again
+SuperSquare.prototype.SettingsClickAboutSection = function () {
+    // Get off the initial click event => We do not want to expend this object again
     $(".settings-section[function='about']").off("click");
 
     // Animate others sections out
@@ -1141,9 +1099,8 @@ function ClickAboutSection() {
         opacity : "0",
     });
 
-    Delay(function () {
+    window.setTimeout(function () {
         // Hide others section (display=none)
-        // ---------------------------------
         $(".settings-section[function='connection']").css({
             display: "none",
         });
@@ -1152,7 +1109,6 @@ function ClickAboutSection() {
         });
 
         // Put the section's title (& the image) on the left side
-        // ------------------------------------------------------
         $(".settings-section[function='about'] .side-side").css({
             marginLeft: "0",
             width: "160px",
@@ -1160,19 +1116,17 @@ function ClickAboutSection() {
         });
 
         // Expend the connection section
-        var about = $(".settings-section[function='about']").css({
-        }).animate({
-            width: "550px",
-        });
+        var about = $(".settings-section[function='about']")
+                    .animate({ width: "550px" });
 
         // Create th content of the connection section
-        var sc = $("<div>", {
-            class: "side-content",
-        }).css({
-            width: "300px",
-        }).appendTo(about)
+        var sc = $("<div>", { class: "side-content" })
+            .css({ width: "300px" })
+            .appendTo(about)
 
-        Delay(function () {
+        window.setTimeout(function () {
+            var ss = FindSuperSquare("play");
+
             // Add buttons
             $("<div>", {
                 class: "rectangle-button",
@@ -1210,29 +1164,20 @@ function ClickAboutSection() {
                 })
                 .appendTo(sc);
 
-            // Close button
-            // -------------
-            AddCloseRectangleToSetingsSection();
+            ss.SettingsAddCloseRectangleToSetingsSection(); // Close button
+            ss.SettingsEventsAbout(); // Events
 
-            // Add click event on close button
-            // CloseAboutSection();
-
-            // Events
-            EventsAbout();
         }, 1000);
-
     });
-
-}
+};
 
 // Click Event to close this section
-function CloseAboutSection() {
+SuperSquare.prototype.SettingsCloseAboutSection = function () {
         $(".side-content").remove();
-        RemoveCloseRectangle();
-        RemoveBlock("help-block");
+        this.SettingsRemoveCloseRectangle();
+        this.RemoveBlock("help-block");
 
         // Put the section's title (& the image) in the middle
-        // ------------------------------------------------------
         $(".settings-section[function='about'] .side-side").css({
             margin: "auto",
             width: "auto",
@@ -1247,90 +1192,88 @@ function CloseAboutSection() {
             width: "160px",
         });
 
-        Delay(function () {
+        window.setTimeout(function () {
+            var ss = FindSuperSquare("play");
+
             // Display others sections
             $(".settings-section").css({
                 display: "inline-block",
                 left: "0",
             }).animate({
                 opacity: "0.5",
-                // width   : "160px",
             });
 
             $(".settings-section[function='about']").click(function () {
-                ClickAboutSection();
+                var ss = FindSuperSquare("play");
+                ss.SettingsClickAboutSection();
             });
 
             // Reduce the second panel if its height is greater than 440px
-            CheckSecondPanelInitialSize();
+            ss.SecondPanelCheckSecondPanelInitialSize();
 
         }, 1000);
-}
+};
 
 // Add event on about block's buttons
-function EventsAboutButtons() {
-    $(".rectangle-button[function='help']")
-        .click(function () {
-            ShowHelp();
-    });
+SuperSquare.prototype.SettingsEventsAboutButtons = function () {
+    $(".rectangle-button[function='help']").click(
+        function () {
+            var ss = FindSuperSquare("play");
+            ss.SettingsShowHelp();
+        });
 
-    $(".rectangle-button[function='informations']")
-        .click(function () {
-            ShowInformations();
-    });
-}
+    $(".rectangle-button[function='informations']").click(
+        function () {
+            var ss = FindSuperSquare("play");
+            ss.SettingsShowInformations();
+        });
+};
 
 // Add events on About block
-function EventsAbout() {
-    EventsAboutButtons();
+SuperSquare.prototype.SettingsEventsAbout = function () {
+    this.SettingsEventsAboutButtons();
 
     // Add click event on close button
     $(".close-rectangle-text[function='close-section']").click(function () {
-        CloseAboutSection();
+        var ss = FindSuperSquare("play");
+        ss.SettingsCloseAboutSection();
     });
 
     $(".close-rectangle").click(function () {
-        CloseAboutSection();
+        var ss = FindSuperSquare("play");
+        ss.SettingsCloseAboutSection();
     });
-}
+};
 
 // Remove events on About block
-function RemoveEventsAbout() {
+SuperSquare.prototype.SettingsRemoveEventsAbout = function () {
     $(".rectangle-button[function='help']")
         .off("click");
 
     $(".rectangle-button[function='informations']")
         .off("click");
-}
-
-// Remove a block class
-// from a settings section
-function RemoveBlock(name) {
-    $("." + name).remove();
-}
+};
 
 // Show the help manual
-function ShowHelp() {
-    // Prevent double click bug
-    // => multiple click
-    // $(".rectangle-button").off("click");
-    RemoveEventsAbout();
+SuperSquare.prototype.SettingsShowHelp = function () {
+    // Prevent double click bug => multiple click
+    this.SettingsRemoveEventsAbout();
 
     // Check if it isn't already displayed
     if ($(".help-block").length > 0) {
         // Remove the audio block
-        RemoveBlock("help-block");
+        this.RemoveBlock("help-block");
         // Reduce the settings section
-        ReduceSettingsSection("about", "200px");
+        this.SettingsReduceSettingsSection("about", "200px");
         // put back the click event
-        EventsAboutButtons();
+        this.SettingsEventsAboutButtons();
         return;
     }
 
     // Expend the panel
-    ExpendSettingsSection( "about", "200px");
+    this.SettingsExpendSettingsSection( "about", "200px");
 
-    Delay(function () {
+    window.setTimeout(function (ss) {
         // Form container
         $("<div>", {
             class: "help-block",
@@ -1344,14 +1287,14 @@ function ShowHelp() {
 
 
         // Events
-        GetManualHelp();
-        EventsAboutButtons();
-    });
-}
+        ss.SettingsGetManualHelp();
+        ss.SettingsEventsAboutButtons();
+    }, 500, this);
+};
 
 // Sends an ajax request to the server
 // and get the game manual (.json)
-function GetManualHelp() {
+SuperSquare.prototype.SettingsGetManualHelp = function () {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/helpmanual/');
 
@@ -1400,15 +1343,15 @@ function GetManualHelp() {
     };
     // Launch the request
     xhr.send();
-}
+};
 
 // Show Project's informations
-function ShowInformations() {
+SuperSquare.prototype.SettingsShowInformations = function () {
 
-}
+};
 
 // Expends the Settigs section desired
-function ExpendSettingsSection(sectionName, pixels) {
+SuperSquare.prototype.SettingsExpendSettingsSection = function (sectionName, pixels) {
     var marge = pixels;
     var regex = /px/g;
 
@@ -1427,10 +1370,10 @@ function ExpendSettingsSection(sectionName, pixels) {
     $(".second-panel").animate({
         height: "+=" + pixels,
     });
-}
+};
 
 // Reduces the Settigs section desired
-function ReduceSettingsSection(sectionName, pixels) {
+SuperSquare.prototype.SettingsReduceSettingsSection = function (sectionName, pixels) {
     var marge = pixels;
     var regex = /px/g;
 
@@ -1446,5 +1389,5 @@ function ReduceSettingsSection(sectionName, pixels) {
         top: "-=" + marge,
     });
 
-    ReduceSecondPanel(pixels);
-}
+    this.SecondPanelReduceSecondPanel(pixels);
+};

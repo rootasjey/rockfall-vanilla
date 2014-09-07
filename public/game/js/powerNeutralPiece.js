@@ -27,15 +27,17 @@ function powerNeutralPiece (elementListener, price, img){
 
 /* la fonction listen permet de mettre effectivement en place l'activation du bonus lors du clique sur l'élément choisi */
 powerNeutralPiece.prototype.listen = function(stateGame){
+    // object super square pour ajouter la tooltip
+    var ssplay = FindSuperSquare("play");
 
     $("#"+this.elementListener).css("cursor","pointer");
     $("#"+this.elementListener).attr("src",this.img);
     $("#"+this.elementListener).attr("price", this.price);
-    AddTooltipOnPower($("#" + this.elementListener), this); // in squareui-game.js
+    ssplay.GameAddTooltipOnPower($("#" + this.elementListener), this); // in squareui-game.js
 
     // Color automatically the power (green or red)
     // if it cans be activated
-    PowerCansbeActivated($("#"+this.elementListener));
+    ssplay.GamePowerCansBeActivated($("#"+this.elementListener));
 
     $("#"+this.elementListener).click(function(){
 

@@ -83,6 +83,12 @@ square-size = 100px
         width square-size
         background black
         display inline-block
+
+        -moz-box-shadow: 0 0 20px #000000;
+        -webkit-box-shadow: 0 0 20px #000000;
+        box-shadow: 0 0 20px #000000;
+
+        overflow hidden
         transition 0.5s
 
         .img-square {
@@ -96,24 +102,24 @@ square-size = 100px
         }
 
         // Specifics squares
-        &[function='play'] {
-            &:hover {
-                background color-alizarin
-            }
-        }
-        &[function='connect'] {
-            &:hover {
-                background color-belize-hole
-            }
-        }
-        &[function='about'] {
-            position relative
-            // top -3px
-
-            &:hover {
-                background: #27ae60
-            }
-        }
+        // &[function='play'] {
+        //     &:hover {
+        //         background color-alizarin
+        //     }
+        // }
+        // &[function='connect'] {
+        //     &:hover {
+        //         background color-belize-hole
+        //     }
+        // }
+        // &[function='about'] {
+        //     position relative
+        //     // top -3px
+        //
+        //     &:hover {
+        //         background: #27ae60
+        //     }
+        // }
     }
 
     #square-ui {
