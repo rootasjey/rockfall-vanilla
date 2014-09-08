@@ -59,6 +59,10 @@
   width: 100px;
   background: #000;
   display: inline-block;
+  -moz-box-shadow: 0 0 20px #000;
+  -webkit-box-shadow: 0 0 20px #000;
+  box-shadow: 0 0 20px #000;
+  overflow: hidden;
   transition: 0.5s;
 }
 #welcome-ui .square .img-square {
@@ -68,18 +72,6 @@
 #welcome-ui .square:hover {
   opacity: 1;
   transition: 0.5s;
-}
-#welcome-ui .square[function='play']:hover {
-  background: #e74c3c;
-}
-#welcome-ui .square[function='connect']:hover {
-  background: #2980b9;
-}
-#welcome-ui .square[function='about'] {
-  position: relative;
-}
-#welcome-ui .square[function='about']:hover {
-  background: #27ae60;
 }
 .ghost-panel {
   display: none;

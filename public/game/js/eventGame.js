@@ -11,6 +11,9 @@ function screenGoStart(stateGame){
 }
 
 function ScreenPause(stateGame){
+    if (typeof stateGame === "undefined" || stateGame === null)
+        stateGame = _myState;
+
     stateGame.pause = true;
     if(stateGame.activePlayers.setScore != null)
         stateGame.activePlayers.setScore.pause();
@@ -30,7 +33,18 @@ function ScreenPause(stateGame){
     stateGame.frame.pause();
 }
 
+function ScreenPauseFadeOut() {
+    ScreenPause(_myState);
+    $("#canvas").animate({
+        opacity: 0.5,
+        height: "500px",
+        width: "785px",
+    });
+}
+
 function ScreenResume(stateGame){
+    if (typeof stateGame === "undefined" || stateGame === null)
+        stateGame = _myState;
 
     stateGame.pause = false;
 
@@ -51,15 +65,6 @@ function ScreenResume(stateGame){
 
     stateGame.frame.play();
     //stateGame.tours.time.play();
-}
-
-function ScreenPauseFadeOut() {
-    ScreenPause(_myState);
-    $("#canvas").animate({
-        opacity: 0.5,
-        height: "500px",
-        width: "785px",
-    });
 }
 
 function ScreenResumeFadeIn() {

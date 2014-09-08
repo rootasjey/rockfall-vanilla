@@ -1,3 +1,6 @@
+#square-ui {
+  z-index: 2;
+}
 #square-ui .mini-icon-panel {
   width: 40px;
   position: absolute;
@@ -9,10 +12,6 @@
   opacity: 0.2;
   position: relative;
   cursor: pointer;
-  transition: 0.5s;
-}
-#square-ui .mini-icon:hover {
-  opacity: 1;
   transition: 0.5s;
 }
 #square-ui .mini-icon[isGlowing='true'] {
@@ -38,13 +37,16 @@
   animation-iteration-count: infinite;
   animation-name: glowIcon;
 }
-#square-ui .square-ui-game {
+#square-ui .square-ui-game,
+#square-ui .game-ui {
   height: 60%;
   width: 67%;
   margin: auto;
+  margin-top: 30px;
   transition: 0.5s;
 }
-#square-ui .square-ui-game .message-confirmation {
+#square-ui .square-ui-game .message-confirmation,
+#square-ui .game-ui .message-confirmation {
   width: 400px;
   padding: 10px;
   padding-top: 40px;
@@ -59,7 +61,8 @@
   box-shadow: 0 0 20px #000;
   transition: 0.5s;
 }
-#square-ui .square-ui-game .message-confirmation .button {
+#square-ui .square-ui-game .message-confirmation .button,
+#square-ui .game-ui .message-confirmation .button {
   color: #fff;
   text-align: center;
   width: 100px;
@@ -84,6 +87,7 @@
   margin-top: 20px;
   margin-left: 5px;
   padding: 5px;
+  position: relative;
   background: #000;
   transition: 0.5s;
 }
@@ -202,12 +206,15 @@
   height: 440px;
   width: 100%;
   min-width: 450px;
-  padding: 20px;
   margin: auto;
   margin-top: -10px;
+  margin-left: -25px;
+  padding: 20px;
   position: relative;
   background: #e74c3c;
   border-radius: 5px;
+  z-index: 1;
+  overflow: hidden;
   -moz-box-shadow: 0 0 20px #000;
   -webkit-box-shadow: 0 0 20px #000;
   box-shadow: 0 0 20px #000;
@@ -243,6 +250,7 @@
 .second-panel .message-panel .new-message .form-title {
   color: #fff;
   opacity: 0.7;
+  position: relative;
 }
 .second-panel .message-panel .new-message .new-message-to {
   height: 30px;
@@ -256,6 +264,7 @@
   margin-top: 5px;
   margin-bottom: 10px;
   padding: 10px;
+  position: relative;
   transition: 0.5s;
 }
 .second-panel .message-panel .new-message .new-message-to:hover {
@@ -275,6 +284,7 @@
   border-width: 0;
   border-style: solid;
   padding: 10px;
+  position: relative;
   transition: 0.5s;
 }
 .second-panel .message-panel .new-message .new-message-body:hover {
@@ -296,6 +306,7 @@
   padding: 10px;
   border-width: 0px;
   margin-top: 10px;
+  position: relative;
   transition: 0.5s;
 }
 .second-panel .message-panel .new-message input[type='submit']:hover {

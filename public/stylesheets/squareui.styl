@@ -6,6 +6,7 @@ main-font = exothinitalic
 color-alizarin = #e74c3c
 
 #square-ui{
+    z-index 2
     // overflow hidden
 
     .mini-icon-panel {
@@ -23,11 +24,6 @@ color-alizarin = #e74c3c
 
         cursor pointer
         transition 0.5s
-
-        &:hover{
-            opacity 1
-            transition 0.5s
-        }
 
         &[isGlowing='true'] {
             animation-duration: 1s
@@ -58,10 +54,11 @@ color-alizarin = #e74c3c
         }
     }
 
-    .square-ui-game {
+    .square-ui-game, .game-ui {
         height 60%
         width 67%
         margin auto
+        margin-top 30px
         transition 0.5s
 
         .message-confirmation {
@@ -114,6 +111,7 @@ color-alizarin = #e74c3c
         margin-left 5px
         padding 5px
 
+        position relative
         background black
         transition 0.5s
 
@@ -278,13 +276,17 @@ color-alizarin = #e74c3c
     width 100%
     min-width 450px
 
-    padding 20px
     margin auto
     margin-top -10px
+    margin-left -25px
+
+    padding 20px
     position relative
     background #e74c3c
 
     border-radius 5px
+    z-index 1
+    overflow hidden
 
     -moz-box-shadow: 0 0 20px #000000;
     -webkit-box-shadow: 0 0 20px #000000;
@@ -334,6 +336,8 @@ color-alizarin = #e74c3c
             .form-title {
                 color white
                 opacity 0.7
+
+                position relative
             }
 
             .new-message-to {
@@ -346,11 +350,13 @@ color-alizarin = #e74c3c
                 opacity 0.2
                 border-width 0
                 border-style solid
-                // border-radius 5px
 
                 margin-top 5px
                 margin-bottom 10px
+
                 padding 10px
+
+                position relative
                 transition 0.5s
 
                 &:hover {
@@ -371,8 +377,9 @@ color-alizarin = #e74c3c
                 opacity 0.2
                 border-width 0
                 border-style solid
-                // border-radius 5px
                 padding 10px
+
+                position relative
                 transition 0.5s
 
                 &:hover {
@@ -399,6 +406,7 @@ color-alizarin = #e74c3c
                 border-width 0px
                 margin-top 10px
 
+                position relative
                 transition 0.5s
 
                 &:hover {

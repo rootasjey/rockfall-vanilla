@@ -270,6 +270,9 @@ $(canvas).on("mouseup",function(e) {
         var mx = mouse.x;
         var my = mouse.y;
 
+        // Super Square Object which allows to test the autoEndTurn setting
+        var ssplay = FindSuperSquare("play");
+
         /* Vérifie si on à une pièce/rock sélectionné(e) */
         if(_myState.selectionPiece != null){
 
@@ -301,7 +304,7 @@ $(canvas).on("mouseup",function(e) {
                         _myState.tours.addAction();
 
                         // Check auto end turn
-                        if (_settings.autoEndTurn) {
+                        if (ssplay.settings.autoEndTurn) {
                             PasseTour(_myState);
                         }
                 }

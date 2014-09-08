@@ -53,7 +53,9 @@ Players.prototype.getPiece = function(){
 }
 
 Players.prototype.changeScore = function(idContainer, points, stateGame){
-
+    // La récupération de l'objet ssplay
+    // permet d'exécuter la fonction GamePowerCansBeActivated() dans la suite du code
+    var ssplay = FindSuperSquare("play");
     var savePlayer = this;
 
     this.score += points;
@@ -76,9 +78,9 @@ Players.prototype.changeScore = function(idContainer, points, stateGame){
                         savePlayer.setScore.stop();
 
                         // Check (automatically) if powers can be used after score has been set
-                        PowerCansbeActivated($("#power-one"));
-                        PowerCansbeActivated($("#power-two"));
-                        PowerCansbeActivated($("#power-three"));
+                        ssplay.GamePowerCansBeActivated($("#power-one"));
+                        ssplay.GamePowerCansBeActivated($("#power-two"));
+                        ssplay.GamePowerCansBeActivated($("#power-three"));
                     }
                     //savePlayer.setScore = null;
                 }

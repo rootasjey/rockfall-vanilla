@@ -247,26 +247,26 @@ mymatch.start();
 //mymatch.push({user:'walter',rank:1450});
 
 function askMatching(idFirstPlayer, idSecondPlayer){
-    
-    
+
+
     //console.log("once");
-    
+
     //players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
     //players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
-    
+
     var retour = addParty(partyInProgress, idFirstPlayer, idSecondPlayer);
-    
+
     players[idFirstPlayer].emit("majEtatPlayer",retour);
     players[idSecondPlayer].emit("majEtatPlayer",retour);
-    
-    
+
+
     //io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer",retour);
-    
+
     //players[idFirstPlayer].leave("multiJoueur");
     //players[idSecondPlayer].leave("multiJoueur");
-    
+
     /*io.sockets.on('etatPlayersOk', function (majInfo) {
-        
+
         var info = partyInProgress[majInfo.idParty];
         console.log(majInfo);
         console.log(info);
@@ -277,24 +277,24 @@ function askMatching(idFirstPlayer, idSecondPlayer){
             partyInProgress[majInfo.idParty].idPSReady = true;
             console.log("second player ready l.271");
         }
-        
+
     });*/
-    
-   /* 
+
+   /*
     var tabPlayer = {};
-    tabPlayer[idFirstPlayer] = {"etat":"attente","nom":"Players1"}; 
-    tabPlayer[idSecondPlayer] = {"etat":"attente","nom":"Players2"}; 
-    
-    
+    tabPlayer[idFirstPlayer] = {"etat":"attente","nom":"Players1"};
+    tabPlayer[idSecondPlayer] = {"etat":"attente","nom":"Players2"};
+
+
     players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
-   
+
     players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
-    
+
     console.log(" id est a la romm  :  "+"room-"+idFirstPlayer+"-"+idSecondPlayer);
     */
     //io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).on('connection', function (socket) {
-        
-       
+
+
 /*
         io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).on("etatPlayersOk",function(){
 
@@ -302,13 +302,13 @@ function askMatching(idFirstPlayer, idSecondPlayer){
             if(tabPlayer[idFirstPlayer].etat == "pret" && tabPlayer[idSecondPlayer].etat == "pret")             {
                 nomDeLaFonctionPourDemarrerLeJeu(tabPlayer,idFirstPlayer,idSecondPlayer);
             }else{
-                io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).emit('majEtatPlayer',tabPlayer);  
+                io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).emit('majEtatPlayer',tabPlayer);
             }
-            
+
         });
-        
+
         io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).on("etatPlayersNo",function(){
-            
+
             io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).emit('cancel');
         });
         */
@@ -323,12 +323,13 @@ function askMatching(idFirstPlayer, idSecondPlayer){
 
                 while(i<partyInProgress.length){
 
-                    var tableCheck = partyInProgress[i];     
+                    var tableCheck = partyInProgress[i];
 
                     if(tableCheck.idPSReady && tableCheck.idPFReady && tableCheck.active && !tableCheck.start){
 
-                        
+
                         tableCheck.start = true;
+
                        /*var customTask = function(obj){
                             var t = 0;
                             for(var z=0;z<100;z++){
@@ -344,26 +345,28 @@ function askMatching(idFirstPlayer, idSecondPlayer){
                     }
 
                 }
+
+                                              
             }, 100);
         }
-    
+
         StartParty();
-    
+
 }
 
 
 
 
 function addParty(tableauP, idF, idS){
-    
+
     var idParty = 0;
     var sizeX = 4;
     var sizeY = 6;
     var newElement = {};
     var plateau = createPlateau(sizeX,sizeY);
-    
+
     if(tableauP.length == 0){
-        
+
         newElement = {
                         'id':0,
                         'idPF':{'id':idF,'name':'idPF','score':0,'point':0,'idPower':"1-2-3"},
@@ -385,14 +388,14 @@ function addParty(tableauP, idF, idS){
                         'hitcombo':0,
                         'pieceGagnante':{}
                     };
-        
+
         tableauP.push(newElement);
-        
+
     }else{
         var noOld = false, i=0;
-        
+
         while(i<tableauP.length && !noOld){
-            
+
             if(!tableauP[i].active){
                 newElement = {
                                 'id':i,
@@ -421,7 +424,7 @@ function addParty(tableauP, idF, idS){
             }
             i++;
         }
-        
+
         if(!noOld){
             newElement = {
                             'id':(tableauP.length-1),
@@ -447,9 +450,9 @@ function addParty(tableauP, idF, idS){
             tableauP.push(newElement);
         }
     }
-    
+
     return newElement;
-     
+
 }
 
     
@@ -462,25 +465,23 @@ function StartParty(){
 
                 while(i<partyInProgress.length){
 
-                    var tableCheck = partyInProgress[i];     
+                    var tableCheck = partyInProgress[i];
 
                     if(tableCheck.start){
-
                         checkTurn(tableCheck);
                         tableCheck.active = false;
-                            
                     }
                     i++;
                 }
 
             }, 300);
         }
-    
+
 }
 
-    
+
 function applyPhysic(donneesATravailler){
-    
+
     var plateau = donneesATravailler.plateau;
     var sizeX = donneesATravailler.sizeX;
     var sizeY = donneesATravailler.sizeY;
@@ -494,6 +495,7 @@ function applyPhysic(donneesATravailler){
 
 		for(var j = sizeX-1; j >= 0; j--){
             
+
             if(plateau[j][i].item != 0){
                 var end = true;
                 var k = j
@@ -504,9 +506,9 @@ function applyPhysic(donneesATravailler){
                         if(plateau[k+1][i].item == 0){
 
                             plateau[k+1][i].item = plateau[k][i].item;
-    
+
                             plateau[k][i].item = 0;
-                            
+
                             fini =  true;
                             end = false;
                         }
@@ -516,7 +518,7 @@ function applyPhysic(donneesATravailler){
             }
         }
     }
-    
+
     //-------------------------------Force----------------------
     if(!fini){
 
@@ -543,7 +545,7 @@ function applyPhysic(donneesATravailler){
                     }
 
                     if((itemWheight * 2) < somme ){
-                        
+
                         donneesATravailler.hitcombo += 1;
                         donneesATravailler.pointAdd = {'multiple':false,'point':plateau[k][i].item.weight * 2,'coordX':k,'coordY':i,'color':plateau[k][i].item.fill,'proprietaire':plateau[k][i].item.idProprietaire};
                         
@@ -554,10 +556,11 @@ function applyPhysic(donneesATravailler){
                             
                         }
                         
-                        if(plateau[k][i].item.idProprietaire == donneesATravailler.idPF){
+                        if(plateau[k][i].item.idProprietaire == donneesATravailler.idPF.id){
                             donneesATravailler.score.idPF += donneesATravailler.pointAdd.point; 
-                        }else if(plateau[k][i].item.idProprietaire == donneesATravailler.idPS){
+                        }else if(plateau[k][i].item.idProprietaire == donneesATravailler.idPS.id){
                             donneesATravailler.score.idPS += donneesATravailler.pointAdd.point; 
+
                         }
 
                         
@@ -569,6 +572,7 @@ function applyPhysic(donneesATravailler){
 
         }
     }
+
     
     //-----------------------------Connect Four Search-------------------------------------
     
@@ -897,20 +901,22 @@ var customTask = function(donneesDePartie){
         
         
         
+
         var finDeParty = null;
-        var donneesLocales = donneesDePartie; 
-    
-    
+        var donneesLocales = donneesDePartie;
+
+
         var party = io.of(donneesLocales.room);
-    
+
         party.on('connection', function(socket){
             
           console.log('someone connected');
           
         });
-    
+
         players[donneesLocales.idPF].join(donneesLocales.room);
         players[donneesLocales.idPS].join(donneesLocales.room);
+
 
         var tamponWin = false;
         var temponWinSec = 0;
@@ -943,13 +949,14 @@ var customTask = function(donneesDePartie){
             
         }, intervalTempo);
     
+
         //party.emit('MiseAJour',donneesDePartie);
-        
+
 
         //players[donneesDePartie.idPF].join(donneesDePartie.room);
         //players[donneesDePartie.idPS].join(donneesDePartie.room);
 }
-    
+
 
 function clearDonnees(donnees){
     
@@ -996,21 +1003,21 @@ function changeTurn(donnees){
     
     
 function checkTurn(tableauDeDonnees){
-    
-    
-    
+
+
+
 /*La fonction gravity permet d'appliquer une certaine gravité aux pièces du plateau */
 /*
     fini = false;
     var plateau = tableauDeDonnees.plateau;
     var sizeX = tableauDeDonnees.sizeX;
     var sizeY = tableauDeDonnees.sizeY;
-    
-    
+
+
 	for(var i = 0;i < sizeY;i++){
 
 		for(var j = sizeX-1;j >= 0;j--){
-            
+
             if(this.plateau[j][i] != 0){
                /* var end = true;
                 var k = j
@@ -1046,26 +1053,25 @@ function checkTurn(tableauDeDonnees){
 }
 
 function createPlateau(nbrePieceHori,nbrePieceVerti){
-    
+
     var plateau = new Array();
-    
+
     for(var i = 0 ;i<nbrePieceVerti;i++){
-        
+
         var ligne = new Array();
-        
+
         for(var j = 0;j<nbrePieceHori;j++){
-        
+
             ligne.push({
                             "item":0
                         });
-        
         }
-        
+
         plateau.push(ligne);
-        
+
     }
-    
-    
+
+
     return plateau;
 }
 
@@ -1093,30 +1099,30 @@ var tamponSetInter = null;
 //io.sockets.on('connection', function (socket) {
 /*
     hs = socket.handshake;
-    //users[hs.session.username] = socket.id; 
-    //players[socket.id] = socket; 
-  
+    //users[hs.session.username] = socket.id;
+    //players[socket.id] = socket;
+
     socket.on('disconnect', function () {
-        delete user[hs.session.username]; 
-        delete players[socket.id]; 
+        delete user[hs.session.username];
+        delete players[socket.id];
         delete time_disc[hs.session.username];
         //delete users[hs.session.username];
     });
-    
+
     socket.on('newUser', function (username) {
-        
+
         hs.session.username = username;
         players[socket.id] = socket;
-        user[hs.session.username] = socket.id; 
-        time_disc[hs.session.username] = new Date().getTime(); 
+        user[hs.session.username] = socket.id;
+        time_disc[hs.session.username] = new Date().getTime();
         players[socket.id].emit('startSync');
         io.sockets.emit('newListe',players);
     });
-    
+
     socket.on('Sync',function(){
-      time_disc[hs.session.username] = new Date().getTime(); 
+      time_disc[hs.session.username] = new Date().getTime();
     });
-    
+
     if(tamponSetInter == null){
         tamponSetInter = setInterval(function(){
             verificationConn();
@@ -1134,8 +1140,8 @@ io.sockets.on('connection', function (socket) {
             console.log("detected newUser");
             socket.username = username;
             players[socket.id] = socket;
-            user[socket.username] = socket.id; 
-            time_disc[socket.username] = new Date().getTime(); 
+            user[socket.username] = socket.id;
+            time_disc[socket.username] = new Date().getTime();
             players[socket.id].emit('startSync',socket.id);
             //socket.of('/multiJoueur').emit('newListe',user);
             io.sockets.in("multiJoueur").emit('newListe',user);
@@ -1147,21 +1153,21 @@ io.sockets.on('connection', function (socket) {
             }
         }
     });
-    
-    
+
+
     socket.on('Sync',function(){
-      time_disc[socket.username] = new Date().getTime(); 
+      time_disc[socket.username] = new Date().getTime();
     });
-    
+
     if(tamponSetInter == null){
         tamponSetInter = setInterval(function(){
             verificationConn();
         }, 10000);
     }
-    
-    
+
+
     socket.on('etatPlayersOk', function (majInfo) {
-        
+
         var info = partyInProgress[majInfo.idParty];
         console.log(majInfo);
         console.log(partyInProgress);
@@ -1181,7 +1187,7 @@ io.sockets.on('connection', function (socket) {
 
 
 
-    
+
 function verificationConn(){
      for(var i in time_disc){
          console.log(i+"    "+time_disc[i]);
@@ -1189,10 +1195,8 @@ function verificationConn(){
             delete players[user[i]];
             delete user[i];
             delete time_disc[i];
-            
+
             io.sockets.in("multiJoueur").emit('newListe',user);
          }
      }
  }
-
-
