@@ -340,9 +340,10 @@ function askMatching(idFirstPlayer, idSecondPlayer){
                         
                     }*/
                         
-                    i++;
-                }
+                        i++;
+                    }
 
+                }
             }, 100);
         }
     
@@ -365,25 +366,24 @@ function addParty(tableauP, idF, idS){
         
         newElement = {
                         'id':0,
-                        'idPF':idF,
-                        'currentPlayer':idF,
-                        'idPS':idS,
+                        'idPF':{'id':idF,'name':'idPF','score':0,'point':0,'idPower':"1-2-3"},
+                        'currentPlayer':'idPF',
+                        'idPS':{'id':idS,'name':'idPS','score':0,'point':0,'idPower':"1-2-3"},
                         'room':'room-'+idF+'-'+idS,
                         'active':true,
                         'idPFReady':false,
                         'idPSReady':false,
                         'start':false,
                         'plateau':plateau,
-                        'idPFPoint':0,
-                        'idPFScore':0,
-                        'idPSScore':0,
-                        'idPSPoint':0,
-                        'idPFPower':"1-2-3",
-                        'idPSPower':"1-2-3",
-                        'newPoint':{},
+                        'pointAdd':{},
+                        'nbreAction':1,
+                        'nbreActionRealise':0,
+                        'nbrePower':1,
+                        'nbrePowerRealise':0,
                         'sizeX':sizeX,
                         'sizeY':sizeY,
-                        'hitcombo':0
+                        'hitcombo':0,
+                        'pieceGagnante':{}
                     };
         
         tableauP.push(newElement);
@@ -396,25 +396,24 @@ function addParty(tableauP, idF, idS){
             if(!tableauP[i].active){
                 newElement = {
                                 'id':i,
-                                'idPF':idF,
-                                'idPS':idS,
-                                'currentPlayer':idF,
+                                'idPF':{'id':idF,'name':'idPF','score':0,'point':0,'idPower':"1-2-3"},
+                                'idPS':{'id':idS,'name':'idPS','score':0,'point':0,'idPower':"1-2-3"},
+                                'currentPlayer':'idPF',
                                 'room':'room-'+idF+'-'+idS,
                                 'active':true,
+                                'pointAdd':{},
                                 'idPFReady':false,
                                 'idPSReady':false,
                                 'start':false,
                                 'plateau':plateau,
-                                'idPSScore':0,
-                                'idPFScore':0,
-                                'idPFPoint':0,
-                                'idPSPoint':0,
-                                'idPFPower':"1-2-3",
-                                'idPSPower':"1-2-3",
-                                'newPoint':{},
+                                'nbreAction':1,
+                                'nbreActionRealise':0,
+                                'nbrePower':1,
+                                'nbrePowerRealise':0,
                                 'sizeX':sizeX,
                                 'sizeY':sizeY,
-                                'hitcombo':0
+                                'hitcombo':0,
+                                'pieceGagnante':{}
                             };
                 tableauP[i] = newElement;
                 idParty = i;
@@ -426,36 +425,34 @@ function addParty(tableauP, idF, idS){
         if(!noOld){
             newElement = {
                             'id':(tableauP.length-1),
-                            'idPF':idF,
-                            'idPS':idS,
-                            'currentPlayer':idF,
+                            'idPF':{'id':idF,'name':'idPF','score':0,'point':0,'idPower':"1-2-3"},
+                            'idPS':{'id':idS,'name':'idPS','score':0,'point':0,'idPower':"1-2-3"},
+                            'currentPlayer':'idPF',
                             'room':'room-'+idF+'-'+idS,
                             'active':true,
                             'idPFReady':false,
                             'idPSReady':false,
                             'start':false,
+                            'pointAdd':{},
                             'plateau':plateau,
-                            'idPFPoint':0,
-                            'idPFScore':0,
-                            'idPSPoint':0,
-                            'idPSScore':0,
-                            'idPFPower':"1-2-3",
-                            'idPSPower':"1-2-3",
-                            'newPoint':{},
+                            'nbreAction':1,
+                            'nbreActionRealise':0,
+                            'nbrePower':1,
+                            'nbrePowerRealise':0,
                             'sizeX':sizeX,
                             'sizeY':sizeY,
-                            'hitcombo':0
+                            'hitcombo':0,
+                            'pieceGagnante':{}
                         };
             tableauP.push(newElement);
         }
     }
     
     return newElement;
-    //return {'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false};
      
 }
-//socket
 
+    
 function StartParty(){
   //  ------------------------------------------------------------------
    if(checkClientParty == null){
@@ -488,13 +485,14 @@ function applyPhysic(donneesATravailler){
     var sizeX = donneesATravailler.sizeX;
     var sizeY = donneesATravailler.sizeY;
     
-    var fini = false;
+    
+    var fini = false, finiSuite = false;
     
     //---------------------------Gravity-----------------------------
     
-	for(var i = 0;i < sizeY;i++){
+	for(var i = 0; i < sizeY; i++){
 
-		for(var j = sizeX-1;j >= 0;j--){
+		for(var j = sizeX-1; j >= 0; j--){
             
             if(plateau[j][i].item != 0){
                 var end = true;
@@ -521,7 +519,6 @@ function applyPhysic(donneesATravailler){
     
     //-------------------------------Force----------------------
     if(!fini){
-        //var pointGagne = {point:0,proprietaire:"none",end:false,color:"grey"};
 
         for(var i = 0;i < sizeY;i++){
 
@@ -548,25 +545,24 @@ function applyPhysic(donneesATravailler){
                     if((itemWheight * 2) < somme ){
                         
                         donneesATravailler.hitcombo += 1;
-                        donneesATravailler.point += plateau[j-1][i].item.weight * 2;
-                        donneesATravailler.color += plateau[j-1][i].item.fill;
-                        donneesATravailler.proprietaire += plateau[j-1][i].item.idProprietaire;
-                        //stateGame.hitCombo += 1;
-                        //pointGagne.end = true;
-                        //pointGagne.point = this.matrice[k][i].weight * 2 ;
-                        //pointGagne.color = this.matrice[k][i].fill;
-                        //pointGagne.proprietaire = this.matrice[k][i].idProprietaire;
+                        donneesATravailler.pointAdd = {'multiple':false,'point':plateau[k][i].item.weight * 2,'coordX':k,'coordY':i,'color':plateau[k][i].item.fill,'proprietaire':plateau[k][i].item.idProprietaire};
+                        
 
-                        if(donneesATravailler.proprietaire == donneesATravailler.currentPlayer){
+                        if(plateau[k][i].item.idProprietaire == donneesATravailler.currentPlayer){
                             
-                            donneesATravailler.point = parseInt(donneesATravailler.point *  (donneesATravailler.hitcombo/(donneesATravailler.hitcombo - 0.1 * donneesATravailler.hitcombo)));
-                            //   pointGagne.point = parseInt(pointGagne.point *  (stateGame.hitCombo/(stateGame.hitCombo - 0.1 * stateGame.hitCombo)));
+                            donneesATravailler.pointAdd.point = parseInt(donneesATravailler.pointAdd.point *  (donneesATravailler.hitcombo/(donneesATravailler.hitcombo - 0.1 * donneesATravailler.hitcombo)));
+                            
+                        }
+                        
+                        if(plateau[k][i].item.idProprietaire == donneesATravailler.idPF){
+                            donneesATravailler.score.idPF += donneesATravailler.pointAdd.point; 
+                        }else if(plateau[k][i].item.idProprietaire == donneesATravailler.idPS){
+                            donneesATravailler.score.idPS += donneesATravailler.pointAdd.point; 
                         }
 
-                        //this.addScore("user-score-points", stateGame, pointGagne);
-                        //stateGame.addDrawPoints("+"+pointGagne.point, this.matrice[k][i].x, this.matrice[k][i].y, pointGagne.color);
+                        
                         plateau[k][i].item = 0;
-                        //this.matrice[k][i] = 0;
+                        finiSuite = true;
                     }
                 }
             }
@@ -574,17 +570,333 @@ function applyPhysic(donneesATravailler){
         }
     }
     
+    //-----------------------------Connect Four Search-------------------------------------
     
-    //------------------------------------------------------------------
+    if(!fini && !finiSuite){
+        
+         var pointWin = findFour(donneesATravailler);
+        if(pointWin.find){
+            
+            donneesATravailler.pieceGagnante = pointWin;
+        }
+    }
+    
+    return donneesATravailler;
+    
 }
 
+    
+
+function verificationD(donneesATravailler,x,y){
+
+
+    var diagonal = new Array();
+    var plateau = donneesATravailler.plateau;
+    var find = false;
+    
+    if(plateau[x][y].item != 0){
+        var id = plateau[x][y].item.idProprietaire;
+        var compt = 1;
+        var i = 1, j = 1 ;
+        diagonal.push({"x":x,"y":y,"point":plateau[x][y].item.weight,"color":plateau[x][y].item.fill});
+
+        while(x-i >= 0 && y+j < donneesATravailler.sizeY && !find){
+
+            if(plateau[x-i][y+j] != 0 && id == plateau[x-i][y+j].item.idProprietaire){
+                compt++;
+                diagonal.push({"x":x-i,"y":y+j,"point":plateau[x-i][y+j].item.weight, "color":plateau[x-i][y+j].item.fill});
+
+                if(compt>=4){
+                    find = true;
+                }
+            }else if(plateau[x-i][y+j].item != 0){
+                id = plateau[x-i][y+j].item.idProprietaire;
+                diagonal = new Array();
+                diagonal.push({"x":x-i,"y":y+j,"point":plateau[x-i][y+j].item.weight, "color":plateau[x-i][y+j].item.fill});
+                compt = 1;
+            }else{
+                id =-1;
+                compt = 1;
+                diagonal = new Array();
+            }
+
+            i++;
+            j++;
+
+        }
+
+        if(!find){
+            id = plateau[x][y].item.idProprietaire;
+            diagonal = new Array();
+            diagonal.push({"x":x,"y":y,"point":plateau[x][y].item.weight, "color":plateau[x][y].item.fill});
+            i = 1;
+            j = 1;
+            compt = 1;
+            while(x+i < donneesATravailler.sizeX && y+j < donneesATravailler.sizeY && !find){
+
+                if(plateau[x+i][y+j] != 0 && id == plateau[x+i][y+j].item.idProprietaire){
+                    diagonal.push({"x":x+i,"y":y+j,"point":plateau[x+i][y+j].item.weight, "color":plateau[x+i][y+j].item.fill});
+                    compt++;
+
+                    if(compt>=4){
+                        find = true;
+                    }
+                }else if(plateau[x+i][y+j].item != 0){
+                    id = plateau[x+i][y+j].item.idProprietaire;
+                    diagonal = new Array();
+                    diagonal.push({"x":x+i,"y":y+j,"point":plateau[x+i][y+j].item.weight,"color":plateau[x+i][y+j].item.fill});
+                    compt = 1;
+                }else{
+                    id = -1;
+                    compt = 1;
+                    diagonal = new Array();
+                }
+
+
+                i++;
+                j++;
+
+            }
+        }
+    }
+    return {"find":find,"case":diagonal,"id":id};
+}
+
+
+
+/* Verification si un joueur à gagner un point en alignant 4 pieces */
+function findFour(donneesATravailler){
+
+    var plateau = donneesATravailler.plateau;
+    
+    var i = 0,j=0;
+    find = false;
+    var id = -1;
+    var compt = 0;
+    var sommePoint = 0;
+    var aligner = new Array();
+
+    /* verification horizontale */
+    while(i < donneesATravailler.sizeX && !find){
+
+        compt = 0;
+        var j = 0;
+
+        while(j < plateau.sizeY && compt < 4){
+
+            if(plateau[i][j].item != 0){
+                if(plateau[i][j].item.idProprietaire == id){
+                    compt++;
+                    aligner.push({"x":i,"y":j,"point":plateau[i][j].item.weight, "color":plateau[i][j].item.fill});
+                }else{
+                    aligner = new Array();
+                    aligner.push({"x":i,"y":j,"point":plateau[i][j].item.weight,"color":plateau[i][j].item.fill});
+                    compt = 1;
+                    id = plateau[i][j].item.idProprietaire;
+                }
+            }else{
+                id = -1;
+                aligner = new Array();
+                compt = 1;
+            }
+            j++;
+
+
+            if(compt >= 4){
+
+                find = true;
+                sommePoint = 0;
+                for(var k = 0;k<aligner.length;k++){
+                    sommePoint += plateau[aligner[k].x][aligner[k].y].item.weight;
+                    sommePoint += plateau[aligner[k].x][aligner[k].y].item.weight;
+                }
+            }
+        }
+        i++;
+    }
+
+   /* verification verticale */
+   if(!find){
+
+        i = 0;
+         while(i < donneesATravailler.sizeY && !find){
+
+            compt = 0;
+            j = 0;
+
+            while(j < donneesATravailler.sizeX && compt < 4){
+
+                if(plateau[j][i].item != 0){
+
+                    if(plateau[j][i].item.idProprietaire == id){
+                        aligner.push({"x":j,"y":i,"point":plateau[j][i].item.weight,"color":plateau[j][i].item.fill});
+                        compt++;
+                    }else{
+                        aligner = new Array();
+                        aligner.push({"x":j,"y":i,"point":plateau[j][i].item.weight, "color": plateau[j][i].item.fill});
+                        compt = 1;
+                        id = plateau[j][i].item.idProprietaire;
+                    }
+                }else{
+                    aligner = new Array();
+                    id = -1;
+                    compt = 1;
+                }
+                j++;
+
+                if(compt >= 4){
+
+                    find = true;
+                    sommePoint = 0;
+                    for(var k = 0;k<aligner.length;k++){
+                        sommePoint += plateau[aligner[k].x][aligner[k].y].item.weight;
+                    }
+                }
+            }
+            i++;
+        }
+   }
+
+    /* verification diagonale */
+    if(!find){
+        i = 0;
+         while(i < donneesATravailler.sizeX && !find){
+
+             j = 0;
+
+            while(j < donneesATravailler.sizeY && !find){
+
+                    if(plateau[i][j].item != 0){
+                        var test = verificationD(donneesATravailler,i,j);
+
+                        if(test.find){
+
+                            find = true;
+                            id = test.id;
+                            sommePoint = 0;
+                            for(var k = 0;k<test.case.length;k++){
+                                sommePoint += plateau[test.case[k].x][test.case[k].y].item.weight;
+                            }
+                            aligner = test.case;
+                        }
+                    }
+                    j++;
+                }
+            i++;
+        }
+    }
+
+
+   
+
+    return {"find":find,"id":id,"box":aligner,"point":sommePoint};
+}
+    
+
+function traitementPointWin(donneesLocales,tamponPieceWin){
+    
+    donneesLocales.hitcombo += 4;
+    
+    var newPointAdd = new Array();
+    
+    for(var i ;i< tamponPieceWin.box.length;i++){
+        
+        newPointAdd.push({
+                            'point':tamponPieceWin.box[i].point * 2,
+                            'coordX':tamponPieceWin.box[i].x,
+                            'coordY':tamponPieceWin.box[i].y
+                        });
+    }
+                         
+    donneesLocales.pointAdd = {
+                                'multiple':true,
+                                'point':newPointAdd, 
+                                'color':tamponPieceWin.box[0].color, 
+                                'proprietaire':tamponPieceWin.id
+        
+                                };
+    
+
+    if(tamponPieceWin.id == donneesLocales.idPF.id){
+        donneesLocales.idPF.score += parseInt(tamponPieceWin.point *  (donneesLocales.hitcombo/(donneesLocales.hitcombo - 0.1 * donneesLocales.hitcombo))); 
+    }else if(tamponPieceWin.id == donneesLocales.idPS.id){
+        donneesLocales.idPS.score += parseInt(tamponPieceWin.point *  (donneesLocales.hitcombo/(donneesLocales.hitcombo - 0.1 * donneesLocales.hitcombo))); 
+    }
+
+
+    for(var i ;i< tamponPieceWin.box.length;i++){
+        
+        donneesLocales.plateau[tamponPieceWin.box[i].x][tamponPieceWin.box[i].y].item = 0; 
+    }
+    
+    return donneesLocales;
+}
+    
+    
+function addItemtoPlateau (donneesLocales,x,y,item){
+    
+    var success = false;
+    if(donneesLocales.plateau[x][y] == 0 && donneesLocales.nbreActionRealise < donneesLocales.nbreAction){
+        
+        donneesLocales.plateau[x][y] = item;
+        donneesLocales.nbreActionRealise += 1;
+        success = true;
+    }
+    
+    return success
+}
+
+    
+function executeBonus(donneesLocales,x,y,bonusChoice){
+    
+    var success = false;
+    var player = null;
+    
+    if(donneesLocales.currentPlayer == donneesLocales.idPF.name){
+        player = donneesLocales.idPF; 
+    }else if(donneesLocales.currentPlayer == donneesLocales.idPS.name){
+        player = donneesLocales.idPS;  
+    }
+    
+    if(donneesLocales.plateau[x][y] != 0 && donneesLocales.nbrePowerRealise < donneesLocales.nbrePower){
+
+    
+        switch(bonusChoice.id){
+            
+            case 1: if( bonusChoice.price <= player.score){
+                        donneesLocales.plateau[x][y].item.weight = donneesLocales.plateau[x][y].item.weight * 2;
+                        donneesLocales.nbrePowerRealise += 1;
+                        success = true;
+                    }
+                    break;
+                
+            case 2: if( bonusChoice.price <= player.score){
+                        donneesLocales.plateau[x][y].item.idProprietaire = -1;
+                        donneesLocales.nbrePowerRealise += 1;
+                        success = true;
+                    }  
+                    break;
+                
+            case 3: if( bonusChoice.price <= player.score){
+                        donneesLocales.plateau[x][y].item.weight = parseInt(donneesLocales.plateau[x][y].item.weight / 2);
+                        donneesLocales.nbrePowerRealise += 1;
+                        success = true;
+                    }
+                    break;
+                
+            default:success = false;
+        }
+        
+    }
+    
+    return success
+}
+    
     
 var customTask = function(donneesDePartie){
         
         
         
-        
-        //io.sockets.in("multiJoueur").emit('newListe',user);
         var finDeParty = null;
         var donneesLocales = donneesDePartie; 
     
@@ -593,20 +905,43 @@ var customTask = function(donneesDePartie){
     
         party.on('connection', function(socket){
             
-          console.log('someone connected'):
+          console.log('someone connected');
           
         });
     
         players[donneesLocales.idPF].join(donneesLocales.room);
         players[donneesLocales.idPS].join(donneesLocales.room);
 
+        var tamponWin = false;
+        var temponWinSec = 0;
+        
+        var tamponPieceWin = {};
+        var intervalTempo = 300;
     
         finDeParty = setInterval(function(){
             
-            donneesLocales = applyPhysic(donneesLocales);
+            if(!tamponWin){
+                donneesLocales = applyPhysic(donneesLocales);
+            }else{
+                temponWinSec += intervalTempo;
+            }
+            
+            if(donneesLocales.pieceGagnante.find){
+                tamponWin = true;
+                tamponPieceWin = donneesLocales.pieceGagnante;
+            }
+                
             party.emit('MiseAJour',donneesLocales);
             
-        }, 300);
+            if( tamponWin && temponWinSec > intervalTempo * 6 ){
+                donneesLocales = traitementPointWin(donneesLocales,tamponPieceWin);
+                tamponWin = false;
+                temponWinSec = 0;
+            }
+            
+            clearDonnees(donneesLocales);
+            
+        }, intervalTempo);
     
         //party.emit('MiseAJour',donneesDePartie);
         
@@ -616,6 +951,50 @@ var customTask = function(donneesDePartie){
 }
     
 
+function clearDonnees(donnees){
+    
+    donnees.pointAdd = {};
+    /*
+        'id':(tableauP.length-1),
+        'idPF':{'id':idF,'name':'idPF','score':0,'point':0,'idPower':"1-2-3"},
+        'idPS':{'id':idS,'name':'idPS','score':0,'point':0,'idPower':"1-2-3"},
+        'currentPlayer':'idPF',
+        'room':'room-'+idF+'-'+idS,
+        'active':true,
+        'idPFReady':false,
+        'idPSReady':false,
+        'start':false,
+        'pointAdd':{},
+        'plateau':plateau,
+        'nbreAction':1,
+        'nbreActionRealise':0,
+        'nbrePower':1,
+        'nbrePowerRealise':0,
+        'sizeX':sizeX,
+        'sizeY':sizeY,
+        'hitcombo':0,
+        'pieceGagnante':{}
+        
+    */
+}
+
+
+function changeTurn(donnees){
+    
+    if(donnees.currentPlayer == donnees.idPF.name){
+        
+        donnees.currentPlayer = donnees.idPS.name;
+        
+    }else if(donnees.currentPlayer == donnees.idPS.name){
+        
+        donnees.currentPlayer = donnees.idPF.name;
+        
+    }
+    
+    donnees.hitcombo = 0;
+}
+    
+    
 function checkTurn(tableauDeDonnees){
     
     
