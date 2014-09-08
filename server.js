@@ -250,7 +250,6 @@ function askMatching(idFirstPlayer, idSecondPlayer){
 
 
     //console.log("once");
-<<<<<<< Updated upstream
 
     //players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
     //players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
@@ -263,18 +262,6 @@ function askMatching(idFirstPlayer, idSecondPlayer){
 
     //io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer",retour);
 
-=======
-
-    players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
-    players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
-
-    var retour = addParty(partyInProgress, idFirstPlayer, idSecondPlayer);
-
-
-
-    io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer",retour);
-
->>>>>>> Stashed changes
     //players[idFirstPlayer].leave("multiJoueur");
     //players[idSecondPlayer].leave("multiJoueur");
 
@@ -350,13 +337,11 @@ function askMatching(idFirstPlayer, idSecondPlayer){
                                     t+=i%2;
                                 }
                             }
-
-
-                    }*/
+                    	}*/
 
                     i++;
-                }
-
+                	}
+				}
             }, 100);
         }
 
@@ -373,13 +358,8 @@ function addParty(tableauP, idF, idS){
     var sizeX = 4;
     var sizeY = 6;
     var newElement = {};
-<<<<<<< Updated upstream
     var plateau = createPlateau(sizeX,sizeY);
 
-=======
-    var plateau = createPlateau(4,6);
-
->>>>>>> Stashed changes
     if(tableauP.length == 0){
 
         newElement = {
@@ -487,17 +467,8 @@ function StartParty(){
                     var tableCheck = partyInProgress[i];
 
                     if(tableCheck.start){
-
-<<<<<<< Updated upstream
                         checkTurn(tableCheck);
                         tableCheck.active = false;
-
-=======
-                        checkTurn();
-                        //tableCheck.start = true;
-
-
->>>>>>> Stashed changes
                     }
                     i++;
                 }
@@ -619,7 +590,7 @@ var customTask = function(donneesDePartie){
 
         party.on('connection', function(socket){
 
-          console.log('someone connected'):
+          console.log('someone connected');
 
         });
 
@@ -695,7 +666,6 @@ function checkTurn(tableauDeDonnees){
 function createPlateau(nbrePieceHori,nbrePieceVerti){
 
     var plateau = new Array();
-<<<<<<< Updated upstream
 
     for(var i = 0 ;i<nbrePieceVerti;i++){
 
@@ -706,18 +676,6 @@ function createPlateau(nbrePieceHori,nbrePieceVerti){
             ligne.push({
                             "item":0
                         });
-
-=======
-
-    for(var i = 0; i<nbrePieceVerti; i++){
-
-        var ligne = new Array();
-
-        for(var j = 0; j<nbrePieceHori; j++){
-
-            ligne.push(0);
-
->>>>>>> Stashed changes
         }
 
         plateau.push(ligne);
