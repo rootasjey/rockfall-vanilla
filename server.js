@@ -17,7 +17,8 @@ var express = require('express'),  // web dev framework
 	nib = require('nib'),		  // Stylus utilities
     http = require('http'),
     path = require('path'),
-    Matchmaker = require('matchmaker');
+    Matchmaker = require('matchmaker'),
+    task = require('tasks');
 
 
 
@@ -468,7 +469,13 @@ function StartParty(){
                     var tableCheck = partyInProgress[i];
 
                     if(tableCheck.start){
-                        checkTurn(tableCheck);
+                        
+                        task.addJob(customTask, tableCheck, function(result){
+                            
+                            console.log("rien a faire");
+                        
+                        });
+                        
                         tableCheck.active = false;
                     }
                     i++;
@@ -912,6 +919,21 @@ var customTask = function(donneesDePartie){
             
           console.log('someone connected');
           
+            socket.on('changeTour',function(){
+                //changeTurn(donneesLocales);
+                console.log("changeTour  de la room : "+donneesLocales.room);
+            });
+            
+            socket.on('addPiece',function(objet){
+                //addItemtoPlateau (donneesLocales,objet.x,objet.y,objet.item);
+                console.log("addPiece  de la room : "+donneesLocales.room);
+            });
+            
+            socket.on('addEffet',function(objet){
+                //executeBonus(donneesLocales,objet.x,objet.y,objet.bonusChoice);
+                console.log("addEffet  de la room : "+donneesLocales.room);
+            });
+            
         });
 
         players[donneesLocales.idPF].join(donneesLocales.room);
@@ -999,6 +1021,8 @@ function changeTurn(donnees){
     }
     
     donnees.hitcombo = 0;
+    donnees.nbreActionRealise = 0;
+    donnees.nbrePowerRealise = 0;
 }
     
     
