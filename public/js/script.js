@@ -15,7 +15,7 @@ function GetSuper() {
     var SSConnect =  new SuperSquare(".square[function='connect']", "connect");
     var SSAbout =  new SuperSquare(".square[function='about']", "about");
 
-    RemoveScrollFromHTML();
+    // RemoveScrollFromHTML();
 }
 
 // ------------------------------

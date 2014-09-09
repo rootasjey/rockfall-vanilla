@@ -60,10 +60,16 @@ SuperSquare.prototype.MessageToggleVisibility = function () {
 
     // Show OR Hide
     if ($(mp).css("opacity") === "0") {
+
+        $(sp).css({ // Change the second panel's color
+            background: "#e74c3c",
+        });
+
         var time = 500;
         $(sp + " .mini-icon").each(
             function () {
                 $(this).css({
+                    display : "inline-block",
                     position: "relative",
                     top     : "-10px",
                     height  : "30px",
@@ -75,6 +81,12 @@ SuperSquare.prototype.MessageToggleVisibility = function () {
                 }, {
                     duration: time,
                 });
+
+                // Special case for new message's icon
+                if ($(this).attr("function") === "new-message") {
+                    $(this).css({ display: "block" });
+                }
+
                 time += 250;
         });
 
@@ -95,11 +107,11 @@ SuperSquare.prototype.MessageToggleVisibility = function () {
             opacity: 0,
         }, {
             complete: function () {
-                $(this).css({ opacity : "none", });
+                $(this).css({ display : "none", });
             }
         });
 
-        var time = 1000;
+        var time = 0;
         $(sp + " .mini-icon").each(
             function () {
                 $(this).animate({
@@ -130,14 +142,14 @@ SuperSquare.prototype.MessageEvents = function (sp, mp) {
         });
     });
 
-    // Event : Click
-    // Override Collapse Icon's Click Event on second panel
-    $(sp + " .mini-icon[function='collapse']").off("click");
-    $(sp + " .mini-icon[function='collapse']").click(
-        function () {
-            var ss = FindSuperSquare("play");
-            ss.SecondPanelToggleVisibility("messages");
-    });
+    // // Event : Click
+    // // Override Collapse Icon's Click Event on second panel
+    // $(sp + " .mini-icon[function='collapse']").off("click");
+    // $(sp + " .mini-icon[function='collapse']").click(
+    //     function () {
+    //         var ss = FindSuperSquare("play");
+    //         ss.SecondPanelToggleVisibility();
+    // });
 
 
     // Click event on new messge icon

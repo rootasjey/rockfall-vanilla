@@ -1,12 +1,12 @@
-#square-ui {
+.square[function='play'] {
   z-index: 2;
 }
-#square-ui .mini-icon-panel {
+.square[function='play'] .mini-icon-panel {
   width: 40px;
   position: absolute;
   display: inline-block;
 }
-#square-ui .mini-icon {
+.square[function='play'] .mini-icon {
   width: 30px;
   height: 30px;
   opacity: 0.2;
@@ -14,13 +14,13 @@
   cursor: pointer;
   transition: 0.5s;
 }
-#square-ui .mini-icon[isGlowing='true'] {
+.square[function='play'] .mini-icon[isGlowing='true'] {
   animation-duration: 1s;
   animation-direction: alternate;
   animation-iteration-count: infinite;
   animation-name: glowIcon;
 }
-#square-ui .game-icon {
+.square[function='play'] .game-icon {
   opacity: 0.2;
   width: 40px;
   height: 40px;
@@ -28,25 +28,23 @@
   cursor: pointer;
   transition: 1s;
 }
-#square-ui .game-icon:hover {
+.square[function='play'] .game-icon:hover {
   transition: 1s;
 }
-#square-ui .game-icon[isGlowing='true'] {
+.square[function='play'] .game-icon[isGlowing='true'] {
   animation-duration: 1s;
   animation-direction: alternate;
   animation-iteration-count: infinite;
   animation-name: glowIcon;
 }
-#square-ui .square-ui-game,
-#square-ui .game-ui {
+.square[function='play'] .game-ui {
   height: 60%;
   width: 67%;
   margin: auto;
   margin-top: 30px;
   transition: 0.5s;
 }
-#square-ui .square-ui-game .message-confirmation,
-#square-ui .game-ui .message-confirmation {
+.square[function='play'] .game-ui .message-confirmation {
   width: 400px;
   padding: 10px;
   padding-top: 40px;
@@ -61,8 +59,7 @@
   box-shadow: 0 0 20px #000;
   transition: 0.5s;
 }
-#square-ui .square-ui-game .message-confirmation .button,
-#square-ui .game-ui .message-confirmation .button {
+.square[function='play'] .game-ui .message-confirmation .button {
   color: #fff;
   text-align: center;
   width: 100px;
@@ -75,7 +72,7 @@
   display: inline-block;
   transition: 0.5s;
 }
-#square-ui .vertical-pan {
+.square[function='play'] .vertical-pan {
   width: 140px;
   height: 300px;
   opacity: 0.5;
@@ -91,13 +88,13 @@
   background: #000;
   transition: 0.5s;
 }
-#square-ui .vertical-pan:hover {
+.square[function='play'] .vertical-pan:hover {
   transition: 0.5s;
 }
-#square-ui .vertical-pan:hover .text-info {
+.square[function='play'] .vertical-pan:hover .text-info {
   color: #fff;
 }
-#square-ui .vertical-pan img {
+.square[function='play'] .vertical-pan img {
   height: 70px;
   width: 70px;
   display: block;
@@ -105,17 +102,17 @@
   margin-top: 30px;
   margin-bottom: 30px;
 }
-#square-ui .vertical-pan .text-info {
+.square[function='play'] .vertical-pan .text-info {
   margin-top: 10px;
   display: inline-block;
   color: transparent;
 }
-#square-ui .user-pan {
+.square[function='play'] .user-pan {
   width: 300px;
   margin: auto;
   text-align: center;
 }
-#square-ui .user-pan .user-profil {
+.square[function='play'] .user-pan .user-profil {
   height: 60px;
   width: 60px;
   margin: auto;
@@ -126,42 +123,42 @@
   background: #fff;
   transition: 0.5s;
 }
-#square-ui .user-pan .user-profil:hover {
+.square[function='play'] .user-pan .user-profil:hover {
   transition: 0.5s;
 }
-#square-ui .user-pan .user-name {
+.square[function='play'] .user-pan .user-name {
   color: #fff;
 }
-#square-ui .user-pan .buttons-pan {
+.square[function='play'] .user-pan .buttons-pan {
   width: 150px;
   margin: auto;
 }
-#square-ui .score-panel {
+.square[function='play'] .score-panel {
   width: 100px;
   top: 10px;
   right: 20px;
   position: absolute;
 }
-#square-ui .score-panel .score {
+.square[function='play'] .score-panel .score {
   top: 10px;
   right: 40px;
   position: absolute;
   color: #fff;
   font-size: 1.3em;
 }
-#square-ui .score-panel .mini-icon {
+.square[function='play'] .score-panel .mini-icon {
   height: 50px;
   width: 50px;
   right: 0;
   position: absolute;
 }
-#square-ui .powers-panel {
+.square[function='play'] .powers-panel {
   width: 80px;
   top: 170px;
   right: -10px;
   position: absolute;
 }
-#square-ui .powers-panel .power {
+.square[function='play'] .powers-panel .power {
   height: 30px;
   width: 30px;
   padding: 5px;
@@ -175,7 +172,7 @@
   display: block;
   transition: 1s;
 }
-#square-ui .powers-panel .power:hover {
+.square[function='play'] .powers-panel .power:hover {
   transition: 1s;
 }
 .qtip-light .qtip-titlebar {
@@ -212,12 +209,13 @@
   padding: 20px;
   position: relative;
   background: #e74c3c;
-  border-radius: 5px;
   z-index: 1;
+  border-radius: 5px;
   overflow: hidden;
   -moz-box-shadow: 0 0 20px #000;
   -webkit-box-shadow: 0 0 20px #000;
   box-shadow: 0 0 20px #000;
+  transition: 0.5s;
 }
 .second-panel .mini-icon {
   opacity: 0.2;
@@ -301,7 +299,7 @@
   background: #000;
   color: #fff;
   font-size: 1.4em;
-  font-family: exothinitalic;
+  font-family: main-font;
   cursor: pointer;
   padding: 10px;
   border-width: 0px;
@@ -414,7 +412,7 @@
   opacity: 0;
   padding: 10px;
   margin-left: 10px;
-  background: #e74c3c;
+  background: color-alizarin;
   -moz-box-shadow: 14px 0 40px -13px #000;
   -webkit-box-shadow: 14px 0 40px -13px #000;
   box-shadow: 14px 0 40px -13px #000;
@@ -534,7 +532,7 @@
   margin: auto;
   margin-top: 5px;
   opacity: 0.5;
-  font-family: exothinitalic;
+  font-family: main-font;
   border: 3px inset rgba(0,0,0,0.15);
   border-radius: 2px;
   transition: 0.5s;

@@ -1,11 +1,12 @@
-// Main UI
-// which contains the game
-// and the main functions
-// --------
-main-font = exothinitalic
-color-alizarin = #e74c3c
+// ----------------------
+// SUPERSQUARE-PLAY.STYL
+// ----------------------
 
-#square-ui{
+// --------------------
+// SUPER SQUARE - PLAY
+// --------------------
+// Style for the play super square
+.square[function='play']{
     z-index 2
     // overflow hidden
 
@@ -54,7 +55,7 @@ color-alizarin = #e74c3c
         }
     }
 
-    .square-ui-game, .game-ui {
+    .game-ui {
         height 60%
         width 67%
         margin auto
@@ -237,7 +238,9 @@ color-alizarin = #e74c3c
     }
 }
 
+// ---------
 // TOOLTIPS
+// ---------
 .qtip-light {
     .qtip-titlebar {
         font-size: 2em
@@ -267,12 +270,12 @@ color-alizarin = #e74c3c
     }
 }
 
-// Second-panel
-// which contains others functions like messages, setings
-// ------------
+// -------------
+// SECOND PANEL
+// -------------
+// Contains messages, setings, about
 .second-panel {
     height 440px
-    // width 838px
     width 100%
     min-width 450px
 
@@ -284,13 +287,15 @@ color-alizarin = #e74c3c
     position relative
     background #e74c3c
 
-    border-radius 5px
     z-index 1
+    border-radius 5px
     overflow hidden
 
     -moz-box-shadow: 0 0 20px #000000;
     -webkit-box-shadow: 0 0 20px #000000;
     box-shadow: 0 0 20px #000000;
+
+    transition 0.5s
 
     // icons
     .mini-icon {
@@ -784,7 +789,6 @@ color-alizarin = #e74c3c
 }
 
 // Glow Animation for icons
-// --------------
 @keyframes glowIcon {
     from {
         opacity 0.2

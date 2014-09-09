@@ -238,7 +238,10 @@ $(canvas).on("mousedown",function(e) {
     var mx = mouse.x;
     var my = mouse.y;
 
-    /* on vérifie pour chaque pieces/rocks du plateau si on à activé l'evenement sur l'une de ces pièces, si c'est le cas on vérifie aussi qu'il n'y a pas de calcul de gravité qui s'opère. Pour finir pour permettre à l'utilisateur de pouvoir utiliser la fonctionnalité drag&drop il faut que la quantité de pièce soit supérieur à 0 */
+    /* on vérifie pour chaque pieces/rocks du plateau si on à activé l'evenement
+       sur l'une de ces pièces, si c'est le cas on vérifie aussi qu'il n'y a pas
+       de calcul de gravité qui s'opère. Pour finir pour permettre à l'utilisateur
+       de pouvoir utiliser la fonctionnalité drag&drop il faut que la quantité de pièce soit supérieur à 0 */
     for (var i = 0; i < _myState.activePlayers.pieces.shapes.length; i++) {
 		if(typeof(_myState.activePlayers.pieces.shapes[i]) != "undefined" &&  !_myState.plateau.verificationGravity){
 		  if (_myState.activePlayers.pieces.shapes[i].contains(mx, my)) {
@@ -249,6 +252,10 @@ $(canvas).on("mousedown",function(e) {
 
             _myState.selectionPiece = _myState.activePlayers.pieces.shapes[i];
             _myState.selectionPiece.select = true;
+
+            //  Grow the rock
+            _myState.selectionPiece.height  = 100;
+            _myState.selectionPiece.width   = 100;
 
             /* on redessine le canvas et ses éléments */
             _myState.valid = false;
@@ -275,6 +282,10 @@ $(canvas).on("mouseup",function(e) {
 
         /* Vérifie si on à une pièce/rock sélectionné(e) */
         if(_myState.selectionPiece != null){
+
+            //  Shrink the rock
+            _myState.selectionPiece.height  = 90;
+            _myState.selectionPiece.width   = 90;
 
            /* pour chaque cellule on vérifie si on relache le rock sur une cellule du plateau libre*/
 		  for (var i = 0; i < _myState.plateau.graphique.length; i++) {
