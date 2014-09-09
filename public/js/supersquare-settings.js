@@ -59,7 +59,11 @@ SuperSquare.prototype.SettingsToggleVisibility = function () {
     }
 
     // Show OR Hide
-    if ($(stp).css("display") === "block") {
+    if ($(stp).css("opacity") === "0") {
+        $(scp).css({ // Change the second panel's color
+            background: "#27ae60",
+        });
+
         // Show the .message-panel content
         $(stp).css({
             opacity: "0",
@@ -69,13 +73,8 @@ SuperSquare.prototype.SettingsToggleVisibility = function () {
         });
 
 
-        // Change the Color's second-panel
-        $(scp).css({
-            background: "#27ae60",
-        });
-
         // ICONS
-        // this.SettingsShowSettingsPanelIcons();
+        this.SettingsShowSettingsPanelIcons();
 
         // Animate content
         var delay = 800;
@@ -95,49 +94,44 @@ SuperSquare.prototype.SettingsToggleVisibility = function () {
         });
     }
     else {
-        // Animate content
         var delay = 200;
         $("." + sts).each(function () {
             $(this).css({
-                // opacity: "0",
-                // top: "-10px"
             }).animate({
                 opacity: "0",
                 top: "-10px",
             }, {
                 duration: delay,
-                queue   : true,
             });
 
             delay += 200;
         });
 
-        window.setTimeout(function () {
-            // Hide the settings panel
-            $(".settings-panel").css({
-                opacity: "1",
-            }).animate({
-                opacity: "0",
-            });
-        }, 500);
+        // $(".mini-icon[function='collapse']")
+        // .animate({
+        //     opacity: '0.2',
+        //     height: '30px',
+        //     width: '30px',
+        // });
 
 
         window.setTimeout(function (stp) {
-            $(stp).css("display", "none");
+            $(stp).css({ display: "none", opacity: 0});
         }, 1000, stp);
-
-        // HideSecondPanelIcons();
     }
 };
 
 // Display Settings icons
 SuperSquare.prototype.SettingsShowSettingsPanelIcons = function () {
-    $(".mini-icon[function='collapse']").css({
-    }).animate({
+    $(".mini-icon[function='collapse']")
+    .animate({
         opacity: '0.2',
         height: '30px',
         width: '30px',
     });
+
+    // Hide inbox's message icon
+    $(".mini-icon[function='inbox']").css({ display : "none" });
 };
 
 // Hover event on settings section

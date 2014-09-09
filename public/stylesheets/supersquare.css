@@ -1,12 +1,11 @@
-/*@import 'nib'*/
 /*-------------------*/
 /*-----VARIABLES-----*/
 /*-------------------*/
 /*------------------*/
-#welcome-ui {
+#container {
   padding-bottom: 50px;
 }
-#welcome-ui .title {
+#container .title {
   color: #000;
   text-align: center;
   cursor: pointer;
@@ -14,18 +13,18 @@
   margin-left: -60px;
   transition: 0.5s;
 }
-#welcome-ui .title:hover {
+#container .title:hover {
   color: #e74c3c;
   transition: 0.5s;
 }
-#welcome-ui .square-group {
+#container .square-group {
   height: 290px;
   width: 300px;
   margin: auto;
   margin-bottom: 0px;
   margin-top: 100px;
 }
-#welcome-ui .square-infos {
+#container .square-infos {
   position: relative;
   right: 30px;
   opacity: 0.8;
@@ -42,13 +41,13 @@
   background: transparent;
   top: -98px;
 }
-#welcome-ui .square-infos .square-text {
+#container .square-infos .square-text {
   margin-top: 80px;
   vertical-align: middle;
   display: inline-block;
   cursor: default;
 }
-#welcome-ui .square {
+#container .square {
   position: relative;
   right: 30px;
   opacity: 0.8;
@@ -65,11 +64,11 @@
   overflow: hidden;
   transition: 0.5s;
 }
-#welcome-ui .square .img-square {
+#container .square .img-square {
   height: 100px;
   width: 100px;
 }
-#welcome-ui .square:hover {
+#container .square:hover {
   opacity: 1;
   transition: 0.5s;
 }
