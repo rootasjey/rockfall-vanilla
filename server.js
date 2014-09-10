@@ -17,8 +17,12 @@ var express = require('express'),  // web dev framework
 	nib = require('nib'),		  // Stylus utilities
     http = require('http'),
     path = require('path'),
+<<<<<<< HEAD
     Matchmaker = require('matchmaker'),
     tasks = require('tasks');
+=======
+    Matchmaker = require('matchmaker');
+>>>>>>> cee88213697b0235f5c45ecfe6c8ebc1e1bb17c9
 
 
 
@@ -338,16 +342,16 @@ function askMatching(idFirstPlayer, idSecondPlayer){
                                     t+=i%2;
                                 }
                             }
-                        
-                        
+
+
                     }*/
-                        
+
                         i++;
                     }
 
                 }
 
-                                              
+
             }, 100);
         }
 
@@ -456,7 +460,7 @@ function addParty(tableauP, idF, idS){
 
 }
 
-    
+
 function StartParty(){
   //  ------------------------------------------------------------------
    if(checkClientParty == null){
@@ -469,13 +473,15 @@ function StartParty(){
                     var tableCheck = partyInProgress[i];
 
                     if(tableCheck.start){
+
                         
                         tasks.addJob(customTask, tableCheck, function(result){
                             
+
                             console.log("rien a faire");
-                        
+
                         });
-                        
+
                         tableCheck.active = false;
                     }
                     i++;
@@ -492,16 +498,16 @@ function applyPhysic(donneesATravailler){
     var plateau = donneesATravailler.plateau;
     var sizeX = donneesATravailler.sizeX;
     var sizeY = donneesATravailler.sizeY;
-    
-    
+
+
     var fini = false, finiSuite = false;
-    
+
     //---------------------------Gravity-----------------------------
-    
+
 	for(var i = 0; i < sizeY; i++){
 
 		for(var j = sizeX-1; j >= 0; j--){
-            
+
 
             if(plateau[j][i].item != 0){
                 var end = true;
@@ -555,22 +561,22 @@ function applyPhysic(donneesATravailler){
 
                         donneesATravailler.hitcombo += 1;
                         donneesATravailler.pointAdd = {'multiple':false,'point':plateau[k][i].item.weight * 2,'coordX':k,'coordY':i,'color':plateau[k][i].item.fill,'proprietaire':plateau[k][i].item.idProprietaire};
-                        
+
 
                         if(plateau[k][i].item.idProprietaire == donneesATravailler.currentPlayer){
-                            
+
                             donneesATravailler.pointAdd.point = parseInt(donneesATravailler.pointAdd.point *  (donneesATravailler.hitcombo/(donneesATravailler.hitcombo - 0.1 * donneesATravailler.hitcombo)));
-                            
+
                         }
-                        
+
                         if(plateau[k][i].item.idProprietaire == donneesATravailler.idPF.id){
-                            donneesATravailler.score.idPF += donneesATravailler.pointAdd.point; 
+                            donneesATravailler.score.idPF += donneesATravailler.pointAdd.point;
                         }else if(plateau[k][i].item.idProprietaire == donneesATravailler.idPS.id){
-                            donneesATravailler.score.idPS += donneesATravailler.pointAdd.point; 
+                            donneesATravailler.score.idPS += donneesATravailler.pointAdd.point;
 
                         }
 
-                        
+
                         plateau[k][i].item = 0;
                         finiSuite = true;
                     }
@@ -580,23 +586,23 @@ function applyPhysic(donneesATravailler){
         }
     }
 
-    
+
     //-----------------------------Connect Four Search-------------------------------------
-    
+
     if(!fini && !finiSuite){
-        
+
          var pointWin = findFour(donneesATravailler);
         if(pointWin.find){
-            
+
             donneesATravailler.pieceGagnante = pointWin;
         }
     }
-    
+
     return donneesATravailler;
-    
+
 }
 
-    
+
 
 function verificationD(donneesATravailler,x,y){
 
@@ -604,7 +610,7 @@ function verificationD(donneesATravailler,x,y){
     var diagonal = new Array();
     var plateau = donneesATravailler.plateau;
     var find = false;
-    
+
     if(plateau[x][y].item != 0){
         var id = plateau[x][y].item.idProprietaire;
         var compt = 1;
@@ -679,7 +685,7 @@ function verificationD(donneesATravailler,x,y){
 function findFour(donneesATravailler){
 
     var plateau = donneesATravailler.plateau;
-    
+
     var i = 0,j=0;
     find = false;
     var id = -1;
@@ -798,116 +804,116 @@ function findFour(donneesATravailler){
     }
 
 
-   
+
 
     return {"find":find,"id":id,"box":aligner,"point":sommePoint};
 }
-    
+
 
 function traitementPointWin(donneesLocales,tamponPieceWin){
-    
+
     donneesLocales.hitcombo += 4;
-    
+
     var newPointAdd = new Array();
-    
+
     for(var i ;i< tamponPieceWin.box.length;i++){
-        
+
         newPointAdd.push({
                             'point':tamponPieceWin.box[i].point * 2,
                             'coordX':tamponPieceWin.box[i].x,
                             'coordY':tamponPieceWin.box[i].y
                         });
     }
-                         
+
     donneesLocales.pointAdd = {
                                 'multiple':true,
-                                'point':newPointAdd, 
-                                'color':tamponPieceWin.box[0].color, 
+                                'point':newPointAdd,
+                                'color':tamponPieceWin.box[0].color,
                                 'proprietaire':tamponPieceWin.id
-        
+
                                 };
-    
+
 
     if(tamponPieceWin.id == donneesLocales.idPF.id){
-        donneesLocales.idPF.score += parseInt(tamponPieceWin.point *  (donneesLocales.hitcombo/(donneesLocales.hitcombo - 0.1 * donneesLocales.hitcombo))); 
+        donneesLocales.idPF.score += parseInt(tamponPieceWin.point *  (donneesLocales.hitcombo/(donneesLocales.hitcombo - 0.1 * donneesLocales.hitcombo)));
     }else if(tamponPieceWin.id == donneesLocales.idPS.id){
-        donneesLocales.idPS.score += parseInt(tamponPieceWin.point *  (donneesLocales.hitcombo/(donneesLocales.hitcombo - 0.1 * donneesLocales.hitcombo))); 
+        donneesLocales.idPS.score += parseInt(tamponPieceWin.point *  (donneesLocales.hitcombo/(donneesLocales.hitcombo - 0.1 * donneesLocales.hitcombo)));
     }
 
 
     for(var i ;i< tamponPieceWin.box.length;i++){
-        
-        donneesLocales.plateau[tamponPieceWin.box[i].x][tamponPieceWin.box[i].y].item = 0; 
+
+        donneesLocales.plateau[tamponPieceWin.box[i].x][tamponPieceWin.box[i].y].item = 0;
     }
-    
+
     return donneesLocales;
 }
-    
-    
+
+
 function addItemtoPlateau (donneesLocales,x,y,item){
-    
+
     var success = false;
     if(donneesLocales.plateau[x][y] == 0 && donneesLocales.nbreActionRealise < donneesLocales.nbreAction){
-        
+
         donneesLocales.plateau[x][y] = item;
         donneesLocales.nbreActionRealise += 1;
         success = true;
     }
-    
+
     return success
 }
 
-    
+
 function executeBonus(donneesLocales,x,y,bonusChoice){
-    
+
     var success = false;
     var player = null;
-    
+
     if(donneesLocales.currentPlayer == donneesLocales.idPF.name){
-        player = donneesLocales.idPF; 
+        player = donneesLocales.idPF;
     }else if(donneesLocales.currentPlayer == donneesLocales.idPS.name){
-        player = donneesLocales.idPS;  
+        player = donneesLocales.idPS;
     }
-    
+
     if(donneesLocales.plateau[x][y] != 0 && donneesLocales.nbrePowerRealise < donneesLocales.nbrePower){
 
-    
+
         switch(bonusChoice.id){
-            
+
             case 1: if( bonusChoice.price <= player.score){
                         donneesLocales.plateau[x][y].item.weight = donneesLocales.plateau[x][y].item.weight * 2;
                         donneesLocales.nbrePowerRealise += 1;
                         success = true;
                     }
                     break;
-                
+
             case 2: if( bonusChoice.price <= player.score){
                         donneesLocales.plateau[x][y].item.idProprietaire = -1;
                         donneesLocales.nbrePowerRealise += 1;
                         success = true;
-                    }  
+                    }
                     break;
-                
+
             case 3: if( bonusChoice.price <= player.score){
                         donneesLocales.plateau[x][y].item.weight = parseInt(donneesLocales.plateau[x][y].item.weight / 2);
                         donneesLocales.nbrePowerRealise += 1;
                         success = true;
                     }
                     break;
-                
+
             default:success = false;
         }
-        
+
     }
-    
+
     return success
 }
-    
-    
+
+
 var customTask = function(donneesDePartie){
-        
-        
-        
+
+
+
 
         var finDeParty = null;
         var donneesLocales = donneesDePartie;
@@ -916,24 +922,24 @@ var customTask = function(donneesDePartie){
         var party = io.of(donneesLocales.room);
 
         party.on('connection', function(socket){
-            
+
           console.log('someone connected');
-          
+
             socket.on('changeTour',function(){
                 //changeTurn(donneesLocales);
                 console.log("changeTour  de la room : "+donneesLocales.room);
             });
-            
+
             socket.on('addPiece',function(objet){
                 //addItemtoPlateau (donneesLocales,objet.x,objet.y,objet.item);
                 console.log("addPiece  de la room : "+donneesLocales.room);
             });
-            
+
             socket.on('addEffet',function(objet){
                 //executeBonus(donneesLocales,objet.x,objet.y,objet.bonusChoice);
                 console.log("addEffet  de la room : "+donneesLocales.room);
             });
-            
+
         });
 
         players[donneesLocales.idPF].join(donneesLocales.room);
@@ -942,35 +948,35 @@ var customTask = function(donneesDePartie){
 
         var tamponWin = false;
         var temponWinSec = 0;
-        
+
         var tamponPieceWin = {};
         var intervalTempo = 300;
-    
+
         finDeParty = setInterval(function(){
-            
+
             if(!tamponWin){
                 donneesLocales = applyPhysic(donneesLocales);
             }else{
                 temponWinSec += intervalTempo;
             }
-            
+
             if(donneesLocales.pieceGagnante.find){
                 tamponWin = true;
                 tamponPieceWin = donneesLocales.pieceGagnante;
             }
-                
+
             party.emit('MiseAJour',donneesLocales);
-            
+
             if( tamponWin && temponWinSec > intervalTempo * 6 ){
                 donneesLocales = traitementPointWin(donneesLocales,tamponPieceWin);
                 tamponWin = false;
                 temponWinSec = 0;
             }
-            
+
             clearDonnees(donneesLocales);
-            
+
         }, intervalTempo);
-    
+
 
         //party.emit('MiseAJour',donneesDePartie);
 
@@ -981,7 +987,7 @@ var customTask = function(donneesDePartie){
 
 
 function clearDonnees(donnees){
-    
+
     donnees.pointAdd = {};
     /*
         'id':(tableauP.length-1),
@@ -1003,29 +1009,29 @@ function clearDonnees(donnees){
         'sizeY':sizeY,
         'hitcombo':0,
         'pieceGagnante':{}
-        
+
     */
 }
 
 
 function changeTurn(donnees){
-    
+
     if(donnees.currentPlayer == donnees.idPF.name){
-        
+
         donnees.currentPlayer = donnees.idPS.name;
-        
+
     }else if(donnees.currentPlayer == donnees.idPS.name){
-        
+
         donnees.currentPlayer = donnees.idPF.name;
-        
+
     }
-    
+
     donnees.hitcombo = 0;
     donnees.nbreActionRealise = 0;
     donnees.nbrePowerRealise = 0;
 }
-    
-    
+
+
 function checkTurn(tableauDeDonnees){
 
 

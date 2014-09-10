@@ -32,7 +32,8 @@
     "nib": "~1.0",
     "node-uuid": "^1.4.1",
     "socket.io": "^1.0.6",
-    "stylus": "~0.46"
+    "stylus": "~0.46",
+    "taskgroup": "~4.0"
   },
   "noAnalyze": true,
   "license": "Apache",

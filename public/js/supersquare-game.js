@@ -68,6 +68,7 @@ SuperSquare.prototype.GameModesToggleVisbility = function () {
             });
             time += 250;
         });
+        console.log("show");
     }
     else {
         var time = 0;
@@ -87,7 +88,7 @@ SuperSquare.prototype.GameModesToggleVisbility = function () {
                 verticalPan.css({ display : "none" });
             }, 500, $(this))
         });
-
+        console.log("hide");
     }
 };
 
@@ -765,7 +766,7 @@ SuperSquare.prototype.GameOnlineMode = function () {
         position: 'relative',
         top: '100px',
         width: '500px',
-    }).appendTo(".square-ui-game");
+    }).appendTo(".game-ui");
 
     var friendlyButton = $("<div>", {
         class: 'button',
@@ -856,7 +857,7 @@ SuperSquare.prototype.GameCPUMode = function () {
         position: 'relative',
         top: '100px',
         width: '500px',
-    }).appendTo(".square-ui-game");
+    }).appendTo(".game-ui");
 
     var easyCPUButton = $("<div>", {
         class: 'button',
