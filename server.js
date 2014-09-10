@@ -18,7 +18,7 @@ var express = require('express'),  // web dev framework
     http = require('http'),
     path = require('path'),
     Matchmaker = require('matchmaker'),
-    task = require('tasks');
+    tasks = require('tasks');
 
 
 
@@ -470,7 +470,7 @@ function StartParty(){
 
                     if(tableCheck.start){
                         
-                        task.addJob(customTask, tableCheck, function(result){
+                        tasks.addJob(customTask, tableCheck, function(result){
                             
                             console.log("rien a faire");
                         
