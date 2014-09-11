@@ -250,109 +250,16 @@ function askMatching(idFirstPlayer, idSecondPlayer){
 
 
     //console.log("once");
-    var task = new Task(function(){
+
     //players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
     //players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
 
-        var retour = addParty(partyInProgress, idFirstPlayer, idSecondPlayer);
+    var retour = addParty(partyInProgress, idFirstPlayer, idSecondPlayer);
 
-        players[idFirstPlayer].emit("majEtatPlayer",retour);
-        players[idSecondPlayer].emit("majEtatPlayer",retour);
-
-
+    players[idFirstPlayer].emit("majEtatPlayer",retour);
+    players[idSecondPlayer].emit("majEtatPlayer",retour);
 
 
-        // Do something ...
-        //return "a synchronous result";
-
-        // You can also return an error
-        // return new Error("something went wrong")
-
-
-    //var customTask = function(donneesDePartie){
-
-
-
-
-            var finDeParty = null;
-            //var donneesLocales = donneesDePartie;
-            var donneesLocales = retour;
-
-
-            var party = io.of(donneesLocales.room);
-
-            party.on('connection', function(socket){
-
-              console.log('someone connected');
-
-                socket.on('changeTour',function(){
-                    //changeTurn(donneesLocales);
-                    console.log("changeTour  de la room : "+donneesLocales.room);
-                });
-
-                socket.on('addPiece',function(objet){
-                    //addItemtoPlateau (donneesLocales,objet.x,objet.y,objet.item);
-                    console.log("addPiece  de la room : "+donneesLocales.room);
-                });
-
-                socket.on('addEffet',function(objet){
-                    //executeBonus(donneesLocales,objet.x,objet.y,objet.bonusChoice);
-                    console.log("addEffet  de la room : "+donneesLocales.room);
-                });
-
-            });
-            //console.log("verification idfirst "+idFirstPlayer+ "  et donne local "+donneesLocales.idPF.id);
-            players[donneesLocales.idPF.id].join(donneesLocales.room);
-            players[donneesLocales.idPS.id].join(donneesLocales.room);
-
-
-            var tamponWin = false;
-            var temponWinSec = 0;
-
-            var tamponPieceWin = {};
-            var intervalTempo = 300;
-
-            finDeParty = setInterval(function(){
-                    
-                //console.log("verification donnée local "+donneesLocales.plateau);
-                
-                if(!tamponWin){
-                    donneesLocales = applyPhysic(donneesLocales);
-                }else{
-                    temponWinSec += intervalTempo;
-                }
-
-                if(donneesLocales.pieceGagnante.find){
-                    tamponWin = true;
-                    tamponPieceWin = donneesLocales.pieceGagnante;
-                }
-                console.log("mise a jour "+donneesLocales.idPF.id+"--"+donneesLocales.idPS.id);
-                //party.emit('MiseAJour',donneesLocales);
-                players[donneesLocales.idPF.id].emit('MiseAJour',donneesLocales);
-                players[donneesLocales.idPS.id].emit('MiseAJour',donneesLocales);
-                
-                
-                if( tamponWin && temponWinSec > intervalTempo * 6 ){
-                    donneesLocales = traitementPointWin(donneesLocales,tamponPieceWin);
-                    tamponWin = false;
-                    temponWinSec = 0;
-                }
-
-                clearDonnees(donneesLocales);
-
-            }, intervalTempo);
-
-
-            //party.emit('MiseAJour',donneesDePartie);
-
-
-            //players[donneesDePartie.idPF].join(donneesDePartie.room);
-            //players[donneesDePartie.idPS].join(donneesDePartie.room);
-    //}
-    });
-
-    // Execute the task
-    task.run();
     //io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer",retour);
 
     //players[idFirstPlayer].leave("multiJoueur");
@@ -409,7 +316,7 @@ function askMatching(idFirstPlayer, idSecondPlayer){
         //io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer");
         //console.log("fini room");
    // });
-       /* if(tamponCheckTabParty == null){
+        if(tamponCheckTabParty == null){
             tamponCheckTabParty = setInterval(function(){
 
                 var i=0;
@@ -432,7 +339,7 @@ function askMatching(idFirstPlayer, idSecondPlayer){
             }, 100);
         }
 
-        StartParty();*/
+        StartParty();
 
 }
 
@@ -537,7 +444,7 @@ function addParty(tableauP, idF, idS){
 
 }
 
-/*
+
 function StartParty(){
   //  ------------------------------------------------------------------
    if(checkClientParty == null){
@@ -645,7 +552,7 @@ function StartParty(){
 
                         });*/
 
-                      /*  tableCheck.active = false;
+                        tableCheck.active = false;
                     }
                     i++;
                 }
@@ -653,13 +560,12 @@ function StartParty(){
             }, 300);
         }
 
-}*/
+}
 
 
 function applyPhysic(donneesATravailler){
 
     var plateau = donneesATravailler.plateau;
-    
     var sizeX = donneesATravailler.sizeX;
     var sizeY = donneesATravailler.sizeY;
 
@@ -672,8 +578,7 @@ function applyPhysic(donneesATravailler){
 
 		for(var j = sizeX-1; j >= 0; j--){
 
-            //console.log("plateau  ::"+j+"::"+i+" ");
-            //console.log("plateau  5  "+plateau[3][5].item);
+
             if(plateau[j][i].item != 0){
                 var end = true;
                 var k = j
@@ -1260,11 +1165,11 @@ function createPlateau(nbrePieceHori,nbrePieceVerti){
 
     var plateau = new Array();
 
-    for(var i = 0 ;i<nbrePieceHori;i++){
+    for(var i = 0 ;i<nbrePieceVerti;i++){
 
         var ligne = new Array();
 
-        for(var j = 0;j<nbrePieceVerti;j++){
+        for(var j = 0;j<nbrePieceHori;j++){
 
             ligne.push({
                             "item":0

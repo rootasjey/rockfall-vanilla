@@ -532,10 +532,10 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                 });
                 
                         
-                socket.on('MiseAjour', function (objet) {
+                socket.on('MiseAJour', function (objet) {
 
                     console.log("detected client side with ");
-                    socket.emit('changeTour');
+                    //socket.emit('changeTour');
                 });
 
                 socket.on('startSync', function (idClient) {
