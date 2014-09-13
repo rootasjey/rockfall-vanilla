@@ -28,7 +28,7 @@ SuperSquare.prototype.SettingsToggleVisibility = function () {
         $("<div>", {
             class: sts,
             function: "connection",
-            html: "<div class='side-side'><span> Connexion </span> <img src='../icons/icon_key.png' alt='connexion'/></div>",
+            html: "<div class='side-side'><span> Connexion </span> <img src='../icons/icon_uservoid.png' alt='connexion'/></div>",
         }).css({
             opacity: "0",
             top: "-10px",
@@ -106,13 +106,6 @@ SuperSquare.prototype.SettingsToggleVisibility = function () {
 
             delay += 200;
         });
-
-        // $(".mini-icon[function='collapse']")
-        // .animate({
-        //     opacity: '0.2',
-        //     height: '30px',
-        //     width: '30px',
-        // });
 
 
         window.setTimeout(function (stp) {
@@ -590,6 +583,8 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
 
         var testClick = 0;
         var tamponPseudo = "";
+        
+
         // Animations
         title.animate({
             opacity: "1",
@@ -621,7 +616,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
         }, {
             duration: 500,
             queue   : true,
-        })
+        });
 
         // Put back the click event
         // on connection-section

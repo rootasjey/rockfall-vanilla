@@ -27,6 +27,7 @@ SuperSquare.prototype.GameModesToggleVisbility = function () {
             function: "cpu-mode",
         }).css({
             opacity: 0,
+            display: "none",
         }).appendTo(gameui);
 
         // 2 LOCAL PLAYERS
@@ -37,6 +38,7 @@ SuperSquare.prototype.GameModesToggleVisbility = function () {
             function: "twoplayers-mode",
         }).css({
             opacity: 0,
+            display: "none",
         }).appendTo(gameui);
 
         // ONLINE
@@ -47,13 +49,14 @@ SuperSquare.prototype.GameModesToggleVisbility = function () {
             function: "online-mode",
         }).css({
             opacity: 0,
+            display: "none",
         }).appendTo(gameui);
 
         this.GameGameModesEvents(); // Events
     }
 
     // Hide or Show
-    if ($(".vertical-pan").css("opacity") === "0") {
+    if ($(".vertical-pan").css("display") === "none") {
         var time = 500;
         $(".vertical-pan").each(function () {
             $(this).css({
@@ -68,7 +71,6 @@ SuperSquare.prototype.GameModesToggleVisbility = function () {
             });
             time += 250;
         });
-        console.log("show");
     }
     else {
         var time = 0;
@@ -88,7 +90,6 @@ SuperSquare.prototype.GameModesToggleVisbility = function () {
                 verticalPan.css({ display : "none" });
             }, 500, $(this))
         });
-        console.log("hide");
     }
 };
 
@@ -792,11 +793,13 @@ SuperSquare.prototype.GameOnlineMode = function () {
         $(this).css({
             opacity: 1,
             background: '#3498db',
+            boxShadow: "0 0 20px #000000",
         });
     }, function () {
         $(this).css({
             opacity: 0.5,
             background: 'black',
+            boxShadow: "0 0 0px #000000",
         });
     });
     cancelButton.hover(function () {
@@ -834,7 +837,7 @@ SuperSquare.prototype.GameOnlineMode = function () {
 
 // Battle with a friend
 SuperSquare.prototype.GameFriendlyOnlineMode = function () {
-    // Enter your friend's name
+    // Enter your friend's name    
 };
 
 // Compete against a total stranger
@@ -883,22 +886,26 @@ SuperSquare.prototype.GameCPUMode = function () {
         $(this).css({
             opacity: 1,
             background: '#2ecc71',
+            boxShadow: "0 0 20px #000000",
         });
     }, function () {
         $(this).css({
             opacity: 0.5,
             background: 'black',
+            boxShadow: "0 0 0px #000000",
         });
     });
     hardCPUButton.hover(function () {
         $(this).css({
             opacity: 1,
             background: '#ecf0f1',
+            boxShadow: "0 0 20px #000000",
         });
     }, function () {
         $(this).css({
             opacity: 0.5,
             background: 'black',
+            boxShadow: "0 0 0px #000000",
         });
     });
     cancelButton.hover(function () {

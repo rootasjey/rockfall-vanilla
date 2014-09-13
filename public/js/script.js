@@ -4,9 +4,9 @@
 
 // Enter point
 // > launch main functions here
-// --------------------------
 window.onload = function () {
     GetSuper();
+    ReloadSuperSquares();
 };
 
 // Transform square to Super Square
@@ -14,8 +14,15 @@ function GetSuper() {
     var SSPlay =  new SuperSquare(".square[function='play']", "play");
     var SSConnect =  new SuperSquare(".square[function='connect']", "connect");
     var SSAbout =  new SuperSquare(".square[function='about']", "about");
+}
 
-    // RemoveScrollFromHTML();
+// Reload Super Squares on a title's click
+function ReloadSuperSquares () {
+    $("#container .title").click(function() {
+        for (var i = 0; i < _SSBOX.length; i++) {
+            _SSBOX[i].ReloadWithANewColor();
+        };
+    });
 }
 
 // ------------------------------
@@ -114,3 +121,10 @@ function RemoveScrollFromHTML() {
         height: '290px',
     });
 }
+
+// Array Remove - By John Resig (MIT Licensed)
+Array.prototype.remove = function(from, to) {
+  var rest = this.slice((to || from) + 1 || this.length);
+  this.length = from < 0 ? this.length + from : from;
+  return this.push.apply(this, rest);
+};

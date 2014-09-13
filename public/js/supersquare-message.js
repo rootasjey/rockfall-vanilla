@@ -588,7 +588,7 @@ SuperSquare.prototype.MessageAnimateMessagesOutPage = function (direction) {
 // Retrieve the demanded messages identified by its ID
 SuperSquare.prototype.MessageGetInboxMessages = function (number) {
     var messageObject = this.box.messages[number];
-    ReceiveNewMessage(messageObject);
+    this.MessageReceiveNewMessage(messageObject);
 };
 
 // Add a new message to the .inbox-center-section

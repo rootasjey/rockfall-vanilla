@@ -9,19 +9,20 @@ extend layout
 //- page content
 block content
   div.title Rockfall
+    div.subtitle BETA <br/><br/> v0.6.1
 
   div.square-group
     div.square(function='play')
-      img.img-square(src='../icons/icon_play.png')
+      img.img-square(src='../icons/icon_gamepad.png')
+      span.text-square play
 
     div.square(function='connect')
-      img.img-square(src='../icons/icon_key.png' function='connect')
+      img.img-square(src='../icons/icon_favoriteflat.png' function='connect')
+      span.text-square connect
 
     div.square(function='about')
-      img.img-square(src='../icons/icon_about.png')
-
-    div.square-infos(function='infos')
-      span.square-text infos
+      img.img-square(src='../icons/icon_medal.png' function='leaderboard')
+      span.text-square leader
 
   div.ghost-panel
     //- floating game
