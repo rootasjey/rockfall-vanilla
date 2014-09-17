@@ -94,3 +94,19 @@
 .square[function='connect'] .connect-block .login-form .text-button[stats='active'] {
   opacity: 1;
 }
+.square[function='connect'] .connect-block .login-form input[type='submit'] {
+  opacity: 0;
+  display: block;
+}
+.square[function='connect'] .user-dashboard {
+  position: relative;
+  margin-top: 100px;
+}
+.square[function='connect'] .user-dashboard .message {
+  font-size: 1.3em;
+  position: relative;
+  text-align: center;
+  display: inline-block;
+  margin: auto;
+  width: 450px;
+}

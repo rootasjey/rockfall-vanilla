@@ -93,7 +93,7 @@ app.get('/', function(req, res) {
 })
 .post('/login/', function (req, res) {
 	// get variables from the form
-	var user 	= req.param('user');
+	var user 	= req.param('login');
 	var password= req.param('password');
 
 	// escape special chars
@@ -121,8 +121,8 @@ app.get('/', function(req, res) {
 					user.name = result.entries[0].user['_'];
 					user.pass = result.entries[0].password['_'];
 					user.email = result.entries[0].email['_'];
-					user.color1 = result.entries[0].color1['_'];
-					user.color2 = result.entries[0].color2['_'];
+					user.rock = result.entries[0].rock['_'];
+					user.credit = result.entries[0].credit['_'];
 
 					res.send(200, user);
 				}
@@ -135,11 +135,11 @@ app.get('/', function(req, res) {
 
 .post('/signup/', function (req, res) {
 	// get variables from the form
-	var user 	= req.param('user');
+	var user 	= req.param('login');
 	var password= req.param('password');
 	var email 	= req.param('email');
-	var color1	= req.param('color1');
-	var color2	= req.param('color2');
+	var rock	= 'default';
+    var credit  = 0;
 
 	// escape special chars
 	user 		= escape(user);
@@ -150,7 +150,6 @@ app.get('/', function(req, res) {
 	// console.log(user + ' ' + password + ' ' + email + ' ' + color1 + ' ' + color2);
 
 	// Test if the username and/or email isn't already in use in the database
-	// -----------
 	var queryUsername = new azure.TableQuery()
 		.select()
 		.where('user eq ?', user);
@@ -160,31 +159,29 @@ app.get('/', function(req, res) {
 
 	usersTable.storageClient.queryEntities('users', queryUsername, null, function (error, result, response) {
 		if(!error) {
-			console.log(result);
-			if(result.entries.length > 1) res.send(401, 'username');
+			// console.log(result);
+			if(result.entries.length > 1) res.send(401, 'username : the username already exists');
 		}
 		else res.send(404, 'error');
 	});
 
 	usersTable.storageClient.queryEntities('users', queryEmail, null, function (error, result, response) {
 		if(!error) {
-			console.log(result);
-			if(result.entries.length > 1) res.send(401, 'email');
+			// console.log(result);
+			if(result.entries.length > 1) res.send(401, 'email : the email already exists');
 		}
 		else res.send(404, 'error');
 	});
 
-	// Insert a new user
-	// -----------------
-	// Create the query
+	// Insert a new user (create the query)
 	var tesk = {
 		PartitionKey: entGen.String('game')
 		, RowKey 	: entGen.String(uuid())
 		, user 		: entGen.String(user)
 		, password  : entGen.String(password)
 		, email 	: entGen.String(email)
-		, color1 	: entGen.String(color1)
-		, color2 	: entGen.String(color2)
+        , credit    : entGen.String(credit)
+        , rock      : entGen.String(rock)
 	};
 
 	// Add a new entity
@@ -194,7 +191,16 @@ app.get('/', function(req, res) {
 		, function (error, result, response) {
 			if(!error) {
 				// Success : Entity inserted
-				res.send(200);
+                // Create a user object to send
+                var userResult = {
+                    "name"      : user
+                    ,"pass"     : password
+                    ,"email"    : email
+                    ,"rock"     : rock
+                    ,"credit"   : credit
+                };
+
+				res.send(200, userResult);
 			}
 			else res.send(404); // error
 	});

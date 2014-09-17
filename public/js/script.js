@@ -13,7 +13,7 @@ window.onload = function () {
 function GetSuper() {
     var SSPlay =  new SuperSquare(".square[function='play']", "play");
     var SSConnect =  new SuperSquare(".square[function='connect']", "connect");
-    var SSAbout =  new SuperSquare(".square[function='about']", "about");
+    var SSAbout =  new SuperSquare(".square[function='leader']", "leader");
 }
 
 // Reload Super Squares on a title's click

@@ -598,6 +598,11 @@ SuperSquare.prototype.GameShowGameIcons = function () {
     $("#user-score-points").animate({
         opacity: 1,
     });
+
+    // Check the user's authentification
+    if (this.settings.connected) {
+        $(".user-name").html(this.user.name);
+    }
 };
 
 // Remove the game's icons (play, pause, powers, ...)
