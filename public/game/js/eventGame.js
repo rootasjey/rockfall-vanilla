@@ -2,6 +2,7 @@ function screenPrepareStart(stateGame){
     stateGame.tours.time.pause();
 }
 
+// Starts the game
 function screenGoStart(stateGame){
     stateGame.tours.time.play();
 
@@ -10,6 +11,7 @@ function screenGoStart(stateGame){
 
 }
 
+// Pause the game
 function ScreenPause(stateGame){
     if (typeof stateGame === "undefined" || stateGame === null)
         stateGame = _myState;
@@ -33,6 +35,7 @@ function ScreenPause(stateGame){
     stateGame.frame.pause();
 }
 
+// Pause the game with animations
 function ScreenPauseFadeOut() {
     ScreenPause(_myState);
     $("#canvas").animate({
@@ -42,6 +45,7 @@ function ScreenPauseFadeOut() {
     });
 }
 
+// Resume the game
 function ScreenResume(stateGame){
     if (typeof stateGame === "undefined" || stateGame === null)
         stateGame = _myState;
@@ -67,6 +71,7 @@ function ScreenResume(stateGame){
     //stateGame.tours.time.play();
 }
 
+// Resume the game with animations
 function ScreenResumeFadeIn() {
     ScreenResume(_myState);
     $("#canvas").animate({
@@ -76,25 +81,43 @@ function ScreenResumeFadeIn() {
     });
 }
 
+// End the active player's turn
 function PasseTour(stateGame){
     stateGame.tours.endTour = true;
 }
 
-
+// Change to the active player
 function ChangePlayer(stateGame){
     stateGame.tours.time.pause();
     stateGame.tours.time.play();
 
-    // $("#active-player").css("display","block");
-    // $("#active-player").html(stateGame.activePlayers.nom);
-    // $("#active-player").animate({
-    // left: "+250",
-    // }, 1500, function() {
-    //     // Animation complete.
-    //     $("#active-player").css("left","10%");
-    //     $("#active-player").css("display","none");
-    //     stateGame.tours.time.play();
-    // });
+    // $(".player-panel").attr("active", false);
+    ActivePlayer($(".player-panel"), "off")
+
+    // Animate active player
+    // console.log(_myTours.stateGame.activePlayers);
+    var playerNumber = _myTours.stateGame.activePlayers.identifiant;
+
+    var p = $(".player-panel[player='" + playerNumber + "']");
+    // p.attr("active", true);
+    ActivePlayer(p, "on");
+}
+
+function ActivePlayer (player, sw) {
+    if (sw === "off") {
+        player.css({
+            opacity : 0.5,
+            height  : '60px',
+            width   : '60px',
+        }).attr("active", false);
+    }
+    else if (sw === "on") {
+        player.css({
+            opacity : 1,
+            height  : '70px',
+            width   : '70px',
+        }).attr("active", true);   
+    }
 }
 
 

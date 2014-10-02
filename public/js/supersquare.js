@@ -1023,7 +1023,8 @@ SuperSquare.prototype.NotifyConnected = function(user) {
 
     // Minimize the Super Square connect
     window.setTimeout(function(ssConnect) {
-        ssConnect.Minimize();
+        // ssConnect.Minimize();
+        ssConnect.PopulateUserDashboard();
     }, 5000, this);
 };
 
@@ -1117,6 +1118,100 @@ SuperSquare.prototype.ConnectLogout = function() {
     }, 1000, ssPlay, ssConnect);
 };
 
+SuperSquare.prototype.PopulateUserDashboard = function() {
+    var udclass = this.selector + " .user-dashboard";
+    var userclass = this.selector + " .user-panel";
+
+    if ($(userclass).length < 1) {
+
+        // User panel
+        var userpanel = $("<div>", {
+            class: "user-panel"
+        }).appendTo(udclass);
+
+        // Avatar container
+        var avatarC = $("<div>", {
+            class: "avatar-container"
+        }).appendTo(userpanel);
+
+        // Avatar
+        $("<img>", {
+            class: "avatar"
+        }).appendTo(avatarC);
+
+        // User name
+        $("<span>", {
+            class: "username"
+        }).appendTo(userpanel);
+
+
+        // -----
+        // Stats
+        var statsSquare = $("<div>", {
+            class: "dashboard-square",
+            purpose: "stats"
+        }).appendTo(udclass);
+
+        // Stats img
+        $("<div>", {
+            class: "dashboard-square-top",
+            html: "0 WIN <br/>0 LOSES"
+        }).appendTo(statsSquare);
+
+        // Stats title
+        $("<span>", {
+            class: "dashboard-square-title",
+            hmtl: "<span>STATS</span>"
+        }).appendTo(statsSquare);
+
+
+        // ----
+        // Rock
+        var rockSquare = $("<div>", {
+            class: "dashboard-square",
+            purpose: "rock"
+        }).appendTo(udclass);
+
+        // Rock img
+        var rockTop = $("<div>", {
+            class: "dashboard-square-top",
+        }).appendTo(rockSquare);
+
+        $("<img>", {
+            class: "dashboard-square-img",
+            src: "../icons/icon_minioctagone.png"
+        }).appendTo(rockTop);
+
+        // Rock title
+        $("<span>", {
+            class: "dashboard-square-title",
+            hmtl: "<span>ROCK</span>"
+        }).appendTo(rockSquare);
+
+
+        // ------
+        // Powers
+        var powerSquare = $("<div>", {
+            class: "dashboard-square",
+            purpose: "powers"
+        }).appendTo(udclass);
+
+        // Powers img
+        var powerTop = $("<div>", {
+            class: "dashboard-square-top",
+        }).appendTo(powerSquare);
+        $("<img>", {
+            class: "dashboard-square-img",
+            src: "../icons/icon_minihandbiceps.png"
+        }).appendTo(powerTop);
+
+        // Powers title
+        $("<span>", {
+            class: "dashboard-square-title",
+            hmtl: "<span>POWERS</span>"
+        }).appendTo(powerSquare);
+    }
+};
 
 // Ajax request to login (old)
 SuperSquare.prototype.ConnectSubmitLoginOld = function() {
@@ -1350,8 +1445,8 @@ SuperSquare.prototype.SecondPanelReduceSecondPanel = function (pixels) {
 // Check if the second panel height is above normal
 SuperSquare.prototype.SecondPanelCheckSecondPanelInitialSize = function () {
     // Reduce the second panel if its height is greater than 440px
-    if ($(".second-panel").css("height") !== "440px") {
-        this.SecondPanelReduceSecondPanel("200px");
+    if ($(".second-panel").css("height") > "440px") {
+        this.SecondPanelReduceSecondPanel("100px");
     }
 };
 

@@ -112,7 +112,11 @@
   margin: auto;
   text-align: center;
 }
-.square[function='play'] .user-pan .user-profil {
+.square[function='play'] .user-pan .player-panel {
+  margin: 15px;
+  display: inline-block;
+}
+.square[function='play'] .user-pan .player-panel .user-profil {
   height: 60px;
   width: 60px;
   margin: auto;
@@ -123,10 +127,10 @@
   background: #fff;
   transition: 0.5s;
 }
-.square[function='play'] .user-pan .user-profil:hover {
+.square[function='play'] .user-pan .player-panel .user-profil:hover {
   transition: 0.5s;
 }
-.square[function='play'] .user-pan .user-name {
+.square[function='play'] .user-pan .player-panel .user-name {
   color: #fff;
 }
 .square[function='play'] .user-pan .buttons-pan {

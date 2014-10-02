@@ -160,6 +160,7 @@ SuperSquare.prototype.SettingsClickSettingsSection = function () {
 };
 
 
+// ------------------
 // CONNECTION SECTION
 // ------------------
 // Expends the connection section
@@ -184,7 +185,7 @@ SuperSquare.prototype.SettingsExpendConnectionSection = function (pixels) {
     });
 };
 
-
+// Click Events on connection item
 SuperSquare.prototype.SettingsClickConnection = function () {
     // Get off the initial click event
     // => We do not want to expend this object again
@@ -399,8 +400,11 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
     // Prevent double click bug => multiple forms
     this.SettingsRemoveEventsConnection();
 
+    var lfClass = ".second-panel" + " .login-form";
+    var lbClass = ".second-panel" + " .login-block";
+
     // Verify if a login form is already there
-    if($(".login-block").length > 0) {
+    if($(lbClass).length > 0) {
         this.RemoveBlock("login-block"); // Remove the form
 
         // Reduce the panel + section
@@ -422,15 +426,14 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
 
         // Form container
         $("<div>", {
-            class: "login-block",
-
-        }).appendTo(".settings-section");
+            class: "login-block"
+        }).appendTo(".settings-section[function='connection']");
 
         // Form object
         $("<form>", {
             class: "login-form",
             name: "login_form",
-        }).appendTo(".login-block");
+        }).appendTo(lbClass);
 
         // Title
         var title = $("<span>", {
@@ -439,7 +442,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
         }).css({
             opacity: "0",
             marginTop: "10px",
-        }).appendTo(".login-form");
+        }).appendTo(lfClass);
 
         // Login input
         var login = $("<input>", {
@@ -460,7 +463,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                     opacity: "0.5",
                 });
             })
-            .appendTo(".login-form");
+            .appendTo(lfClass);
 
         // Password input
         var password = $("<input>", {
@@ -481,7 +484,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                     opacity: "0.5",
                 });
             })
-            .appendTo(".login-form");
+            .appendTo(lfClass);
 
         // Validation button
         var ok = $("<img>", {
@@ -579,7 +582,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
 
 
         })
-        .appendTo(".login-form");
+        .appendTo(lfClass);
 
         var testClick = 0;
         var tamponPseudo = "";
@@ -1080,7 +1083,9 @@ SuperSquare.prototype.SettingsClosePreferencesSection = function () {
 };
 
 
+// --------------
 // ABOUT SECTION
+// --------------
 // Click event on About section
 SuperSquare.prototype.SettingsClickAboutSection = function () {
     // Get off the initial click event => We do not want to expend this object again

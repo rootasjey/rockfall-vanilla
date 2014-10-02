@@ -4,43 +4,43 @@ RockFall
 A Web Connect Four Game
 
 #version
-0.6.0
+0.6.3
 
 #todo
-* UI
+* UI [ALMOST]
     * Game UI
         * Board [OK]
         * Animations [IN PROGRESS...]
-    * Notifications UI
-        * Implementation: short-polling?
-        * Achievements ?
-        * Look for an online opponent
-        * Sent/Receive a challenge request
-        * Start/End turn
+    * Notifications UI [ALMOST]
+        * Implementation: short-polling? [THINKNG]
+        * Achievements ? [IN CONSIDERATION]
+        * Look for an online opponent [IN PROGRESS...]
+        * Sent/Receive a challenge request [IN PROGRESS...]
+        * Start/End turn [OK]
     * Others UI
-        * Leadderboard (online classment)
+        * Leadderboard (online classment) [IN PROGRESS]
         * Settings [OK]
-            * Edit name?
+            * Edit name
             * Edit avatar
             * Edit password
             * Edit email
-* IA
-    * Check the winner
-    * Challenge the IA (offline mode)
-    * Time turn (optional)
-* Database
+* IA [SOON]
+    * Check the winner [OK]
+    * Challenge the IA (offline mode) [THINKING]
+    * Time turn (optional) [OK]
+* Database [OK]
     * Create an online/offline database [OK]
     * Connect the app with the database [OK]
     * Tables
         * Create a users table [OK]
-        * Create a parties table
-        * (+ Primary/Foreigh key between the two tables)
+        * Create a parties table [OTHER IDEA]
+        * (+ Primary/Foreigh key between the two tables) [OFF]
     * Create a user account [OK]
     * Login to a user account [OK]
-    * Create a party
-    * Challenge an opponent
-    * Add/Delete/Edit rows in both users table & parties table
-* Server
+    * Create a party [IN PROGRESS]
+    * Challenge an opponent [IN PROGRESS]
+    * Add/Delete/Edit rows in both users table & parties table [OK]
+* Server [SOON]
     * Get an online server (Heroku, Azure) [OK]
     * Configuration (domain name, Node.js init)
     * Deploy the application to the Cloud

@@ -1,7 +1,6 @@
 /* La fonction tours permet de gérer le jeu entre différents participant */
 
 function Tours(stateGame,nombreActionAdd, nombreActionEffet, toursTime){
-
     this.stateGame = stateGame;
 
     

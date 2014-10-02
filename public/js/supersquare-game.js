@@ -464,25 +464,57 @@ SuperSquare.prototype.GameShowGameIcons = function () {
 
     // First create objects if they're don't exist
     if ($(".user-profil").length < 1) {
-        // User's avatar
-        // & game buttons
+        // Container for game avatars & user's names
         $("<div>", {
             class: "user-pan",
         }).insertBefore(gameui);
 
-        var profil = $("<div>", {
+        // PLAYER 1 : avatar
+        var p1 = $("<div>", {
+            player: "1",
+            active: false,
+            class: "player-panel"
+        }).appendTo(".user-pan");
+
+        // Avatar
+        $("<div>", {
             class: "user-profil",
         }).css({
             opacity: '0',
         })
-        .appendTo(".user-pan");
+        .appendTo(p1);
 
-        var userName = $("<span>", {
+        // Name
+        $("<span>", {
             class: "user-name",
             html: "Visitor",
         }).css({
             opacity: '0',
+        }).appendTo(p1);
+
+
+        // PLAYER 2 : avatar
+        var p2 = $("<div>", {
+            player: "2",
+            acitve: false,
+            class: "player-panel"
         }).appendTo(".user-pan");
+
+        // Avatar
+        $("<div>", {
+            class: "user-profil",
+        }).css({
+            opacity: '0',
+        })
+        .appendTo(p2);
+
+        // Name
+        $("<span>", {
+            class: "user-name",
+            html: "CPU",
+        }).css({
+            opacity: '0',
+        }).appendTo(p2);
     }
 
     if ($(".score-panel").length < 1) {

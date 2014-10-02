@@ -110,3 +110,33 @@
   margin: auto;
   width: 450px;
 }
+.square[function='connect'] .user-dashboard .user-panel {
+  width: 200px;
+  height: 200px;
+}
+.square[function='connect'] .user-dashboard .user-panel .avatar-container {
+  height: 90px;
+  width: 90px;
+  overflow: hidden;
+  background: #000;
+  border-radius: 40px;
+}
+.square[function='connect'] .user-dashboard .user-panel .avatar-container .avatar {
+  height: 90px;
+  width: 90px;
+}
+.square[function='connect'] .user-dashboard .user-panel .avatar-container .username {
+  color: #fff;
+}
+.square[function='connect'] .user-dashboard .dashboard-square {
+  height: 250px;
+  width: 250px;
+}
+.square[function='connect'] .user-dashboard .dashboard-square .dashboard-square-top {
+  height: 200px;
+}
+.square[function='connect'] .user-dashboard .dashboard-square .dashboard-square-title {
+  height: 50px;
+  text-align: center;
+  display: inline-block;
+}
