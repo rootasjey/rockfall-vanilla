@@ -99,7 +99,6 @@ function ChangePlayer(stateGame){
     var playerNumber = _myTours.stateGame.activePlayers.identifiant;
 
     var p = $(".player-panel[player='" + playerNumber + "']");
-    // p.attr("active", true);
     ActivePlayer(p, "on");
 }
 
@@ -109,14 +108,14 @@ function ActivePlayer (player, sw) {
             opacity : 0.5,
             height  : '60px',
             width   : '60px',
-        }).attr("active", false);
+        }).attr("isActive", false);
     }
     else if (sw === "on") {
         player.css({
             opacity : 1,
             height  : '70px',
             width   : '70px',
-        }).attr("active", true);   
+        }).attr("isActive", true);   
     }
 }
 

@@ -172,6 +172,13 @@
                     transition 0.5s
 
                 }
+
+                &[isActive='true'] {
+                    animation-duration: 1s
+                    animation-direction: alternate
+                    animation-iteration-count infinite
+                    animation-name: activeUser
+                }
             }
             .user-name {
                 color white
@@ -801,5 +808,17 @@
 
     to {
         opacity 0.8
+    }
+}
+
+//
+@keyframes activeUser {
+    from {
+        height 60px
+        width 60px
+    }
+    to {
+        height 70px
+        width 70px
     }
 }

@@ -472,7 +472,7 @@ SuperSquare.prototype.GameShowGameIcons = function () {
         // PLAYER 1 : avatar
         var p1 = $("<div>", {
             player: "1",
-            active: false,
+            isActive: false,
             class: "player-panel"
         }).appendTo(".user-pan");
 
@@ -496,7 +496,7 @@ SuperSquare.prototype.GameShowGameIcons = function () {
         // PLAYER 2 : avatar
         var p2 = $("<div>", {
             player: "2",
-            acitve: false,
+            isActive: false,
             class: "player-panel"
         }).appendTo(".user-pan");
 
