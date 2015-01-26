@@ -309,6 +309,7 @@ SuperSquare.prototype.GameEventGamePause = function (button) {
         ScreenPauseFadeOut();
         ss.settings.stats = "pause";
         ss.GameEventGameResume(button);
+        ss.GamePauseAnimations();
     });
 };
 
@@ -325,6 +326,7 @@ SuperSquare.prototype.GameEventGameResume = function (button) {
         ScreenResumeFadeIn();
         ss.settings.stats = "playing";
         ss.GameEventGamePause(button);
+        ss.GameResumeAnimations();
     });
 };
 
@@ -472,13 +474,15 @@ SuperSquare.prototype.GameShowGameIcons = function () {
         // PLAYER 1 : avatar
         var p1 = $("<div>", {
             player: "1",
-            isActive: false,
+            // isActive: false,
             class: "player-panel"
         }).appendTo(".user-pan");
 
         // Avatar
         $("<div>", {
             class: "user-profil",
+            player: "1",
+            isActive: false
         }).css({
             opacity: '0',
         })
@@ -496,13 +500,15 @@ SuperSquare.prototype.GameShowGameIcons = function () {
         // PLAYER 2 : avatar
         var p2 = $("<div>", {
             player: "2",
-            isActive: false,
+            // isActive: false,
             class: "player-panel"
         }).appendTo(".user-pan");
 
         // Avatar
         $("<div>", {
             class: "user-profil",
+            player: "2",
+            isActive: false
         }).css({
             opacity: '0',
         })
@@ -772,6 +778,7 @@ SuperSquare.prototype.GameHideGameBoard = function () {
         this.settings.stats = "pause";
         // Change the button to resume
         this.GameEventGameResume($("#button-pause"));
+        this.GamePauseAnimations();
     }
 };
 
@@ -874,7 +881,7 @@ SuperSquare.prototype.GameOnlineMode = function () {
 
 // Battle with a friend
 SuperSquare.prototype.GameFriendlyOnlineMode = function () {
-    // Enter your friend's name    
+    // Enter your friend's name
 };
 
 // Compete against a total stranger
@@ -974,4 +981,16 @@ SuperSquare.prototype.GameCPUMode = function () {
         opacity: 1,
         top: '90px',
     });
+};
+
+// Pause animations
+SuperSquare.prototype.GamePauseAnimations = function() {
+    // Pause active user animation
+    $(".user-profil[isActive='true'").attr("isActive", "suspended");
+};
+
+// Resume animations
+SuperSquare.prototype.GameResumeAnimations = function() {
+    // Resume active user animation
+    $(".user-profil[isActive='suspended'").attr("isActive", "true");
 };

@@ -123,12 +123,18 @@
   margin-bottom: 10px;
   opacity: 0.5;
   cursor: pointer;
-  border-radius: 30px;
+  border-radius: 50px;
   background: #fff;
   transition: 0.5s;
 }
 .square[function='play'] .user-pan .player-panel .user-profil:hover {
   transition: 0.5s;
+}
+.square[function='play'] .user-pan .player-panel .user-profil[isactive='true'] {
+  animation-duration: 1s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-name: activeUser;
 }
 .square[function='play'] .user-pan .player-panel .user-name {
   color: #fff;
@@ -618,5 +624,53 @@
   }
   to {
     opacity: 0.8;
+  }
+}
+@-moz-keyframes activeUser {
+  from {
+    opacity: 0.5;
+    height: 70px;
+    width: 70px;
+  }
+  to {
+    opacity: 1;
+    height: 75px;
+    width: 75px;
+  }
+}
+@-webkit-keyframes activeUser {
+  from {
+    opacity: 0.5;
+    height: 70px;
+    width: 70px;
+  }
+  to {
+    opacity: 1;
+    height: 75px;
+    width: 75px;
+  }
+}
+@-o-keyframes activeUser {
+  from {
+    opacity: 0.5;
+    height: 70px;
+    width: 70px;
+  }
+  to {
+    opacity: 1;
+    height: 75px;
+    width: 75px;
+  }
+}
+@keyframes activeUser {
+  from {
+    opacity: 0.5;
+    height: 70px;
+    width: 70px;
+  }
+  to {
+    opacity: 1;
+    height: 75px;
+    width: 75px;
   }
 }

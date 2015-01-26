@@ -1,12 +1,12 @@
-// ------------------
+// ---------------------------------------------------------------------------
 // SUPERSQUARE.JS
-// ------------------
+// ---------------------------------------------------------------------------
 // SuperSquare class!
-// ------------------
+// ---------------------------------------------------------------------------
 // ~ All functions ending with 'ToggleVisibility' are built identically :    ~
 // ~ 1 : Create the control if it's non-existent                             ~
 // ~ 2 : If the control is hidden, show it OR if it's displayed, hide it     ~
-// ------------------
+// ---------------------------------------------------------------------------
 
 // CONSTRUCTOR --->
 // -selector > #id or .class (html object)

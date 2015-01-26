@@ -91,14 +91,12 @@ function ChangePlayer(stateGame){
     stateGame.tours.time.pause();
     stateGame.tours.time.play();
 
-    // $(".player-panel").attr("active", false);
-    ActivePlayer($(".player-panel"), "off")
+    ActivePlayer($(".user-profil"), "off")
 
     // Animate active player
-    // console.log(_myTours.stateGame.activePlayers);
     var playerNumber = _myTours.stateGame.activePlayers.identifiant;
 
-    var p = $(".player-panel[player='" + playerNumber + "']");
+    var p = $(".user-profil[player='" + playerNumber + "']");
     ActivePlayer(p, "on");
 }
 
@@ -113,8 +111,8 @@ function ActivePlayer (player, sw) {
     else if (sw === "on") {
         player.css({
             opacity : 1,
-            height  : '70px',
-            width   : '70px',
+            // height  : '70px',
+            // width   : '70px',
         }).attr("isActive", true);   
     }
 }

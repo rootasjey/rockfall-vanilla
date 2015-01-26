@@ -6,8 +6,9 @@
 SuperSquare.prototype.MessageToggleVisibility = function () {
     var sp = ".second-panel";
     var mp = ".message-panel";
+    var mc = ".messages-counter";
 
-    // If the control exists
+    // If the control doesn't exist
     if($(mp).length < 1) {
         // Icons
         // -----
@@ -64,6 +65,9 @@ SuperSquare.prototype.MessageToggleVisibility = function () {
         $(sp).css({ // Change the second panel's color
             background: "#e74c3c",
         });
+
+        // Show the message counter
+        $(mc).css('opacity', '1');
 
         var time = 500;
         $(sp + " .mini-icon").each(
@@ -122,6 +126,9 @@ SuperSquare.prototype.MessageToggleVisibility = function () {
                 });
                 time += 500;
         });
+
+        // Hide the message counter
+        $(mc).css('opacity', '0');
     }
 };
 
