@@ -112,21 +112,31 @@
   margin: auto;
   text-align: center;
 }
-.square[function='play'] .user-pan .user-profil {
+.square[function='play'] .user-pan .player-panel {
+  margin: 15px;
+  display: inline-block;
+}
+.square[function='play'] .user-pan .player-panel .user-profil {
   height: 60px;
   width: 60px;
   margin: auto;
   margin-bottom: 10px;
   opacity: 0.5;
   cursor: pointer;
-  border-radius: 30px;
+  border-radius: 50px;
   background: #fff;
   transition: 0.5s;
 }
-.square[function='play'] .user-pan .user-profil:hover {
+.square[function='play'] .user-pan .player-panel .user-profil:hover {
   transition: 0.5s;
 }
-.square[function='play'] .user-pan .user-name {
+.square[function='play'] .user-pan .player-panel .user-profil[isactive='true'] {
+  animation-duration: 1s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-name: activeUser;
+}
+.square[function='play'] .user-pan .player-panel .user-name {
   color: #fff;
 }
 .square[function='play'] .user-pan .buttons-pan {
@@ -614,5 +624,53 @@
   }
   to {
     opacity: 0.8;
+  }
+}
+@-moz-keyframes activeUser {
+  from {
+    opacity: 0.5;
+    height: 70px;
+    width: 70px;
+  }
+  to {
+    opacity: 1;
+    height: 75px;
+    width: 75px;
+  }
+}
+@-webkit-keyframes activeUser {
+  from {
+    opacity: 0.5;
+    height: 70px;
+    width: 70px;
+  }
+  to {
+    opacity: 1;
+    height: 75px;
+    width: 75px;
+  }
+}
+@-o-keyframes activeUser {
+  from {
+    opacity: 0.5;
+    height: 70px;
+    width: 70px;
+  }
+  to {
+    opacity: 1;
+    height: 75px;
+    width: 75px;
+  }
+}
+@keyframes activeUser {
+  from {
+    opacity: 0.5;
+    height: 70px;
+    width: 70px;
+  }
+  to {
+    opacity: 1;
+    height: 75px;
+    width: 75px;
   }
 }

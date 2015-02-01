@@ -28,7 +28,7 @@ SuperSquare.prototype.SettingsToggleVisibility = function () {
         $("<div>", {
             class: sts,
             function: "connection",
-            html: "<div class='side-side'><span> Connexion </span> <img src='../icons/icon_key.png' alt='connexion'/></div>",
+            html: "<div class='side-side'><span> Connexion </span> <img src='../icons/icon_uservoid.png' alt='connexion'/></div>",
         }).css({
             opacity: "0",
             top: "-10px",
@@ -107,13 +107,6 @@ SuperSquare.prototype.SettingsToggleVisibility = function () {
             delay += 200;
         });
 
-        // $(".mini-icon[function='collapse']")
-        // .animate({
-        //     opacity: '0.2',
-        //     height: '30px',
-        //     width: '30px',
-        // });
-
 
         window.setTimeout(function (stp) {
             $(stp).css({ display: "none", opacity: 0});
@@ -167,6 +160,7 @@ SuperSquare.prototype.SettingsClickSettingsSection = function () {
 };
 
 
+// ------------------
 // CONNECTION SECTION
 // ------------------
 // Expends the connection section
@@ -191,7 +185,7 @@ SuperSquare.prototype.SettingsExpendConnectionSection = function (pixels) {
     });
 };
 
-
+// Click Events on connection item
 SuperSquare.prototype.SettingsClickConnection = function () {
     // Get off the initial click event
     // => We do not want to expend this object again
@@ -406,13 +400,18 @@ SuperSquare.prototype.SettingsEventLoginSignupButtons = function () {
 SuperSquare.prototype.SettingsShowLoginForm = function () {
     // Prevent double click bug => multiple forms
     this.SettingsRemoveEventsConnection();
+
     /* variable pour enregistrer les informations globals servant au déroulement d'une partie */
     var sock = null;
     var pseudo = "";
     var joueur_lite = null;
     
+
+    var lfClass = ".second-panel" + " .login-form";
+    var lbClass = ".second-panel" + " .login-block";
+
     // Verify if a login form is already there
-    if($(".login-block").length > 0) {
+    if($(lbClass).length > 0) {
         this.RemoveBlock("login-block"); // Remove the form
 
         // Reduce the panel + section
@@ -434,15 +433,14 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
 
         // Form container
         $("<div>", {
-            class: "login-block",
-
-        }).appendTo(".settings-section");
+            class: "login-block"
+        }).appendTo(".settings-section[function='connection']");
 
         // Form object
         $("<form>", {
             class: "login-form",
             name: "login_form",
-        }).appendTo(".login-block");
+        }).appendTo(lbClass);
 
         // Title
         var title = $("<span>", {
@@ -451,7 +449,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
         }).css({
             opacity: "0",
             marginTop: "10px",
-        }).appendTo(".login-form");
+        }).appendTo(lfClass);
 
         // Login input
         var login = $("<input>", {
@@ -472,7 +470,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                     opacity: "0.5",
                 });
             })
-            .appendTo(".login-form");
+            .appendTo(lfClass);
 
         // Password input
         var password = $("<input>", {
@@ -493,7 +491,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                     opacity: "0.5",
                 });
             })
-            .appendTo(".login-form");
+            .appendTo(lfClass);
 
         // Validation button
         var ok = $("<img>", {
@@ -686,12 +684,16 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                         
 
         })
-        .appendTo(".login-form");
+       // .appendTo(".login-form");
         
                         
         
+        .appendTo(lfClass);
+
         var testClick = 0;
         var tamponPseudo = "";
+        
+
         // Animations
         title.animate({
             opacity: "1",
@@ -723,7 +725,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
         }, {
             duration: 500,
             queue   : true,
-        })
+        });
 
         // Put back the click event
         // on connection-section
@@ -1187,7 +1189,9 @@ SuperSquare.prototype.SettingsClosePreferencesSection = function () {
 };
 
 
+// --------------
 // ABOUT SECTION
+// --------------
 // Click event on About section
 SuperSquare.prototype.SettingsClickAboutSection = function () {
     // Get off the initial click event => We do not want to expend this object again

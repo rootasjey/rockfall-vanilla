@@ -1,12 +1,12 @@
-// ------------------
+// ---------------------------------------------------------------------------
 // SUPERSQUARE.JS
-// ------------------
+// ---------------------------------------------------------------------------
 // SuperSquare class!
-// ------------------
+// ---------------------------------------------------------------------------
 // ~ All functions ending with 'ToggleVisibility' are built identically :    ~
 // ~ 1 : Create the control if it's non-existent                             ~
 // ~ 2 : If the control is hidden, show it OR if it's displayed, hide it     ~
-// ------------------
+// ---------------------------------------------------------------------------
 
 // CONSTRUCTOR --->
 // -selector > #id or .class (html object)
@@ -73,13 +73,30 @@ SuperSquare.prototype.GetAFlatColor = function () {
     return colors[int];
 };
 
+// Generate a new color for the Super Square & animate it
+SuperSquare.prototype.ReloadWithANewColor = function() {
+    this.color = this.GetAFlatColor();
+
+    if (!this.IsExpended())
+        this.SquareEffect(); // Animate only if the square isn't expended
+};
+
+// Return true if the square is expended
+SuperSquare.prototype.IsExpended = function() {
+    if ($(this.selector).css("width") > "100px")
+        return true;
+    return false;
+};
+
+// Set settings according to the square's function
 SuperSquare.prototype.AddSettingsToSuperSquare = function () {
     if (this.purpose === "play") {
         this.settings = {
             "autoEndTurn"   : false,
-            "background"    : "shattered.png",
             "gameStarted"   : false,
+            "connected"     : false,
             "stats"         : "none",
+            "background"    : "shattered.png",
         };
 
         // User's mail box
@@ -90,6 +107,8 @@ SuperSquare.prototype.AddSettingsToSuperSquare = function () {
             "messagesPerPage"   : 6,
             "messages"          : [],
         };
+
+        this.user = null;
     }
 };
 
@@ -102,14 +121,39 @@ SuperSquare.prototype.DefaultEvents = function () {
 // Event : Mouse hover
 SuperSquare.prototype.EventMouseHover = function () {
     $(this.selector).hover(function () {
-        // Shadow effect
+        // Retrieve Super Square object
         var purpose = this.getAttribute("function");
         var ss = FindSuperSquare(purpose);
+
+        // Retrieve Super Square properties
+        var img = $(ss.selector + " .img-square");
+        var txt = $(ss.selector + " .text-square");
+
+        // Animations
+        img.animate({ top: "-30px" });
+        txt.css({ display: "inline-block" })
+           .animate({ top: "-20px" });
+
+        // Shadow effect
         $(this).css("background", ss.color);
         $(this).css("box-shadow", "0 0 20px #000000");
         $(this).css("-moz-box-shadow", "0 0 20px #000000");
         $(this).css("-webkit-box-shadow", "0 0 20px #000000");
+
     }, function () {
+        // Retrieve Super Square object
+        var purpose = this.getAttribute("function");
+        var ss = FindSuperSquare(purpose);
+
+        // Retrieve Super Square properties
+        var img = $(ss.selector + " .img-square");
+        var txt = $(ss.selector + " .text-square");
+
+        // Animations
+        img.animate({ top: "0px" });
+        txt.css({ display: "none" })
+           .animate({ top: "30px" });
+
         // Set the blur radius at 0
         $(this).css("background", "black");
         $(this).css("box-shadow", "0 0 0px #000000");
@@ -121,19 +165,25 @@ SuperSquare.prototype.EventMouseHover = function () {
 // Event : Mouse click
 SuperSquare.prototype.EventMouseClick = function () {
     $(this.selector).click(function () {
-        // As we lose our 'this' object,
-        // we have to use the global var (cf. globals.js)
+        // As we lose our 'this' object, we have to retrieve the ss
         var attr = this.getAttribute("function");
-        if (attr !== "play") return; // block others Super Square for now
         var ss = FindSuperSquare(attr);
-        ss.Expend();
+
+        // Depending of the Square's function, the size will be different
+        if (attr === "connect") {
+            ss.Expend('300px', '300px', null, '700');
+        } else{ 
+            ss.Expend(); 
+        };
     });
 };
 
 // Expend Super Square with a height and a width
-// -height > the desired height
-// -width  > the desired width
-SuperSquare.prototype.Expend = function (height, width) {
+// -height      > the desired height
+// -width       > the desired width
+// -hContainer  > height of the square's container
+// -wContainer  > width of the square's container
+SuperSquare.prototype.Expend = function (height, width, hContainer, wContainer) {
     // Check if the height and the width are specified,
     // if not, give a default value
     var h = height;
@@ -146,16 +196,21 @@ SuperSquare.prototype.Expend = function (height, width) {
         w = "100%"; // Default value
     }
 
-    // First expend the super container
-    $(this.superContainer).animate({
-        width: "800px",
-    });
+    // First expend the super container, Add scroll to the page
+    var _hContainer = hContainer;
+    var _wContainer = wContainer;
 
-    // Add scroll to the page
-    // $("html").toggleClass("html-no-scrollable");
-    $(".square-group").css({
-        height: 'auto',
-    });
+    if (this.NotDefined(_hContainer)) {
+        _hContainer = 'auto';
+    }
+    if (this.NotDefined(_wContainer)) {
+        _wContainer = '800px';
+    };
+
+    $(this.superContainer)
+    .animate({ width: _wContainer })
+    .css({ height: _hContainer });
+
 
     // Expend the Super Square
     $(this.selector).animate({
@@ -169,22 +224,37 @@ SuperSquare.prototype.Expend = function (height, width) {
     $(this.selector + " .img-square").css({
         display: "none",
     });
+    $(this.selector + " .text-square").css({
+        display: "none",
+    });
 
     // Remove hover, click events from the ss
     $(this.selector).off("mouseenter mouseleave click");
 
-    // Apply inline CSS to the ss
-    $(this.selector).css({
-        opacity         : 1,
-        background      : "radial-gradient(circle farthest-side, #3B536A 0%, #12191F 100%)",
-        backgroundImage : "radial-gradient(circle farthest-side, #3B536A 0%, #12191F 100%)",
-        backgroundImage : "-o-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
-        backgroundImage : "-ms-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
-        backgroundImage : "-moz-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
-        backgroundImage : "-webkit-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
-        backgroundImage : "-webkit-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
-    });
-
+    if (this.purpose === "play") {
+        // Apply inline CSS to the ss
+        $(this.selector).css({
+            opacity         : 1,
+            textAlign       : "left",
+            background      : "radial-gradient(circle farthest-side, #3B536A 0%, #12191F 100%)",
+            backgroundImage : "radial-gradient(circle farthest-side, #3B536A 0%, #12191F 100%)",
+            backgroundImage : "-o-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
+            backgroundImage : "-ms-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
+            backgroundImage : "-moz-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
+            backgroundImage : "-webkit-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
+            backgroundImage : "-webkit-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
+        });
+    }
+    else if (this.purpose === "connect") {
+        $(this.selector).css({
+            textAlign       : "left"
+        });
+    } 
+    else if (this.purpose === "leader") {
+        $(this.selector).css({
+            textAlign       : "left"
+        });
+    }
     this.Populate(); // Add objects to this Super Square
 };
 
@@ -196,8 +266,8 @@ SuperSquare.prototype.Minimize = function (height, width) {
     this.Unpopulate(); // Remove objects to this Super Square
     ScrollVerticallyTo(-1000);
 
-    window.setTimeout(function () {
-        var ss = FindSuperSquare("play");
+    window.setTimeout(function (ss) {
+        // var ss = FindSuperSquare("play");
         // Check if the height and the width are specified,
         // if not, give a default value
         var h = height;
@@ -228,14 +298,13 @@ SuperSquare.prototype.Minimize = function (height, width) {
                 $(".square-group").css({
                     height: "290px",
                 });
-                // Remove scroll to the page
-                // $("html").toggleClass("html-no-scrollable");
             },
         });
 
         // Remove the custom background gradient
         $(ss.selector).css({
             backgroundImage : "",
+            textAlign: "center",
         });
 
         // Display the Super Square's image
@@ -247,15 +316,13 @@ SuperSquare.prototype.Minimize = function (height, width) {
         // Add hover, click events to the ss
         ss.DefaultEvents();
 
-    }, 1000);
-
-
+    }, 1000, this);
 };
 
 // Check if a variable is defined (not eql to undefined or null)
 // -arg > the variable which has to be tested
 SuperSquare.prototype.NotDefined = function (arg) {
-    if (typeof arg === "undefined" || arg === null) {
+    if (typeof arg === "undefined" || arg === null || arg === "") {
         return true;
     }
     return false;
@@ -267,11 +334,17 @@ SuperSquare.prototype.Populate = function () {
         // We want to fill this ss with game elements
         this.PopulatePlay();
     }
+    else if (this.purpose === "connect") {
+        this.PopulateConnect();
+    }
+    else if (this.purpose === "leader") {
+        this.PopulateLeader();
+    }
 };
 
 SuperSquare.prototype.Unpopulate = function () {
     if (this.purpose === "play") {
-        this.MiniIconPlayToggleVisibility(); // Hide icons
+        this.MiniIconPlayToggleVisibility(); // hide icons
 
         // Test if game's modes are visible
         if ($(".vertical-pan").css("opacity") !== "0")
@@ -287,6 +360,10 @@ SuperSquare.prototype.Unpopulate = function () {
              this.GameHideGameBoard();
         }
     }
+
+    else if (this.purpose === "connect") {
+        this.MiniIconConnectToggleVisibility(); // hide icons
+    }
 };
 
 // Fill the ss with gaming objects (Super Square Play)
@@ -298,7 +375,7 @@ SuperSquare.prototype.PopulatePlay = function () {
 // Show/Hide mini-icon class objects specially for Play Super Square
 // Create them if they're non-existent
 SuperSquare.prototype.MiniIconPlayToggleVisibility = function () {
-    if ($(".mini-icon-panel").length < 1) {
+    if ($(this.selector + " .mini-icon-panel").length < 1) {
         // If we're here, that means the panel's icons is non-existent
         // Let's create it!
         $("<div>", {
@@ -313,7 +390,7 @@ SuperSquare.prototype.MiniIconPlayToggleVisibility = function () {
         }).css({
             height  : "0px",
             width   : "0px",
-        }).appendTo(".mini-icon-panel");
+        }).appendTo(this.selector + " .mini-icon-panel");
 
         // message icon
         $("<img>", {
@@ -324,7 +401,7 @@ SuperSquare.prototype.MiniIconPlayToggleVisibility = function () {
         }).css({
             height  : "0px",
             width   : "0px",
-        }).appendTo(".mini-icon-panel");
+        }).appendTo(this.selector + " .mini-icon-panel");
 
         // settings icon
         $("<img>", {
@@ -334,23 +411,21 @@ SuperSquare.prototype.MiniIconPlayToggleVisibility = function () {
         }).css({
             height  : "0px",
             width   : "0px",
-        }).appendTo(".mini-icon-panel");
+        }).appendTo(this.selector + " .mini-icon-panel");
 
         this.MiniIconPlayEvents();
     }
 
     // If the mini icons are hidden
-    if ($(".mini-icon").css("height") === "0px") {
-        $(".mini-icon").animate({ // Show them
+    if ($(this.selector + " .mini-icon").css("height") === "0px") {
+        $(this.selector + " .mini-icon").animate({ // Show them
             height: '30px',
             width: '30px',
         });
-
-        // this.MiniIconPlayEvents();
         return;
     }
     else { // Mini icons are displayed
-        $(".mini-icon").animate({ // Hide them
+        $(this.selector + " .mini-icon").animate({ // Hide them
             height: '0px',
             width: '0px',
         });
@@ -447,6 +522,790 @@ SuperSquare.prototype.ExpendVertically = function (height) {
     });
 };
 
+
+// SUPERSQUARE - CONNECT
+// ---------------------
+SuperSquare.prototype.PopulateConnect = function() {
+    this.MiniIconConnectToggleVisibility();
+
+    // Don't show the connection if the user is already connected
+    var ss = FindSuperSquare("play");
+    if (ss.settings.connected) {
+
+    }
+    else {
+        this.ConnectFormToggleVisibility();
+    }
+};
+
+// Show/Hide mini-icon class objects
+SuperSquare.prototype.MiniIconConnectToggleVisibility = function() {
+    if ($(this.selector + " .mini-icon-panel").length < 1) {
+        // If we're here, that means the panel's icons is non-existent
+        // Let's create it!
+        $("<div>", {
+            class: 'mini-icon-panel',
+        }).appendTo(this.selector);
+
+        // close icon
+        $("<img>", {
+            class   : 'mini-icon',
+            src     : '../icons/icon_miniclose.png',
+            function: 'close',
+        }).css({
+            height  : "0px",
+            width   : "0px",
+        }).appendTo(this.selector + " .mini-icon-panel");
+
+        this.MiniIconConnectEvents();
+    }
+
+    // If the mini icons are hidden
+    if ($(this.selector + " .mini-icon").css("height") === "0px") {
+        $(this.selector + " .mini-icon").animate({ // Show them
+            height: '30px',
+            width: '30px',
+        });
+        return;
+    }
+    else { // Mini icons are displayed
+        $(this.selector + " .mini-icon").animate({ // Hide them
+            height: '0px',
+            width: '0px',
+        });
+        return;
+    }
+};
+
+// Events for the mini icons (Super Square Connect)
+SuperSquare.prototype.MiniIconConnectEvents = function () {
+    $(this.selector + " .mini-icon").off("mouseenter mouseleave click");
+
+    // Hover Event on mini icon
+    $(this.selector + " .mini-icon").hover(function () {
+        $(this).css({
+            opacity: '1',
+        });
+    }, function () {
+        $(this).css({
+            opacity: '0.2',
+        });
+    });
+
+
+    // Click Event
+    // -----------
+    // Event : Close
+    $(this.selector + " .mini-icon[function='close']").click(function () {
+        var ss = FindSuperSquare("connect");
+        var ssPlay = FindSuperSquare("play");
+
+        if (!ssPlay.settings.connected) {
+            ss.ConnectFormToggleVisibility(); // if we're connected the form is not visible
+        }
+        
+        ss.Minimize();
+    });
+
+    // Event : Logout
+    $(this.selector + " .mini-icon[function='logout']").click(function () {
+        var ss = FindSuperSquare("connect");
+        ss.ConnectLogout();
+    });
+};
+
+// Show/Hide the connection's form
+SuperSquare.prototype.ConnectFormToggleVisibility = function() {
+    if ($(this.selector + " .connect-block").length < 1) {
+        // Create a login form if it's non-existant
+        // Form container
+        $("<div>", { class: "connect-block", html: "<span class='block-title'> Connect </span>" })
+        .css({ display : "none"})
+        .appendTo(this.selector);
+
+        // Form object
+        var form = $("<form>", {
+            class: "login-form",
+            name: "login_form",
+        }).appendTo(this.selector + " .connect-block");
+
+        // Title
+        $("<span>", {
+            class: "form-title",
+            html: "<span class='text-button' stats='active'>login</span>"+
+                  "<span class='text-button' stats='inactive'>signup</span>",
+        }).css({
+            opacity: "0",
+        }).appendTo(form);
+
+        // Login input
+        var loginContainer = $("<div>", {
+            class: "input-container",
+        }).appendTo(form);
+
+        // label icon
+        $("<img>", {
+            class: "img-input",
+            src: "../icons/icon_miniuser_male.png",
+        }).css({opacity: "0"})
+          .appendTo(loginContainer);
+
+        $("<input>", {
+            name: "login",
+            type: "text",
+            placeholder: "login",
+            class: "form-login",
+
+        }).css({ opacity: "0" })
+          .appendTo(loginContainer);
+
+
+        // Password input
+        var passwordContainer = $("<div>", {
+            class: "input-container",
+        }).appendTo(form);
+
+        // label icon
+        $("<img>", {
+            class: "img-input",
+            src: "../icons/icon_minilock.png",
+        }).css({opacity: "0"})
+          .appendTo(passwordContainer);
+
+        $("<input>", {
+            name: "password",
+            type: "password",
+            placeholder: "password",
+            class: "form-password"
+
+        }).css({ opacity: "0" })
+          .appendTo(passwordContainer);
+
+        // Validation button
+        $("<img>", {
+            class: "form-icon",
+            function: "send",
+            src: "../icons/icon_miniok.png",
+
+        }).css({ opacity: "0" })
+        .appendTo(form);
+
+        $("<input>", {
+            name    : "submit-button",
+            type    : "submit",
+            value   : ""
+        }).appendTo(form);
+
+        this.ConnectFormEvents(); // Add events on buttons & inputs
+    };
+            
+    if ($(this.selector + " .connect-block").css("display") !== "block") {                                            
+        // Animations
+        $(this.selector + " .connect-block").css({
+            display: "block"
+        });
+
+        $(this.selector + " .form-title")
+        .css({ top: "10px" })
+        .animate({
+            opacity: "1",
+            top: "0",
+        }, { duration: 500 });
+
+        $(this.selector + " .form-login")
+        .css({ top: "10px" })
+        .animate({
+            opacity: "0.5",
+            top: "0",
+        }, { duration: 600 });
+
+        $(this.selector + " .form-password")
+        .css({ top: "10px" })
+        .animate({
+            opacity: "0.5",
+            top: "0",
+        }, { duration: 700 });
+
+        $(this.selector + " .form-icon")
+        .css({ top: "10px" })
+        .animate({
+            opacity: "1",
+            top: "0",
+        }, { duration: 800 });
+
+        $(this.selector + " .img-input")
+        .css({ right : "0" })
+        .animate({ right: "10px", opacity: 1},
+                 { duration: 1600});
+
+        // Check if signup is selected
+        var active = $(this.selector + " .text-button[stats='active']");
+        if (active.html() === "signup") {
+            // Extend the container
+            $(this.selector).animate({ height: "+=300px"});
+        }
+    } 
+    else{
+        // Animations
+        $(this.selector + " .img-input")
+        .animate({ right: "0", opacity: 0});
+
+        $(this.selector + " .form-title").animate({
+            opacity: "0",
+            top: "10px",
+        }, { duration: 200 });
+
+        $(this.selector + " .form-login").animate({
+            opacity: "0",
+            top: "10px",
+        }, { duration: 300 });
+
+        $(this.selector + " .form-password").animate({
+            opacity: "0",
+            top: "10px",
+        }, { duration: 400 });
+
+        $(this.selector + " .form-icon").animate({
+            opacity: "0",
+            top: "10px",
+        }, { duration: 500 });
+
+        window.setTimeout(function(ss) {
+            $(ss.selector + " .connect-block").css({ display: "none" });
+        }, 2000, this);
+        
+    };
+};
+
+// Events on connection's form
+SuperSquare.prototype.ConnectFormEvents = function() {
+    // Event: Hover on login input
+    $("input[name='login']")
+        .hover(function () {
+            $(this).css({
+                opacity: "1",
+            });
+        }, function () {
+            $(this).css({
+                opacity: "0.5",
+            });
+        });
+
+    // Event: Hover on password input
+    $("input[name='password']")
+        .hover(function () {
+            $(this).css({
+                opacity: "1",
+            });
+        }, function () {
+            $(this).css({
+                opacity: "0.5",
+            });
+        });
+
+    // Event: Click on text buttons
+    $(".text-button").click(function() {
+        if ($(this).attr("stats") === "active") return;
+        $(".text-button[stats='active']").attr("stats", "inactive");
+        $(this).attr("stats", "active");
+
+        var ss = FindSuperSquare("connect");
+        ss.ConnectFormSignupToggleVisibility();
+    });
+
+    // Event : Click on submit button
+    $(".form-icon[function='send']").click(function() {
+        $(".login-form").submit();
+    });
+
+    // Ajax request
+    this.ConnectSubmitLogin();
+};
+
+// Show/Hide signup fields
+SuperSquare.prototype.ConnectFormSignupToggleVisibility = function() {
+    var form = $(".login-form");
+    var sbclass = ".signup-block";
+
+    if ($(sbclass).length < 1) {
+        var sb = $("<div>", {
+            class: "signup-block",
+        }).css({ display: "none", height: "0" })
+        .insertBefore(".login-form .form-icon");
+
+        // Password input
+        var passwordContainer2nd = $("<div>", {
+            class: "input-container",
+        }).appendTo(sb);
+
+        // label icon
+        $("<img>", {
+            class: "img-input",
+            src: "../icons/icon_minilock.png",
+        }).css({opacity: "0"})
+          .appendTo(passwordContainer2nd);
+
+        var password = $("<input>", {
+            name: "passwordcheck",
+            type: "password",
+            placeholder: "re-enter your password",
+            class: "form-password"
+
+        }).appendTo(passwordContainer2nd);
+
+
+        // Email input
+        var emailContainer = $("<div>", {
+            class: "input-container",
+        }).appendTo(sb);
+
+        // label icon
+        $("<img>", {
+            class: "img-input",
+            src: "../icons/icon_minimail.png",
+        }).css({opacity: "0"})
+          .appendTo(emailContainer);
+
+        var email = $("<input>", {
+            name: "email",
+            type: "email",
+            placeholder: "email",
+            class: "form-password"
+
+        }).appendTo(emailContainer);
+
+
+        // Events: hover
+        password.hover(function() {
+            $(this).css({ opacity: "1" });
+        }, function() {
+            $(this).css({ opacity: "0.5" });
+        });
+
+        email.hover(function() {
+            $(this).css({ opacity: "1" });
+        }, function() {
+            $(this).css({ opacity: "0.5" });
+        });
+    }
+
+    if ($(sbclass).css("display") !== "block") {
+        // Extend the container
+        $(this.selector)
+                  .animate({ height: "+=100px"});
+
+        $(sbclass).css({ display: "block" })
+                  .animate({ height: "100px" });
+        
+
+        $(sbclass + " .img-input")
+        .css({ right: "0" })
+        .animate({ opacity: 1, right: "10px" }, {duration: 500});
+    }
+    else {
+        // Reduce the container
+        $(this.selector).animate({ height: "-=100px"});
+
+        $(sbclass).animate({ 
+            height: "0"
+        }, {
+            complete: function() {
+                $(this).css({ display: "none" });
+            }
+        });
+    }
+};
+
+// Ajax request to login
+SuperSquare.prototype.ConnectSubmitLogin = function() {
+    var _url = null;
+    var request; // variable to hold request
+
+    
+    
+    // Bind to the submit event of our form
+    $(".login-form").submit(function(event) {
+        if (request) request.abort(); // abort any pending request
+
+        var ss = FindSuperSquare("connect");
+        // Determine if it's a connection or a signup
+        var active = $(ss.selector + " .text-button[stats='active']");
+        
+        if (active.html() === "login")
+            _url  = "/login/";
+        else if (active.html() === "signup")
+            _url  = "/signup/";
+        
+
+        // Setup some local variables
+        var $form = $(this);
+        var $inputs = $form.find("input, select, button, textarea"); // cache fields
+        var serializedData = $form.serialize();  // serialize the data in the form
+
+        $inputs.prop("disabled", true); // disable inputs for the duration of the ajax request
+
+        request = $.ajax({
+            url: _url,
+            type: "POST",
+            data: serializedData
+        });
+
+        // callback handler that will be called on success
+        request.done(function(response, textStatus, jqXHR) {
+
+            if (_url === "/login/") {
+                ss.NotifyConnected(response);
+            }
+            else if (_url === "/signup/") {
+                ss.NotifySigned(response);
+            }
+        });
+
+        // callback handler that will be called on failure
+        request.fail(function(jqXHR, textStatus, errorThrown) {
+            console.error("The following error occured : " + textStatus, errorThrown);
+        });
+
+    // callback handler that will be called regardless
+    // if the request failed or succeeded
+    request.always(function () {
+        // reenable the inputs
+        $inputs.prop("disabled", false);
+    });
+
+    // prevent default posting of form
+    event.preventDefault();
+    });
+};
+
+// Method executed when a user has been connected
+SuperSquare.prototype.NotifyConnected = function(user) {
+    // Set the variables
+    var ss = FindSuperSquare("play");
+    ss.settings.connected = true;
+    ss.user = user;
+
+    // Hide the connect form
+    this.ConnectFormToggleVisibility();
+
+
+    // Add logout icon
+    var iconLogout = $("<img>", {
+        class: "mini-icon",
+        function: "logout",
+        src: "../icons/icon_minishutdown.png"
+    }).css({ opacity: 0 }).appendTo(this.selector + " .mini-icon-panel");
+
+    // Refresh mini icons events
+    this.MiniIconConnectEvents();
+
+
+    // Add a user dashboard
+    $("<div>", {
+        class: "user-dashboard",
+    }).appendTo(this.selector);
+
+    // Show a welcome message
+    var msg = $("<div>", {
+        class: "message",
+        html: "<span class='message'> Welcome back, " + user.name + " ! </span>",
+    }).css({ opacity: 0 }).appendTo(this.selector + " .user-dashboard");
+
+    
+    // Animations : Welcome message
+    window.setTimeout(function(msg, iconLogout) {
+        msg.css({ top: "20px" })
+           .animate({ top: "0", opacity: 1 });
+
+        iconLogout.css({ height: "0", width: "0"})
+                  .animate({height: "30px", width: "30px", opacity: "0.2" }); 
+    }, 2000, msg, iconLogout);
+
+    // Minimize the Super Square connect
+    window.setTimeout(function(ssConnect) {
+        // ssConnect.Minimize();
+        ssConnect.PopulateUserDashboard();
+    }, 5000, this);
+};
+
+// Method executed when a user has been signed up
+SuperSquare.prototype.NotifySigned = function(user) {
+    // Set the variables
+    var ss = FindSuperSquare("play");
+    ss.settings.connected = true;
+    ss.user = user;
+
+    // Hide the connect form
+    this.ConnectFormToggleVisibility();
+
+
+    // Add logout icon
+    var iconLogout = $("<img>", {
+        class: "mini-icon",
+        function: "logout",
+        src: "../icons/icon_minishutdown.png"
+    }).css({ opacity: 0 }).appendTo(this.selector + " .mini-icon-panel");
+
+    // Refresh mini icons events
+    this.MiniIconConnectEvents();
+
+
+    // Add a user dashboard
+    $("<div>", {
+        class: "user-dashboard",
+    }).appendTo(this.selector);
+
+    // Show a welcome message
+    var msg = $("<div>", {
+        class: "message",
+        html: "<span class='message'> Hello, " + user.name + " ! </span>",
+    }).css({ opacity: 0 }).appendTo(this.selector + " .user-dashboard");
+
+    
+    // Animations : Welcome message
+    window.setTimeout(function(msg, iconLogout) {
+        msg.css({ top: "20px" })
+           .animate({ top: "0", opacity: 1 });
+
+        iconLogout.css({ height: "0", width: "0"})
+                  .animate({height: "30px", width: "30px", opacity: "0.2" }); 
+    }, 2000, msg, iconLogout);
+};
+
+// Logout the user
+SuperSquare.prototype.ConnectLogout = function() {
+    // Get the Super Squares
+    var ssPlay = FindSuperSquare("play");
+    var ssConnect = FindSuperSquare("connect");
+    
+
+    // Hide everything in the dashboard
+    $(ssConnect.selector + " .user-dashboard").children().animate({
+        height: "0px",
+        width: "0px",
+        opacity: 0,
+    }, {
+        complete:function() {
+            $(this).css({ display: "none" });
+        }
+    });
+
+    window.setTimeout(function(ssPlay, ssConnect) {
+        // Show a ciao message
+        var msg = $("<div>", {
+            class: "message",
+            html: "<span class='message'> See you soon, " + ssPlay.user.name + " ! </span>",
+        }).css({ opacity: 0 }).appendTo(ssConnect.selector + " .user-dashboard");
+
+        // Animate the message
+        msg.css({ top: "20px" })
+           .animate({ top: "0", opacity: 1 });
+
+        window.setTimeout(function() {
+            var ssConnect = FindSuperSquare("connect");
+
+            // Remove the user dashboard
+            $(ssConnect.selector + " .user-dashboard").remove();
+            $(ssConnect.selector + " .mini-icon[function='logout']").remove();
+
+            ssConnect.Minimize(); // Minimize the connect square
+        }, 2000);
+
+        // Set the variables to null
+        ssPlay.settings.connected = false;
+        ssPlay.user = null;
+
+    }, 1000, ssPlay, ssConnect);
+};
+
+SuperSquare.prototype.PopulateUserDashboard = function() {
+    var udclass = this.selector + " .user-dashboard";
+    var userclass = this.selector + " .user-panel";
+
+    if ($(userclass).length < 1) {
+
+        // User panel
+        var userpanel = $("<div>", {
+            class: "user-panel"
+        }).appendTo(udclass);
+
+        // Avatar container
+        var avatarC = $("<div>", {
+            class: "avatar-container"
+        }).appendTo(userpanel);
+
+        // Avatar
+        $("<img>", {
+            class: "avatar"
+        }).appendTo(avatarC);
+
+        // User name
+        $("<span>", {
+            class: "username"
+        }).appendTo(userpanel);
+
+
+        // -----
+        // Stats
+        var statsSquare = $("<div>", {
+            class: "dashboard-square",
+            purpose: "stats"
+        }).appendTo(udclass);
+
+        // Stats img
+        $("<div>", {
+            class: "dashboard-square-top",
+            html: "0 WIN <br/>0 LOSES"
+        }).appendTo(statsSquare);
+
+        // Stats title
+        $("<span>", {
+            class: "dashboard-square-title",
+            hmtl: "<span>STATS</span>"
+        }).appendTo(statsSquare);
+
+
+        // ----
+        // Rock
+        var rockSquare = $("<div>", {
+            class: "dashboard-square",
+            purpose: "rock"
+        }).appendTo(udclass);
+
+        // Rock img
+        var rockTop = $("<div>", {
+            class: "dashboard-square-top",
+        }).appendTo(rockSquare);
+
+        $("<img>", {
+            class: "dashboard-square-img",
+            src: "../icons/icon_minioctagone.png"
+        }).appendTo(rockTop);
+
+        // Rock title
+        $("<span>", {
+            class: "dashboard-square-title",
+            hmtl: "<span>ROCK</span>"
+        }).appendTo(rockSquare);
+
+
+        // ------
+        // Powers
+        var powerSquare = $("<div>", {
+            class: "dashboard-square",
+            purpose: "powers"
+        }).appendTo(udclass);
+
+        // Powers img
+        var powerTop = $("<div>", {
+            class: "dashboard-square-top",
+        }).appendTo(powerSquare);
+        $("<img>", {
+            class: "dashboard-square-img",
+            src: "../icons/icon_minihandbiceps.png"
+        }).appendTo(powerTop);
+
+        // Powers title
+        $("<span>", {
+            class: "dashboard-square-title",
+            hmtl: "<span>POWERS</span>"
+        }).appendTo(powerSquare);
+    }
+};
+
+// Ajax request to login (old)
+SuperSquare.prototype.ConnectSubmitLoginOld = function() {
+    $('.login-form').submit(function () { 
+        $.ajax({ 
+            type: 'POST', 
+            url: '/login/', 
+            data: $(".login-form").serialize(), 
+            success: function (data) { 
+                if (data !== 'wrong password' && data !== 'wrong login') { 
+                    console.log(data);
+                } 
+                else {
+                } 
+            }, 
+            error: function (data) {
+                console.log("wrong password");
+            } 
+         });
+        return false; 
+     });
+};
+
+
+// SUPERSQUARE - LEADER
+// ---------------------
+SuperSquare.prototype.PopulateLeader = function() {
+    this.MiniIconLeaderToggleVisibility();
+};
+
+// Show/Hide mini-icon class objects
+SuperSquare.prototype.MiniIconLeaderToggleVisibility = function() {
+    if ($(this.selector + " .mini-icon-panel").length < 1) {
+        // If we're here, that means the panel's icons is non-existent
+        // Let's create it!
+        $("<div>", {
+            class: 'mini-icon-panel',
+        }).appendTo(this.selector);
+
+        // close icon
+        $("<img>", {
+            class   : 'mini-icon',
+            src     : '../icons/icon_miniclose.png',
+            function: 'close',
+        }).css({
+            height  : "0px",
+            width   : "0px",
+        }).appendTo(this.selector + " .mini-icon-panel");
+
+        this.MiniIconLeaderEvents();
+    }
+
+    // If the mini icons are hidden
+    if ($(this.selector + " .mini-icon").css("height") === "0px") {
+        $(this.selector + " .mini-icon").animate({ // Show them
+            height: '30px',
+            width: '30px',
+        });
+        return;
+    }
+    else { // Mini icons are displayed
+        $(this.selector + " .mini-icon").animate({ // Hide them
+            height: '0px',
+            width: '0px',
+        });
+        return;
+    }
+};
+
+// Events for the mini icons (Super Square Leader)
+SuperSquare.prototype.MiniIconLeaderEvents = function() {
+    // Hover Event on mini icon
+    $(this.selector + " .mini-icon").hover(function () {
+        $(this).css({
+            opacity: '1',
+        });
+    }, function () {
+        $(this).css({
+            opacity: '0.2',
+        });
+    });
+
+
+    // Event : Click on panel's mini icon
+    // close event
+    $(this.selector + " .mini-icon[function='close']").click(function () {
+        var ss = FindSuperSquare("leader");
+        ss.MiniIconLeaderToggleVisibility();
+        ss.Minimize();
+    });
+};
+
+
+// ------------
 // SECOND PANEL
 // ------------
 // Show/Hide second panel control
@@ -586,8 +1445,8 @@ SuperSquare.prototype.SecondPanelReduceSecondPanel = function (pixels) {
 // Check if the second panel height is above normal
 SuperSquare.prototype.SecondPanelCheckSecondPanelInitialSize = function () {
     // Reduce the second panel if its height is greater than 440px
-    if ($(".second-panel").css("height") !== "440px") {
-        this.SecondPanelReduceSecondPanel("200px");
+    if ($(".second-panel").css("height") > "440px") {
+        this.SecondPanelReduceSecondPanel("100px");
     }
 };
 

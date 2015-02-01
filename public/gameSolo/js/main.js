@@ -68,7 +68,7 @@ function loadImages(sources, callback) {
 */
 function CanvasState (players,pointToWin, imageLoad){
 
-      /* On définit le plateau de jeu avec les différents arguments détaillés dans plateau.js*/
+    /* On définit le plateau de jeu avec les différents arguments détaillés dans plateau.js*/
     this.plateau = new Table(4, 6, 160, 15, 20);
 
     /*la variable qui détermine le nombre de point qu'il faut pour gagner la partie */
@@ -271,57 +271,56 @@ $(canvas).on("mousedown",function(e) {
 
 
 $(canvas).on("mouseup",function(e) {
+    /* La variable succes nous permettra de vérifier si l'utilisateur
+       lors de son drag and drop a bien relacher sur une cellule du plateau vide */
+    var success = false;
 
-        /* La variable succes nous permettra de vérifier si l'utilisateur
-           lors de son drag and drop a bien relacher sur une cellule du plateau vide */
-        var success = false;
 
+    var mouse = getMouse(e,_myState.canvas);
+    var mx = mouse.x;
+    var my = mouse.y;
 
-        var mouse = getMouse(e,_myState.canvas);
-        var mx = mouse.x;
-        var my = mouse.y;
+    // Super Square Object which allows to test the autoEndTurn setting
+    var ssplay = FindSuperSquare("play");
 
-        // Super Square Object which allows to test the autoEndTurn setting
-        var ssplay = FindSuperSquare("play");
+    /* Vérifie si on à une pièce/rock sélectionné(e) */
+    if(_myState.selectionPiece != null){
 
-        /* Vérifie si on à une pièce/rock sélectionné(e) */
-        if(_myState.selectionPiece != null){
+        //  Shrink the rock
+        _myState.selectionPiece.height  = 90;
+        _myState.selectionPiece.width   = 90;
 
-            //  Shrink the rock
-            _myState.selectionPiece.height  = 90;
-            _myState.selectionPiece.width   = 90;
+       /* pour chaque cellule on vérifie si on relache le rock sur une cellule du plateau libre*/
+	  for (var i = 0; i < _myState.plateau.graphique.length; i++) {
+        if(typeof(_myState.plateau.graphique[i]) != "undefined"){
+            if(_myState.tours.canAdd() == true){
+                if (_myState.plateau.graphique[i].contains(mx, my)
+                    && _myState.plateau.matrice[_myState.plateau.graphique[i].matriceX][_myState.plateau.graphique[i].matriceY] == 0) {
 
-           /* pour chaque cellule on vérifie si on relache le rock sur une cellule du plateau libre*/
-		  for (var i = 0; i < _myState.plateau.graphique.length; i++) {
-            if(typeof(_myState.plateau.graphique[i]) != "undefined"){
-                if(_myState.tours.canAdd() == true){
-                    if (_myState.plateau.graphique[i].contains(mx, my)
-                        && _myState.plateau.matrice[_myState.plateau.graphique[i].matriceX][_myState.plateau.graphique[i].matriceY] == 0) {
+                     success = true;
+                     _myState.comboMaker.nom = _myState.activePlayers.nom;
+                     _myState.comboMaker.id = _myState.activePlayers.identifiant;
 
-                         success = true;
-                         _myState.comboMaker.nom = _myState.activePlayers.nom;
-                         _myState.comboMaker.id = _myState.activePlayers.identifiant;
+				      var shape = new Shape(_myState.plateau.graphique[i].x-(_myState.plateau.graphique[i].width/2), _myState.plateau.graphique[i].y-(_myState.plateau.graphique[i].height/4.5), _myState.selectionPiece.width, _myState.selectionPiece.height, _myState.selectionPiece.weight, _myState.selectionPiece.fill);
+                    shape.image = _myState.activePlayers.image;
+                    shape.idProprietaire = _myState.activePlayers.identifiant;
+                      _myState.plateau.add(_myState.plateau.graphique[i].matriceX, _myState.plateau.graphique[i].matriceY, shape);
 
-    				      var shape = new Shape(_myState.plateau.graphique[i].x-(_myState.plateau.graphique[i].width/2), _myState.plateau.graphique[i].y-(_myState.plateau.graphique[i].height/4.5), _myState.selectionPiece.width, _myState.selectionPiece.height, _myState.selectionPiece.weight, _myState.selectionPiece.fill);
-                        shape.image = _myState.activePlayers.image;
-                        shape.idProprietaire = _myState.activePlayers.identifiant;
-                          _myState.plateau.add(_myState.plateau.graphique[i].matriceX, _myState.plateau.graphique[i].matriceY, shape);
+                    /* une fois l'ajout de la pièce dans le plateau on décrémente la quantité,
+                       on lance la fonction de gravité de force,
+                       et on replace la pièce movable à son origine */
+                    GravityLaunch(_myState);
 
-                        /* une fois l'ajout de la pièce dans le plateau on décrémente la quantité,
-                           on lance la fonction de gravité de force,
-                           et on replace la pièce movable à son origine */
-                        GravityLaunch(_myState);
+                    FallEffectAndForce(_myState);
 
-                        FallEffectAndForce(_myState);
+                    _myState.selectionPiece.init();
 
-                        _myState.selectionPiece.init();
+                    _myState.tours.addAction();
 
-                        _myState.tours.addAction();
-
-                        // Check auto end turn
-                        if (ssplay.settings.autoEndTurn) {
-                            PasseTour(_myState);
-                        }
+                    // Check auto end turn
+                    if (ssplay.settings.autoEndTurn) {
+                        PasseTour(_myState);
+                    }
                 }
               }
             }
