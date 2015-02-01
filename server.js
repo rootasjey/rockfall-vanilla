@@ -5,8 +5,6 @@
 // the server's logic
 // -----------------------------
 // -----------------------------
-
-
 // -----------------------------
 // -----------------------------
 // ------- REQUIRES ------------
@@ -18,8 +16,6 @@ var express = require('express'),  // web dev framework
     http = require('http'),
     path = require('path'),
     Matchmaker = require('matchmaker');
-    Task = require('taskgroup').Task
-
 
 var fs = require('fs');		// file stream
 var bodyParser = require('body-parser');
@@ -222,12 +218,19 @@ app.get('/', function(req, res) {
 
 // listen port => server start
 // ---------------------------
+var addressServer = "localhost";
+
 var server = http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+    if(server.address().address != "0.0.0.0"){
+        addressServer = server.address().address+":"+app.get('port');
+    }else{
+        addressServer += ":"+app.get('port');
+        
+    }
+    console.log("En attente de connexion sur le port :"+app.get('port'));
 });
 
-
-// MATCHMAKING
+var Tableau_Joueur = require('./public/gameCommun/js/playerArray.js');
 
 var mymatch = new Matchmaker;
 
@@ -236,270 +239,200 @@ mymatch.policy = function(a,b) {
 };
 
 mymatch.on('match', function(result) {
-    console.log(result);
-    askMatching(result.a.socketId,result.b.socketId);
-    /*console.log(result.a); // match a
-    console.log(result.b); // match b*/
+    new askMatching(result.a,result.b);
 });
 
 mymatch.start();
 
-//mymatch.push({user:'walter',rank:1450});
-
-function askMatching(idFirstPlayer, idSecondPlayer){
-
-
-    //console.log("once");
-    var task = new Task(function(){
-    //players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
-    //players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
-
-        var retour = addParty(partyInProgress, idFirstPlayer, idSecondPlayer);
-
-        players[idFirstPlayer].emit("majEtatPlayer",retour);
-        players[idSecondPlayer].emit("majEtatPlayer",retour);
+var justAdd = [];
+var wantToTurn = [];
 
 
+/* Fonction qui permet d'initier une partie entre 2 joueurs */
+function askMatching(joueurUn, joueurDeux){
 
-
-        // Do something ...
-        //return "a synchronous result";
-
-        // You can also return an error
-        // return new Error("something went wrong")
-
-
-    //var customTask = function(donneesDePartie){
-
-
-
-
-            var finDeParty = null;
-            //var donneesLocales = donneesDePartie;
-            var donneesLocales = retour;
-
-
-            var party = io.of(donneesLocales.room);
-
-            party.on('connection', function(socket){
-
-              console.log('someone connected');
-
-                socket.on('changeTour',function(){
-                    //changeTurn(donneesLocales);
-                    console.log("changeTour  de la room : "+donneesLocales.room);
-                });
-
-                socket.on('addPiece',function(objet){
-                    //addItemtoPlateau (donneesLocales,objet.x,objet.y,objet.item);
-                    console.log("addPiece  de la room : "+donneesLocales.room);
-                });
-
-                socket.on('addEffet',function(objet){
-                    //executeBonus(donneesLocales,objet.x,objet.y,objet.bonusChoice);
-                    console.log("addEffet  de la room : "+donneesLocales.room);
-                });
-
-            });
-            //console.log("verification idfirst "+idFirstPlayer+ "  et donne local "+donneesLocales.idPF.id);
-            players[donneesLocales.idPF.id].join(donneesLocales.room);
-            players[donneesLocales.idPS.id].join(donneesLocales.room);
-
-
-            var tamponWin = false;
-            var temponWinSec = 0;
-
-            var tamponPieceWin = {};
-            var intervalTempo = 300;
-
-            finDeParty = setInterval(function(){
-                    
-                //console.log("verification donnée local "+donneesLocales.plateau);
-                
-                if(!tamponWin){
-                    donneesLocales = applyPhysic(donneesLocales);
-                }else{
-                    temponWinSec += intervalTempo;
-                }
-
-                if(donneesLocales.pieceGagnante.find){
-                    tamponWin = true;
-                    tamponPieceWin = donneesLocales.pieceGagnante;
-                }
-                console.log("mise a jour "+donneesLocales.idPF.id+"--"+donneesLocales.idPS.id);
-                //party.emit('MiseAJour',donneesLocales);
-                players[donneesLocales.idPF.id].emit('MiseAJour',donneesLocales);
-                players[donneesLocales.idPS.id].emit('MiseAJour',donneesLocales);
-                
-                
-                if( tamponWin && temponWinSec > intervalTempo * 6 ){
-                    donneesLocales = traitementPointWin(donneesLocales,tamponPieceWin);
-                    tamponWin = false;
-                    temponWinSec = 0;
-                }
-
-                clearDonnees(donneesLocales);
-
-            }, intervalTempo);
-
-
-            //party.emit('MiseAJour',donneesDePartie);
-
-
-            //players[donneesDePartie.idPF].join(donneesDePartie.room);
-            //players[donneesDePartie.idPS].join(donneesDePartie.room);
-    //}
-    });
-
-    // Execute the task
-    task.run();
-    //io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer",retour);
-
-    //players[idFirstPlayer].leave("multiJoueur");
-    //players[idSecondPlayer].leave("multiJoueur");
-
-    /*io.sockets.on('etatPlayersOk', function (majInfo) {
-
-        var info = partyInProgress[majInfo.idParty];
-        console.log(majInfo);
-        console.log(info);
-        if(majInfo.idPlayer == info.idPF){
-            partyInProgress[majInfo.idParty].idPFReady = true;
-            console.log("first player ready l.268");
-        }else if(majInfo.idPlayer == info.idPS){
-            partyInProgress[majInfo.idParty].idPSReady = true;
-            console.log("second player ready l.271");
+    var idJoueurUn = joueurUn.id;
+    var idJoueurDeux = joueurDeux.id;
+    
+    this.party = addParty(partyInProgress, joueurUn, joueurDeux);
+    justAdd[this.party.id] = false;
+    wantToTurn[this.party.id] = false;
+    
+    if(lobby_server.getJoueurById(idJoueurUn) != null && lobby_server.getJoueurById(idJoueurDeux) != null){
+       
+        if(!lobby_server.isBientotHorsConnexion(lobby_server.getJoueurById(idJoueurUn)) && !lobby_server.isBientotHorsConnexion(lobby_server.getJoueurById(idJoueurDeux))){
+            
+            tableauJeu.ajout(lobby_server.supprimer(idJoueurUn));
+            tableauJeu.ajout(lobby_server.supprimer(idJoueurDeux));
+            tableauJeu.getJoueurById(idJoueurUn).socket.emit("majJoueurStatusParty",this.party);
+            tableauJeu.getJoueurById(idJoueurDeux).socket.emit("majJoueurStatusParty",this.party);
         }
+    }
+    
+    this.tamponWin = false;
+    this.temponWinSec = 0;
 
-    });*/
+    this.tamponPieceWin = {};
+    this.intervalTempo = 250;
+    this.countForSeconde = 0;
 
-   /*
-    var tabPlayer = {};
-    tabPlayer[idFirstPlayer] = {"etat":"attente","nom":"Players1"};
-    tabPlayer[idSecondPlayer] = {"etat":"attente","nom":"Players2"};
+    this.countForPointPlayer = 0;
+    
+    this.endOfPhysic = true;
+    
+    this.resetStateBonus = false;
+    
+    this.isFinDePartie = false;
 
+    /*----------------------------------------------------------Attente --------------------------------*/
+        
+        this.partyTamponInterval = setInterval( (function(){
+        
+            var donneesLocales = partyInProgress[this.party.id];
+            if(donneesLocales.idPF.ready == true && donneesLocales.idPS.ready == true){
 
-    players[idFirstPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
+                if(tableauJeu.getJoueurById(donneesLocales.idPF.id) != null && tableauJeu.getJoueurById(donneesLocales.idPS.id) != null){
 
-    players[idSecondPlayer].join("room-"+idFirstPlayer+"-"+idSecondPlayer);
+                    if(!tableauJeu.isBientotHorsConnexion(tableauJeu.getJoueurById(donneesLocales.idPF.id)) && !tableauJeu.isBientotHorsConnexion(tableauJeu.getJoueurById(donneesLocales.idPS.id))){
+                
+                        if(donneesLocales.pointJoueur == true){
 
-    console.log(" id est a la romm  :  "+"room-"+idFirstPlayer+"-"+idSecondPlayer);
-    */
-    //io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).on('connection', function (socket) {
+                            donneesLocales.action = false;
+                            if(this.countForPointPlayer == 4){
+                                this.isFinDePartie = traitementPointWin(donneesLocales,donneesLocales.pieceGagnante);
+                                donneesLocales.pointJoueur = false;
+                                this.countForPointPlayer = 0;
+                                donneesLocales.action = true;
 
+                            }else{
+                                this.countForPointPlayer++;
+                            }
 
-/*
-        io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).on("etatPlayersOk",function(){
+                        }else{
 
-            tabPlayer[socket.id].etat = "pret";
-            if(tabPlayer[idFirstPlayer].etat == "pret" && tabPlayer[idSecondPlayer].etat == "pret")             {
-                nomDeLaFonctionPourDemarrerLeJeu(tabPlayer,idFirstPlayer,idSecondPlayer);
-            }else{
-                io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).emit('majEtatPlayer',tabPlayer);
-            }
+                            /* 4 * 250 = 1000 milliseconde */
+                            if(this.countForSeconde == 4){
 
-        });
+                                if((donneesLocales.time == 0 || wantToTurn[this.party.id]) && this.endOfPhysic ){
+                                    changeTurn(donneesLocales);
+                                    wantToTurn[this.party.id] = false;
+                                    donneesLocales.time = timeTurn;
+                                }else{
+                                    if(donneesLocales.time >= 0 ){
+                                        donneesLocales.time = donneesLocales.time - 1;
+                                    }else{
+                                        donneesLocales.time = 0;
+                                    }
+                                }
+                                this.countForSeconde = 0;
 
-        io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).on("etatPlayersNo",function(){
+                            }
 
-            io.of("room-"+idFirstPlayer+"-"+idSecondPlayer).emit('cancel');
-        });
-        */
-        //console.log("a la room "+"room-"+idFirstPlayer+"-"+idSecondPlayer);
-        //io.sockets.in("room-"+idFirstPlayer+"-"+idSecondPlayer).emit("majEtatPlayer");
-        //console.log("fini room");
-   // });
-       /* if(tamponCheckTabParty == null){
-            tamponCheckTabParty = setInterval(function(){
+                            if(justAdd[this.party.id] == false){   
+                                this.endOfPhysic = applyPhysic(donneesLocales);
 
-                var i=0;
-
-                while(i<partyInProgress.length){
-
-                    var tableCheck = partyInProgress[i];
-
-                    if(tableCheck.idPSReady && tableCheck.idPFReady && tableCheck.active && !tableCheck.start){
-
-
-                        tableCheck.start = true;
-
-                        i++;
+                            }else{
+                                justAdd[this.party.id] = false;
+                                this.endOfPhysic = false;
+                            }
                     }
 
+                    if(this.resetStateBonus == true){
+                        donneesLocales.isChangeTurn = false;
+                        this.resetStateBonus = false;
+                    }
+                    if(donneesLocales.isChangeTurn == true){
+                        this.resetStateBonus = true;
+
+                    }
+                    if(tableauJeu.getJoueurById(donneesLocales.idPF.id) != null){
+                        tableauJeu.getJoueurById(donneesLocales.idPF.id).socket.emit("MiseAJour",donneesLocales);
+                    }
+                        if(tableauJeu.getJoueurById(donneesLocales.idPS.id) != null){
+                        tableauJeu.getJoueurById(donneesLocales.idPS.id).socket.emit("MiseAJour",donneesLocales);
+                    }
+                    clearDonnees(donneesLocales);
+                    if(donneesLocales.pointJoueur == false){
+                        this.countForSeconde++;
+                    }
+                    
+                    partyInProgress[this.party.id] = donneesLocales;
+                    
+                    }else{
+                        interruptionDePartie(donneesLocales.id);
+                        clearInterval(this.partyTamponInterval);
+
+                    }
+                }else{
+                    //Deconnexion Effective !!
+                    console.log("Deconnexion");
                 }
+            }else if(donneesLocales.idPF.ready == false || donneesLocales.idPS.ready == false){
 
-
-            }, 100);
-        }
-
-        StartParty();*/
-
+                lobby_server.ajout(tableauJeu.supprimer(donneesLocales.idPF.id));
+                lobby_server.ajout(tableauJeu.supprimer(donneesLocales.idPS.id));
+                lobby_client_affichage(new Tableau_Joueur.Personne(donneesLocales.idPF.id, donneesLocales.idPF.pseudo));
+                lobby_client_affichage(new Tableau_Joueur.Personne(donneesLocales.idPS.id, donneesLocales.idPS.pseudo));
+                io.sockets.emit('miseAJourDeLaListeJoueur',lobby_client_affichage);
+            }
+            if(this.isFinDePartie){
+                clearInterval(this.partyTamponInterval);
+            }
+            
+        }).bind(this), this.intervalTempo);
+    
 }
 
 
-
-
-function addParty(tableauP, idF, idS){
+/* addParty créé la partie afin de mettre ne relation deux joueur */
+function addParty(tableauP, joueurUn, joueurDeux){
 
     var idParty = 0;
     var sizeX = 4;
     var sizeY = 6;
     var newElement = {};
     var plateau = createPlateau(sizeX,sizeY);
-
+    var idF = joueurUn.id;
+    var idS = joueurDeux.id;
+    
+    newElement = {
+        'id':0,
+        'idPF':{'id':idF, 'name':'idPF', 'pseudo':joueurUn.pseudo, 'score':0, 'point':0, 'idPower':"1;20;x2-2;40;/2-3;80;[]", 'piece':"5-10-15",'color':"blue",'ready':null},
+        'currentPlayer':idF,
+        'idPS':{'id':idS, 'name':'idPS' ,'pseudo':joueurDeux.pseudo, 'score':0, 'point':0, 'idPower':"1;20;x2-2;40;/2-3;80;[]", 'piece':"8-16-20",'color':"red",'ready':null},
+        'active':true,
+        'start':false,
+        'plateau':plateau,
+        'pointAdd':new Array(),
+        'nbreAction':1,
+        'nbreActionRealise':0,
+        'nbrePower':1,
+        'nbrePowerRealise':0,
+        'sizeX':sizeX,
+        'sizeY':sizeY,
+        'hitcombo':0,
+        'pointPourGagner':2,
+        'pieceGagnante':{},
+        'time':timeTurn,
+        'action':false,
+        'pointJoueur':false,
+        'isChangeTurn':false,
+        'soundToPlay':new Array(),
+        'finDeParty':{}
+    };
+    
     if(tableauP.length == 0){
-
-        newElement = {
-                        'id':0,
-                        'idPF':{'id':idF,'name':'idPF','score':0,'point':0,'idPower':"1-2-3"},
-                        'currentPlayer':'idPF',
-                        'idPS':{'id':idS,'name':'idPS','score':0,'point':0,'idPower':"1-2-3"},
-                        'room':'room-'+idF+'-'+idS,
-                        'active':true,
-                        'idPFReady':false,
-                        'idPSReady':false,
-                        'start':false,
-                        'plateau':plateau,
-                        'pointAdd':{},
-                        'nbreAction':1,
-                        'nbreActionRealise':0,
-                        'nbrePower':1,
-                        'nbrePowerRealise':0,
-                        'sizeX':sizeX,
-                        'sizeY':sizeY,
-                        'hitcombo':0,
-                        'pieceGagnante':{}
-                    };
-
+        
         tableauP.push(newElement);
-
+        
     }else{
+        
         var noOld = false, i=0;
-
         while(i<tableauP.length && !noOld){
 
             if(!tableauP[i].active){
-                newElement = {
-                                'id':i,
-                                'idPF':{'id':idF,'name':'idPF','score':0,'point':0,'idPower':"1-2-3"},
-                                'idPS':{'id':idS,'name':'idPS','score':0,'point':0,'idPower':"1-2-3"},
-                                'currentPlayer':'idPF',
-                                'room':'room-'+idF+'-'+idS,
-                                'active':true,
-                                'pointAdd':{},
-                                'idPFReady':false,
-                                'idPSReady':false,
-                                'start':false,
-                                'plateau':plateau,
-                                'nbreAction':1,
-                                'nbreActionRealise':0,
-                                'nbrePower':1,
-                                'nbrePowerRealise':0,
-                                'sizeX':sizeX,
-                                'sizeY':sizeY,
-                                'hitcombo':0,
-                                'pieceGagnante':{}
-                            };
+                
+                newElement.id = i;
                 tableauP[i] = newElement;
                 idParty = i;
                 noOld = true;
@@ -508,161 +441,22 @@ function addParty(tableauP, idF, idS){
         }
 
         if(!noOld){
-            newElement = {
-                            'id':(tableauP.length-1),
-                            'idPF':{'id':idF,'name':'idPF','score':0,'point':0,'idPower':"1-2-3"},
-                            'idPS':{'id':idS,'name':'idPS','score':0,'point':0,'idPower':"1-2-3"},
-                            'currentPlayer':'idPF',
-                            'room':'room-'+idF+'-'+idS,
-                            'active':true,
-                            'idPFReady':false,
-                            'idPSReady':false,
-                            'start':false,
-                            'pointAdd':{},
-                            'plateau':plateau,
-                            'nbreAction':1,
-                            'nbreActionRealise':0,
-                            'nbrePower':1,
-                            'nbrePowerRealise':0,
-                            'sizeX':sizeX,
-                            'sizeY':sizeY,
-                            'hitcombo':0,
-                            'pieceGagnante':{}
-                        };
+            newElement.id = (tableauP.length);
             tableauP.push(newElement);
         }
     }
 
     return newElement;
-
 }
 
-/*
-function StartParty(){
-  //  ------------------------------------------------------------------
-   if(checkClientParty == null){
-            checkClientParty = setInterval(function(){
 
-                var i=0;
-
-                while(i<partyInProgress.length){
-
-                    var tableCheck = partyInProgress[i];
-
-                    if(tableCheck.start && tableCheck.active){
-                        
-                        var task = new Task(function(){
-                        // Do something ...
-                        //return "a synchronous result";
-
-                        // You can also return an error
-                        // return new Error("something went wrong")
-
-
-                    //var customTask = function(donneesDePartie){
-
-
-
-
-                            var finDeParty = null;
-                            //var donneesLocales = donneesDePartie;
-                            var donneesLocales = tableCheck;
-
-
-                            var party = io.of(donneesLocales.room);
-
-                            party.on('connection', function(socket){
-
-                              console.log('someone connected');
-
-                                socket.on('changeTour',function(){
-                                    //changeTurn(donneesLocales);
-                                    console.log("changeTour  de la room : "+donneesLocales.room);
-                                });
-
-                                socket.on('addPiece',function(objet){
-                                    //addItemtoPlateau (donneesLocales,objet.x,objet.y,objet.item);
-                                    console.log("addPiece  de la room : "+donneesLocales.room);
-                                });
-
-                                socket.on('addEffet',function(objet){
-                                    //executeBonus(donneesLocales,objet.x,objet.y,objet.bonusChoice);
-                                    console.log("addEffet  de la room : "+donneesLocales.room);
-                                });
-
-                            });
-
-                            players[donneesLocales.idPF].join(donneesLocales.room);
-                            players[donneesLocales.idPS].join(donneesLocales.room);
-
-
-                            var tamponWin = false;
-                            var temponWinSec = 0;
-
-                            var tamponPieceWin = {};
-                            var intervalTempo = 300;
-
-                            finDeParty = setInterval(function(){
-
-                                if(!tamponWin){
-                                    donneesLocales = applyPhysic(donneesLocales);
-                                }else{
-                                    temponWinSec += intervalTempo;
-                                }
-
-                                if(donneesLocales.pieceGagnante.find){
-                                    tamponWin = true;
-                                    tamponPieceWin = donneesLocales.pieceGagnante;
-                                }
-
-                                party.emit('MiseAJour',donneesLocales);
-
-                                if( tamponWin && temponWinSec > intervalTempo * 6 ){
-                                    donneesLocales = traitementPointWin(donneesLocales,tamponPieceWin);
-                                    tamponWin = false;
-                                    temponWinSec = 0;
-                                }
-
-                                clearDonnees(donneesLocales);
-
-                            }, intervalTempo);
-
-
-                            //party.emit('MiseAJour',donneesDePartie);
-
-
-                            //players[donneesDePartie.idPF].join(donneesDePartie.room);
-                            //players[donneesDePartie.idPS].join(donneesDePartie.room);
-                    //}
-                    });
-
-                        // Execute the task
-                        task.run();
-                        /*tasks.addJob(customTask, tableCheck, function(result){
-                            
-
-                            console.log("rien a faire");
-
-                        });*/
-
-                      /*  tableCheck.active = false;
-                    }
-                    i++;
-                }
-
-            }, 300);
-        }
-
-}*/
-
+/* Le traitement sur le plateau de jeu qui définie les règles qui y sont appliqué comme la gravité ou la destruction d'une pièce */
 
 function applyPhysic(donneesATravailler){
 
-    var plateau = donneesATravailler.plateau;
-    
+    var allEnd = false;
     var sizeX = donneesATravailler.sizeX;
     var sizeY = donneesATravailler.sizeY;
-
 
     var fini = false, finiSuite = false;
 
@@ -672,21 +466,20 @@ function applyPhysic(donneesATravailler){
 
 		for(var j = sizeX-1; j >= 0; j--){
 
-            //console.log("plateau  ::"+j+"::"+i+" ");
-            //console.log("plateau  5  "+plateau[3][5].item);
-            if(plateau[j][i].item != 0){
+            
+            if(donneesATravailler.plateau[j][i].item != 0){
                 var end = true;
                 var k = j
                 while(end){
                     if(k == sizeX-1){
                         end = false;
                     }else{
-                        if(plateau[k+1][i].item == 0){
+                        if(donneesATravailler.plateau[k+1][i].item == 0){
 
-                            plateau[k+1][i].item = plateau[k][i].item;
+                            donneesATravailler.plateau[k+1][i].item = donneesATravailler.plateau[k][i].item;
 
-                            plateau[k][i].item = 0;
-
+                            donneesATravailler.plateau[k][i].item = 0;
+                            donneesATravailler.soundToPlay.push("http://"+addressServer+"/sound/chute_pierre.mp3");
                             fini =  true;
                             end = false;
                         }
@@ -694,92 +487,117 @@ function applyPhysic(donneesATravailler){
                     k++;
                 }
             }
+            
         }
     }
-
+    
     //-------------------------------Force----------------------
-    if(!fini){
+     if(!fini){
 
         for(var i = 0;i < sizeY;i++){
 
             for(var k = sizeX-1; k>=0 ;k--){
 
-                if(plateau[k][i].item != 0){
+                if(donneesATravailler.plateau[k][i].item != 0){
 
-                    var itemWheight = plateau[k][i].item.weight;
-
+                    var itemWheight = donneesATravailler.plateau[k][i].item.weight;
                     var somme = 0;
-                    for(var j = k;j >=0;j--){
-
-                        if(j-1 >= 0){
-
-                            if(plateau[j-1][i].item != 0){
-
-                                somme += plateau[j-1][i].item.weight;
-                           }
-
-                       }
-
+                    var j = k
+                    
+                    while(j-1 >=0 && donneesATravailler.plateau[j-1][i].item != 0){
+                        
+                        somme += donneesATravailler.plateau[j-1][i].item.weight;
+                        j--;
                     }
 
                     if((itemWheight * 2) < somme ){
 
                         donneesATravailler.hitcombo += 1;
-                        donneesATravailler.pointAdd = {'multiple':false,'point':plateau[k][i].item.weight * 2,'coordX':k,'coordY':i,'color':plateau[k][i].item.fill,'proprietaire':plateau[k][i].item.idProprietaire};
+                        donneesATravailler.soundToPlay.push("http://"+addressServer+"/sound/low_hit.mp3");
+                        
+                        var data = {
+                                    'point':donneesATravailler.plateau[k][i].item.weight * 2,
+                                    'coordX':k,
+                                    'coordY':i,
+                                    'color':donneesATravailler.plateau[k][i].item.fill,
+                                    'proprietaire':donneesATravailler.plateau[k][i].item.idProprietaire
+                                   };
+                        
+                        if(donneesATravailler.plateau[k][i].item.idProprietaire == donneesATravailler.currentPlayer){
 
-
-                        if(plateau[k][i].item.idProprietaire == donneesATravailler.currentPlayer){
-
-                            donneesATravailler.pointAdd.point = parseInt(donneesATravailler.pointAdd.point *  (donneesATravailler.hitcombo/(donneesATravailler.hitcombo - 0.1 * donneesATravailler.hitcombo)));
+                            data.point = parseInt(data.point *  (donneesATravailler.hitcombo/(donneesATravailler.hitcombo - 0.1 * donneesATravailler.hitcombo)));
 
                         }
-
-                        if(plateau[k][i].item.idProprietaire == donneesATravailler.idPF.id){
-                            donneesATravailler.score.idPF += donneesATravailler.pointAdd.point;
-                        }else if(plateau[k][i].item.idProprietaire == donneesATravailler.idPS.id){
-                            donneesATravailler.score.idPS += donneesATravailler.pointAdd.point;
-
+                        
+                        if(donneesATravailler.plateau[k][i].item.idProprietaire == donneesATravailler.idPF.id){
+                            donneesATravailler.idPF.score += data.point;
+                        }else if(donneesATravailler.plateau[k][i].item.idProprietaire == donneesATravailler.idPS.id){
+                            donneesATravailler.idPS.score += data.point;
+                        }else if(donneesATravailler.plateau[k][i].item.idProprietaire == -1){
+                            data.color = "#CCCCCC";
                         }
-
-
-                        plateau[k][i].item = 0;
+                        
+                        donneesATravailler.pointAdd.push(data);
+                        donneesATravailler.plateau[k][i].item = 0;
                         finiSuite = true;
+                        
                     }
                 }
             }
 
         }
     }
+    
 
-
-    //-----------------------------Connect Four Search-------------------------------------
+    //--------------------------------Connect Four Search------------------------------
 
     if(!fini && !finiSuite){
-
-         var pointWin = findFour(donneesATravailler);
+    
+        var pointWin = findFour(donneesATravailler);
+        
         if(pointWin.find){
-
             donneesATravailler.pieceGagnante = pointWin;
+            donneesATravailler.pointJoueur = true;
+            zoomPieceGagnante(donneesATravailler);
         }
+        
+        donneesATravailler.action = true; 
+        allEnd = true;
     }
-
-    return donneesATravailler;
-
+    
+    return allEnd;
 }
 
+/* Permet d'agrandir la dimension d'un ensemble de pièce en modifiant leurs attributs de largeur et hauteur */
 
+function zoomPieceGagnante(donnees){
+    
+    var pos = donnees.pieceGagnante.box;
 
+    var tamponArray = new Array();
+    
+    for(var i = 0; i < pos.length; i++){
+ 
+        if(donnees.plateau[pos[i].x][pos[i].y].item != 0){
+            donnees.plateau[pos[i].x][pos[i].y].item.width += 10;
+            donnees.plateau[pos[i].x][pos[i].y].item.height += 10;
+        }
+    }
+}
+
+/* fonction qui vérifie l'alignement de 4 pièces en diagonale */
 function verificationD(donneesATravailler,x,y){
-
 
     var diagonal = new Array();
     var plateau = donneesATravailler.plateau;
     var find = false;
-
+    var id =-1;
+    
     if(plateau[x][y].item != 0){
-        var id = plateau[x][y].item.idProprietaire;
+        id = plateau[x][y].item.idProprietaire;
         var compt = 1;
         var i = 1, j = 1 ;
+        
         diagonal.push({"x":x,"y":y,"point":plateau[x][y].item.weight,"color":plateau[x][y].item.fill});
 
         while(x-i >= 0 && y+j < donneesATravailler.sizeY && !find){
@@ -834,7 +652,6 @@ function verificationD(donneesATravailler,x,y){
                     diagonal = new Array();
                 }
 
-
                 i++;
                 j++;
 
@@ -848,11 +665,11 @@ function verificationD(donneesATravailler,x,y){
 
 /* Verification si un joueur à gagner un point en alignant 4 pieces */
 function findFour(donneesATravailler){
-
+    
     var plateau = donneesATravailler.plateau;
 
     var i = 0,j=0;
-    find = false;
+    var find = false;
     var id = -1;
     var compt = 0;
     var sommePoint = 0;
@@ -860,13 +677,14 @@ function findFour(donneesATravailler){
 
     /* verification horizontale */
     while(i < donneesATravailler.sizeX && !find){
-
+       
         compt = 0;
         var j = 0;
 
-        while(j < plateau.sizeY && compt < 4){
-
-            if(plateau[i][j].item != 0){
+        while(j < donneesATravailler.sizeY && compt < 4){
+            
+            
+            if(plateau[i][j].item != 0 && plateau[i][j].item.idProprietaire != -1){
                 if(plateau[i][j].item.idProprietaire == id){
                     compt++;
                     aligner.push({"x":i,"y":j,"point":plateau[i][j].item.weight, "color":plateau[i][j].item.fill});
@@ -883,9 +701,8 @@ function findFour(donneesATravailler){
             }
             j++;
 
-
+            
             if(compt >= 4){
-
                 find = true;
                 sommePoint = 0;
                 for(var k = 0;k<aligner.length;k++){
@@ -927,7 +744,6 @@ function findFour(donneesATravailler){
                 j++;
 
                 if(compt >= 4){
-
                     find = true;
                     sommePoint = 0;
                     for(var k = 0;k<aligner.length;k++){
@@ -940,6 +756,7 @@ function findFour(donneesATravailler){
    }
 
     /* verification diagonale */
+    
     if(!find){
         i = 0;
          while(i < donneesATravailler.sizeX && !find){
@@ -968,294 +785,210 @@ function findFour(donneesATravailler){
         }
     }
 
-
-
-
     return {"find":find,"id":id,"box":aligner,"point":sommePoint};
 }
 
 
+/*fonction qui est exécuté lorsqu'un joueur à aligné 4 pièces afin de gérer les points gagnés, le score */
 function traitementPointWin(donneesLocales,tamponPieceWin){
-
+    
+    var isFinDePartie = false;
     donneesLocales.hitcombo += 4;
 
-    var newPointAdd = new Array();
+    for(var i = 0 ;i< tamponPieceWin.box.length;i++){
 
-    for(var i ;i< tamponPieceWin.box.length;i++){
-
-        newPointAdd.push({
-                            'point':tamponPieceWin.box[i].point * 2,
+    donneesLocales.pointAdd.push({
+                            'point':parseInt(tamponPieceWin.box[i].point) * 2,
                             'coordX':tamponPieceWin.box[i].x,
-                            'coordY':tamponPieceWin.box[i].y
+                            'coordY':tamponPieceWin.box[i].y,
+                            'color':tamponPieceWin.box[i].color,
+                            'proprietaire':tamponPieceWin.id
                         });
     }
 
-    donneesLocales.pointAdd = {
-                                'multiple':true,
-                                'point':newPointAdd,
-                                'color':tamponPieceWin.box[0].color,
-                                'proprietaire':tamponPieceWin.id
-
-                                };
-
-
+    var scorePoint = parseInt(tamponPieceWin.point);
     if(tamponPieceWin.id == donneesLocales.idPF.id){
-        donneesLocales.idPF.score += parseInt(tamponPieceWin.point *  (donneesLocales.hitcombo/(donneesLocales.hitcombo - 0.1 * donneesLocales.hitcombo)));
+       
+        donneesLocales.idPF.score += parseInt(scorePoint + parseInt(scorePoint * (donneesLocales.hitcombo*0.1)));
+        donneesLocales.idPF.point += 1;
+        if(donneesLocales.pointPourGagner <= donneesLocales.idPF.point ){
+            console.log("TESTER");
+            finDePartie(donneesLocales.id,donneesLocales.idPF.id);
+            isFinDePartie = true;
+        }
     }else if(tamponPieceWin.id == donneesLocales.idPS.id){
-        donneesLocales.idPS.score += parseInt(tamponPieceWin.point *  (donneesLocales.hitcombo/(donneesLocales.hitcombo - 0.1 * donneesLocales.hitcombo)));
+        donneesLocales.idPS.score += parseInt(scorePoint + parseInt(scorePoint * (donneesLocales.hitcombo*0.1)));
+        donneesLocales.idPS.point += 1;
+        if(donneesLocales.pointPourGagner <= donneesLocales.idPS.point ){
+            //console.log("TESTER");
+            finDePartie(donneesLocales.id,donneesLocales.idPS.id);
+            isFinDePartie = true;
+        }
     }
 
-
-    for(var i ;i< tamponPieceWin.box.length;i++){
+    for(var i = 0;i< tamponPieceWin.box.length;i++){
 
         donneesLocales.plateau[tamponPieceWin.box[i].x][tamponPieceWin.box[i].y].item = 0;
     }
-
-    return donneesLocales;
+    return isFinDePartie;
 }
 
-
-function addItemtoPlateau (donneesLocales,x,y,item){
+/*fonction qui rajoute une pièce en x, y sur une partie */
+function addItemtoPlateau(donneesLocales,x,y,item){
 
     var success = false;
-    if(donneesLocales.plateau[x][y] == 0 && donneesLocales.nbreActionRealise < donneesLocales.nbreAction){
+    if(donneesLocales.plateau[x][y].item == 0 && donneesLocales.nbreActionRealise < donneesLocales.nbreAction){
 
-        donneesLocales.plateau[x][y] = item;
+        donneesLocales.plateau[x][y].item = item;
         donneesLocales.nbreActionRealise += 1;
         success = true;
     }
 
-    return success
 }
 
-
-function executeBonus(donneesLocales,x,y,bonusChoice){
+/* fonction qui exécute un bonus sur une partie donnée et une pièce précise */
+function executeBonus(donneesLocales,bonusChoice){
 
     var success = false;
-    var player = null;
-
-    if(donneesLocales.currentPlayer == donneesLocales.idPF.name){
-        player = donneesLocales.idPF;
-    }else if(donneesLocales.currentPlayer == donneesLocales.idPS.name){
-        player = donneesLocales.idPS;
-    }
-
+    var x = bonusChoice.x;
+    var y = bonusChoice.y;
+    
     if(donneesLocales.plateau[x][y] != 0 && donneesLocales.nbrePowerRealise < donneesLocales.nbrePower){
 
 
-        switch(bonusChoice.id){
+        switch(parseInt(bonusChoice.power.id)){
 
-            case 1: if( bonusChoice.price <= player.score){
+            case 1: if( bonusChoice.power.prix <= bonusChoice.player.score){
                         donneesLocales.plateau[x][y].item.weight = donneesLocales.plateau[x][y].item.weight * 2;
+                        if(bonusChoice.player.id == donneesLocales.idPF.id){
+                            donneesLocales.idPF.score = donneesLocales.idPF.score - bonusChoice.power.prix;
+                        }else if(bonusChoice.player.id == donneesLocales.idPS.id){
+                            donneesLocales.idPS.score = donneesLocales.idPS.score - bonusChoice.power.prix;
+                        }
                         donneesLocales.nbrePowerRealise += 1;
+                        
                         success = true;
                     }
                     break;
 
-            case 2: if( bonusChoice.price <= player.score){
+            case 2: if( bonusChoice.power.prix <= bonusChoice.player.score){
+                        donneesLocales.plateau[x][y].item.weight = parseInt(donneesLocales.plateau[x][y].item.weight) / 2;
+                        if(bonusChoice.player.id == donneesLocales.idPF.id){
+                            donneesLocales.idPF.score = donneesLocales.idPF.score - bonusChoice.power.prix;
+                        }else if(bonusChoice.player.id == donneesLocales.idPS.id){
+                            donneesLocales.idPS.score = donneesLocales.idPS.score - bonusChoice.power.prix;
+                        }
+                        donneesLocales.nbrePowerRealise += 1;
+                        success = true;
+                    }
+                    break;
+                
+            case 3: if(bonusChoice.power.prix <= bonusChoice.player.score){
                         donneesLocales.plateau[x][y].item.idProprietaire = -1;
+                        if(bonusChoice.player.id == donneesLocales.idPF.id){
+                            donneesLocales.idPF.score = donneesLocales.idPF.score - bonusChoice.power.prix;
+                        }else if(bonusChoice.player.id == donneesLocales.idPS.id){
+                            donneesLocales.idPS.score = donneesLocales.idPS.score - bonusChoice.power.prix;
+                        }
                         donneesLocales.nbrePowerRealise += 1;
                         success = true;
                     }
                     break;
 
-            case 3: if( bonusChoice.price <= player.score){
-                        donneesLocales.plateau[x][y].item.weight = parseInt(donneesLocales.plateau[x][y].item.weight / 2);
-                        donneesLocales.nbrePowerRealise += 1;
-                        success = true;
-                    }
-                    break;
+            
 
             default:success = false;
         }
 
     }
 
-    return success
 }
 
-/*
-var task = new Task(function(){
-    // Do something ...
-    //return "a synchronous result";
-
-    // You can also return an error
-    // return new Error("something went wrong")
-
-
-//var customTask = function(donneesDePartie){
-
-
-
-
-        var finDeParty = null;
-        var donneesLocales = donneesDePartie;
-
-
-        var party = io.of(donneesLocales.room);
-
-        party.on('connection', function(socket){
-
-          console.log('someone connected');
-
-            socket.on('changeTour',function(){
-                //changeTurn(donneesLocales);
-                console.log("changeTour  de la room : "+donneesLocales.room);
-            });
-
-            socket.on('addPiece',function(objet){
-                //addItemtoPlateau (donneesLocales,objet.x,objet.y,objet.item);
-                console.log("addPiece  de la room : "+donneesLocales.room);
-            });
-
-            socket.on('addEffet',function(objet){
-                //executeBonus(donneesLocales,objet.x,objet.y,objet.bonusChoice);
-                console.log("addEffet  de la room : "+donneesLocales.room);
-            });
-
-        });
-
-        players[donneesLocales.idPF].join(donneesLocales.room);
-        players[donneesLocales.idPS].join(donneesLocales.room);
-
-
-        var tamponWin = false;
-        var temponWinSec = 0;
-
-        var tamponPieceWin = {};
-        var intervalTempo = 300;
-
-        finDeParty = setInterval(function(){
-
-            if(!tamponWin){
-                donneesLocales = applyPhysic(donneesLocales);
-            }else{
-                temponWinSec += intervalTempo;
-            }
-
-            if(donneesLocales.pieceGagnante.find){
-                tamponWin = true;
-                tamponPieceWin = donneesLocales.pieceGagnante;
-            }
-
-            party.emit('MiseAJour',donneesLocales);
-
-            if( tamponWin && temponWinSec > intervalTempo * 6 ){
-                donneesLocales = traitementPointWin(donneesLocales,tamponPieceWin);
-                tamponWin = false;
-                temponWinSec = 0;
-            }
-
-            clearDonnees(donneesLocales);
-
-        }, intervalTempo);
-
-
-        //party.emit('MiseAJour',donneesDePartie);
-
-
-        //players[donneesDePartie.idPF].join(donneesDePartie.room);
-        //players[donneesDePartie.idPS].join(donneesDePartie.room);
-//}
-});
-*/                    
-
+                   
+/* fonction qui supprime des informations sur la partie par exemple à chaque envoie d'information, on supprime des informations pour le prochain envoie */
 function clearDonnees(donnees){
-
-    donnees.pointAdd = {};
-    /*
-        'id':(tableauP.length-1),
-        'idPF':{'id':idF,'name':'idPF','score':0,'point':0,'idPower':"1-2-3"},
-        'idPS':{'id':idS,'name':'idPS','score':0,'point':0,'idPower':"1-2-3"},
-        'currentPlayer':'idPF',
-        'room':'room-'+idF+'-'+idS,
-        'active':true,
-        'idPFReady':false,
-        'idPSReady':false,
-        'start':false,
-        'pointAdd':{},
-        'plateau':plateau,
-        'nbreAction':1,
-        'nbreActionRealise':0,
-        'nbrePower':1,
-        'nbrePowerRealise':0,
-        'sizeX':sizeX,
-        'sizeY':sizeY,
-        'hitcombo':0,
-        'pieceGagnante':{}
-
-    */
+    donnees.pointAdd = new Array();
+    donnees.soundToPlay = new Array();
 }
 
+/* fonction exécuté pour supprimer la partie et informer les joueurs de la fin d'une partie*/
+function finDePartie (idPartie, idJoueurGagner){
+    
+    tableauJeu.getJoueurById(partyInProgress[idPartie].idPF.id).socket.emit("finDePartie",idJoueurGagner);
+    tableauJeu.getJoueurById(partyInProgress[idPartie].idPS.id).socket.emit("finDePartie",idJoueurGagner);
+    
+    var nouveau_joueur_un = new Tableau_Joueur.Client(partyInProgress[idPartie].idPF.id, partyInProgress[idPartie].idPF.pseudo, tableauJeu.supprimer(partyInProgress[idPartie].idPF.id).socket, new Date().getTime());
 
+    var nouveau_joueur_lite_un = new Tableau_Joueur.Personne(partyInProgress[idPartie].idPF.id, partyInProgress[idPartie].idPF.pseudo);
+
+
+    lobby_server.ajout(nouveau_joueur_un);
+    lobby_client_affichage.ajout(nouveau_joueur_lite_un);
+    
+    var nouveau_joueur_deux = new Tableau_Joueur.Client(partyInProgress[idPartie].idPS.id, partyInProgress[idPartie].idPS.pseudo, tableauJeu.supprimer(partyInProgress[idPartie].idPS.id).socket, new Date().getTime());
+
+    var nouveau_joueur_lite_deux = new Tableau_Joueur.Personne(partyInProgress[idPartie].idPS.id, partyInProgress[idPartie].idPS.pseudo);
+
+    lobby_server.ajout(nouveau_joueur_deux);
+    lobby_client_affichage.ajout(nouveau_joueur_lite_deux);
+    
+    partyInProgress[idPartie].active = false;
+    
+}
+
+/* 
+    fonction qui permet d'avertir le joueur restant que son adversaire à interrompue la partie (problème de connexion ) et procède à l'initialisation     des éléments d'une partie
+*/
+function interruptionDePartie(idPartie){
+    
+    if(tableauJeu.getJoueurById(partyInProgress[idPartie].idPF.id) != null){
+        tableauJeu.getJoueurById(partyInProgress[idPartie].idPF.id).socket.emit("Interruption");
+        var nouveau_joueur_un = new Tableau_Joueur.Client(partyInProgress[idPartie].idPF.id, partyInProgress[idPartie].idPF.pseudo, tableauJeu.supprimer(partyInProgress[idPartie].idPF.id).socket, new Date().getTime());
+
+        var nouveau_joueur_lite_un = new Tableau_Joueur.Personne(partyInProgress[idPartie].idPF.id, partyInProgress[idPartie].idPF.pseudo);
+
+
+        lobby_server.ajout(nouveau_joueur_un);
+        lobby_client_affichage.ajout(nouveau_joueur_lite_un);
+    }
+    
+    if(tableauJeu.getJoueurById(partyInProgress[idPartie].idPS.id) != null){
+        tableauJeu.getJoueurById(partyInProgress[idPartie].idPS.id).socket.emit("Interruption");
+        var nouveau_joueur_deux = new Tableau_Joueur.Client(partyInProgress[idPartie].idPS.id, partyInProgress[idPartie].idPS.pseudo, tableauJeu.supprimer(partyInProgress[idPartie].idPS.id).socket, new Date().getTime());
+
+        var nouveau_joueur_lite_deux = new Tableau_Joueur.Personne(partyInProgress[idPartie].idPS.id, partyInProgress[idPartie].idPS.pseudo);
+
+
+        lobby_server.ajout(nouveau_joueur_deux);
+        lobby_client_affichage.ajout(nouveau_joueur_lite_deux);
+    }
+        
+    partyInProgress[idPartie].active = false;
+    
+}
+
+/* fonction lors du changement de tour d'une partie entre deux joueurs */
 function changeTurn(donnees){
 
-    if(donnees.currentPlayer == donnees.idPF.name){
+    if(donnees.currentPlayer == donnees.idPF.id){
 
-        donnees.currentPlayer = donnees.idPS.name;
+        donnees.currentPlayer = donnees.idPS.id;
 
-    }else if(donnees.currentPlayer == donnees.idPS.name){
+    }else if(donnees.currentPlayer == donnees.idPS.id){
 
-        donnees.currentPlayer = donnees.idPF.name;
+        donnees.currentPlayer = donnees.idPF.id;
 
     }
 
     donnees.hitcombo = 0;
     donnees.nbreActionRealise = 0;
     donnees.nbrePowerRealise = 0;
+    donnees.action = true;
+    donnees.isChangeTurn = true;
 }
 
 
-function checkTurn(tableauDeDonnees){
-
-
-
-/*La fonction gravity permet d'appliquer une certaine gravité aux pièces du plateau */
-/*
-    fini = false;
-    var plateau = tableauDeDonnees.plateau;
-    var sizeX = tableauDeDonnees.sizeX;
-    var sizeY = tableauDeDonnees.sizeY;
-
-
-	for(var i = 0;i < sizeY;i++){
-
-		for(var j = sizeX-1;j >= 0;j--){
-
-            if(this.plateau[j][i] != 0){
-               /* var end = true;
-                var k = j
-                while(end){
-                    if(k == this.sizeX-1){
-                        end = false;
-                    }else{
-                        if(this.matrice[k+1][i] == 0){
-
-                            this.matrice[k+1][i] = this.matrice[k][i];
-                            var objet = this.search(k+1,i);
-                            if(objet != null){
-                                this.matrice[k+1][i].x = objet.x-(objet.width/2);
-                                this.matrice[k+1][i].y = objet.y-(objet.height/4.5);
-                            }
-                            this.matrice[k][i]= 0;
-                            fini =  true;
-                            end = false;
-                        }
-                    }
-                    k++;
-                }*/
-          /*  }
-        }
-
-	}
-    if(fini == false && this.justAdd == true){
-        fini = true;
-    }
-    this.justAdd = false;
-    return fini;
-*/
-}
-
+/* fonction qui créé un plateau de jeu*/
 function createPlateau(nbrePieceHori,nbrePieceVerti){
 
     var plateau = new Array();
@@ -1267,140 +1000,153 @@ function createPlateau(nbrePieceHori,nbrePieceVerti){
         for(var j = 0;j<nbrePieceVerti;j++){
 
             ligne.push({
-                            "item":0
-                        });
+                "item":0
+            });
         }
 
         plateau.push(ligne);
-
     }
-
 
     return plateau;
 }
 
+/* les variables globales pour la gérer les différents éléments tel que les parties, joueurs.*/
+var lobby_server = new Tableau_Joueur.Tableau_EnAttente();
+var lobby_client_affichage = new Tableau_Joueur.Tableau_EnAttente_Affichage();
+var tableauJeu = new Tableau_Joueur.Tableau_EnJeu();
 
-var players = {};
-var user = {};
-var time_disc = {};
-var matchList = {};
-
-var tamponCheckTabParty = null;
-var checkClientParty = null;
-
+/* Le temps de jeu d'un tour dan sune partie */
+var timeTurn = 10;
 
 var partyInProgress = new Array();
-
-
-var partyAdvance = new Array();
-
 var tamponSetInter = null;
 
-//var io = require('socket.io').listen(server);
-
-//var hs = null;
-
-//io.sockets.on('connection', function (socket) {
-/*
-    hs = socket.handshake;
-    //users[hs.session.username] = socket.id;
-    //players[socket.id] = socket;
-
-    socket.on('disconnect', function () {
-        delete user[hs.session.username];
-        delete players[socket.id];
-        delete time_disc[hs.session.username];
-        //delete users[hs.session.username];
-    });
-
-    socket.on('newUser', function (username) {
-
-        hs.session.username = username;
-        players[socket.id] = socket;
-        user[hs.session.username] = socket.id;
-        time_disc[hs.session.username] = new Date().getTime();
-        players[socket.id].emit('startSync');
-        io.sockets.emit('newListe',players);
-    });
-
-    socket.on('Sync',function(){
-      time_disc[hs.session.username] = new Date().getTime();
-    });
-
-    if(tamponSetInter == null){
-        tamponSetInter = setInterval(function(){
-            verificationConn();
-        }, 10000);
-    }
-});*/
-
+/* on lance l'écoute du server */
 var io = require('socket.io').listen(server);
 
+/* Et enfin on déclare les listeners qui serviront au serveur pour coordonner les différentes requêtes */
 io.sockets.on('connection', function (socket) {
-	console.log('Fun client est connecté');
-    socket.join('multiJoueur')
-    socket.on('newUser', function (username) {
-        if(typeof(players[socket.id]) == "undefined"){
-            console.log("detected newUser");
-            socket.username = username;
-            players[socket.id] = socket;
-            user[socket.username] = socket.id;
-            time_disc[socket.username] = new Date().getTime();
-            players[socket.id].emit('startSync',socket.id);
-            //socket.of('/multiJoueur').emit('newListe',user);
-            io.sockets.in("multiJoueur").emit('newListe',user);
-        }else{
-            if(typeof(matchList[socket.id]) == "undefined"){
-                console.log("rejoind le matchmaking");
-                matchList[socket.id] = true;
-                mymatch.push({user:socket.username,socketId:socket.id});
-            }
+	
+    /* lorsqu'un nouveau joueur apparait on informe l'ensemble des joueurs*/
+    socket.on('nouveauJoueur', function (pseudoJoueur) {
+        
+        var nouveau_joueur = new Tableau_Joueur.Client(socket.id, pseudoJoueur, socket, new Date().getTime());
+        var nouveau_joueur_lite = new Tableau_Joueur.Personne(socket.id, pseudoJoueur);
+        
+        lobby_server.ajout(nouveau_joueur);
+        lobby_client_affichage.ajout(nouveau_joueur_lite);
+        
+        socket.emit('start_synchronisation',nouveau_joueur_lite);  
+        io.sockets.emit('miseAJourDeLaListeJoueur',lobby_client_affichage);
+    });
+
+    /* permet d'obtenir la liste de tous les joueurs connectés*/
+    socket.on('ListeJoueur', function () {
+        
+        socket.emit('miseAJourDeLaListeJoueur',lobby_client_affichage);
+    });
+    
+    /* permet d'entrer dans la file d'attente du matchmaking pour trouver une partie */
+    socket.on('entrerFileAttente', function (idUtilisateur) {
+        
+        if(lobby_client_affichage.getJoueurById(idUtilisateur) != null){
+            console.log("Ajouter au matchMaking");
+            mymatch.push(lobby_server.getJoueurById(idUtilisateur));
+            lobby_client_affichage.supprimer(idUtilisateur);
+            io.sockets.emit('miseAJourDeLaListeJoueur',lobby_client_affichage);
+        }
+    });
+    
+
+    /* mise à jour l'information du joueur sur le timestamp de la synchronisation */
+    socket.on('synchronisation',function(idJoueur){
+        
+        if(!lobby_server.timeLifeSynchronisation(idJoueur)){
+            tableauJeu.timeLifeSynchronisation(idJoueur);
         }
     });
 
+   /* information concernant la demande de partie d'un joueur */
+    socket.on('etatJoueurOk', function (idParty, idJoueur) {
 
-    socket.on('Sync',function(){
-      time_disc[socket.username] = new Date().getTime();
-    });
-
-    if(tamponSetInter == null){
-        tamponSetInter = setInterval(function(){
-            verificationConn();
-        }, 10000);
-    }
-
-
-    socket.on('etatPlayersOk', function (majInfo) {
-
-        var info = partyInProgress[majInfo.idParty];
-        console.log(majInfo);
-        console.log(partyInProgress);
-        if(majInfo.idPlayer == info.idPF){
-            partyInProgress[majInfo.idParty].idPFReady = true;
-            console.log("first player ready l.268");
-        }else if(majInfo.idPlayer == info.idPS){
-            partyInProgress[majInfo.idParty].idPSReady = true;
-            console.log("second player ready l.271");
+        var partie = partyInProgress[idParty];
+        if(idJoueur == partie.idPF.id){
+            partyInProgress[idParty].idPF.ready = true;
+        }else if(idJoueur == partie.idPS.id){
+            partyInProgress[idParty].idPS.ready = true;
         }
-
-        //console.log(majInfo);
     });
+    
+    /* le refus d'un joueur concernant une partie */
+    socket.on('etatJoueurNo', function (idParty, idJoueur) {
+
+        var partie = partyInProgress[idParty];
+        
+        if(idJoueur == partie.idPF.id){
+            partyInProgress[idParty].idPF.ready = false;
+        }else if(idJoueur == partie.idPS.id){
+            partyInProgress[idParty].idPS.ready = false;
+        }
+    });
+    
+    /* déconnection sur le serveur*/
+    socket.on('deconnection', function (idJoueur) {
+        lobby_server.supprimer(idJoueur);
+        lobby_client_affichage.supprimer(idJoueur);
+        tableauJeu.supprimer(idJoueur);
+        io.sockets.emit('miseAJourDeLaListeJoueur',lobby_client_affichage);
+    });
+
+    /* la joueur à fini de jouer et décide de passer son tour */
+    socket.on('changeTour',function(objetAsker){
+        if(objetAsker.idplayer == partyInProgress[objetAsker.id].currentPlayer){
+            wantToTurn[objetAsker.id] = true;
+        }
+    });
+
+    /* le joueur ajoute une pièce au plateau de jeu */
+    socket.on('addPiece',function(objet){
+        
+        if(partyInProgress[objet.id].currentPlayer == objet.idPlayer){
+            addItemtoPlateau(partyInProgress[objet.id],objet.x,objet.y,objet.item);
+            justAdd[objet.id] = true;
+        }
+    });
+
+    /* le joueur ajoute un effet sur une pièce */
+    socket.on('addEffet',function(objet){
+       
+        if(partyInProgress[objet.id].currentPlayer == objet.player.id){
+            executeBonus(partyInProgress[objet.id],objet);
+        }
+        justAdd[objet.id] = true;
+    });
+    
 });
 
+/* vérification de la synchronisation des joueurs avec le serveur afin de gérer les coupures de comminucation */
+var verification_Enligne = setInterval(function(){
+    
+    for(var i = 0; i < lobby_server.element.length;i++){
+        
+        if(new Date().getTime() - lobby_server.element[i].timeLife > 6000){
+            var id = lobby_server.element[i].id;
+            lobby_server.supprimer(id);
+            lobby_client_affichage.supprimer(id);
+            io.sockets.emit('miseAJourDeLaListeJoueur',lobby_client_affichage);
+        }else if(new Date().getTime() - lobby_server.element[i].timeLife > 3000){
+            lobby_server.element[i].almostLeave = true;
+        }
+    }
+    
+    for(var i = 0; i < tableauJeu.element.length;i++){
 
-
-
-
-
-function verificationConn(){
-     for(var i in time_disc){
-         console.log(i+"    "+time_disc[i]);
-         if(time_disc[i]+30000<(new Date().getTime())){
-            delete players[user[i]];
-            delete user[i];
-            delete time_disc[i];
-
-            io.sockets.in("multiJoueur").emit('newListe',user);
-         }
-     }
- }
+        if(new Date().getTime() - tableauJeu.element[i].timeLife > 6000){
+            var id = tableauJeu.element[i].id;
+            tableauJeu.supprimer(id);
+        }else if(new Date().getTime() - tableauJeu.element[i].timeLife > 3000){
+            tableauJeu.element[i].almostLeave = true;
+        }
+    }
+    
+}, 2000);

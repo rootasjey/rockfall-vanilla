@@ -24,5 +24,22 @@ block content
       span.square-text infos
 
   div.ghost-panel
+    div#profil_idPF.profil_player
+      img#profil_idPF_img.profil_img
+      label#profil_idPF_name.profil_name
+      span#profil_idPF_score.profil_score
+      span#profil_idPF_point.profil_point
+      
+    div#profil_idPS.profil_adversaire
+      img#profil_idPS_img.profil_img
+      label#profil_idPS_name.profil_name
+      span#profil_idPS_score.profil_score
+      span#profil_idPS_point.profil_point
+    button#passeTour Passer
+    button#bonus_0 Bonus 1
+    button#bonus_1 Bonus 2
+    button#bonus_2 Bonus 3
+    span#etatBonus Etat Bonus
     //- floating game
     <canvas id="canvas" width="800px" height="515px">This text is displayed if your browser does not support HTML5 Canvas.</canvas>
+    <audio id="sound_game"/>
