@@ -401,11 +401,16 @@ SuperSquare.prototype.SettingsEventLoginSignupButtons = function () {
     });
 };
 
+
 // Create and show the login form
 SuperSquare.prototype.SettingsShowLoginForm = function () {
     // Prevent double click bug => multiple forms
     this.SettingsRemoveEventsConnection();
-
+    /* variable pour enregistrer les informations globals servant au déroulement d'une partie */
+    var sock = null;
+    var pseudo = "";
+    var joueur_lite = null;
+    
     // Verify if a login form is already there
     if($(".login-block").length > 0) {
         this.RemoveBlock("login-block"); // Remove the form
@@ -507,87 +512,184 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                 background: "transparent",
             });
         }).click(function(){
-
+            
+            
             if(testClick==0){
 
-                var pseudo = $("input[name='login']" ).val();
+                pseudo = $("input[name='login']" ).val();
+                
+                /* la liste des images que l'utilisateur téléchargera pour l'affichage sur le navigateur*/
+                var sources = {
+                    "idPF": './images/rocks/rock-red.png',
+                    "idPS": './images/rocks/rock-ciel.png',
+                    "system_Neutre":"./images/rocks/rock-grey.png",
+                    "idPF_profile":"./icons/icon_key.png",
+                    "idPS_profile":"./icons/icon_key.png",
+                    "starA":"./images/etoile_active.png",
+                    "starNA":"./images/etoile_nonactive.png"
+                  };
+                
+                var main = null;
+                var firstReceive = 0;
+                var joueur = null;
+                var adversaire = null;
+                
+                /* on lance la connexion sur le serveur */
+                sock = new Connexion("3000", "127.0.0.1");
+                sock.start();
+                sock.listenToStartSession();
+                
+                /* puis on initialise tous les listeners d'évènement */
+                
+                /* Evenènement pour l'aarrivé de nouveau joueur */
+                sock.listener("miseAJourDeLaListeJoueur",function (lobby_client_affichage) {
 
-                tamponPseudo = pseudo;
-
-                var infoPartyLocal = null;
-                var idSocketClient = null;
-
-
-
-                socket = io.connect('http://127.0.0.1:3000');
-
-                socket.on('newListe', function (tab) {
-
-                    console.log("detected client side with ");
-                    var liste = "";
-                    for(var i in tab){
-                        liste += "  "+i+" => "+tab[i];
+                    var element = lobby_client_affichage.element;
+                    for(var i in element){
+                        console.log("  "+i+" => ");console.log(element[i]);
                     }
-                    console.log(liste);
+                });
+               
+                /* 
+                    on écoute la mise a jour venant du server et qui nous envoie les informations de la partie 
+                    importante
+                */                
+                sock.socket.on("MiseAJour",function (objet) {
+                    
+                    main.setFluxInfoServer(objet);
+                    main.valid = false;
+                                    
+                    if(firstReceive == 0){
+                                    
+                        console.log("premiere data");
+                        _myStateMulti.plateauOnlineObjet.initialisePlateau(objet);
+                        main.initInfo("profil_player","profil_adversaire");
+                        firstReceive++;
+                    }
+                    
+                    if(objet.isChangeTurn == true){
+                        main.desactiveBonus();
+                    }
+                    
+                        
+                    if(objet.currentPlayer == objet.idPF.id){
+                        main.currentPlayer = objet.idPF;
+                    }else if(objet.currentPlayer == objet.idPS.id){
+                        main.currentPlayer = objet.idPS;
+                    }
+                                    
+                    /*****************modif************/
+                    $("#profil_"+objet.idPF.name).removeClass("profil_currentPlayer");
+                    $("#profil_"+objet.idPS.name).removeClass("profil_currentPlayer");
+                    $("#profil_"+main.currentPlayer.name).addClass("profil_currentPlayer");
+                    /********************************/
+                        
+                    if(objet.idPF.id == joueur_lite.id){
+                        main.player = objet.idPF;
+                        main.adversaire = objet.idPS
+                    }else if(objet.idPS.id == joueur_lite.id){
+                        main.player = objet.idPS;
+                        main.adversaire = objet.idPF;
+                    }
+                    
+                    main.infoPlayer();
+                    
+                    if(objet.action == true){
+                        main.canContinue = true;
+                    }
+                });
+                        
+
+                /* 
+                    lancé la synchronisation avec le server ici toutes les 1 secondes on envoie un message pour
+                    prévenir qu'on est toujours présent 
+                 */
+               sock.socket.on('start_synchronisation', function (joueur_info) {
+                    joueur_lite = joueur_info;
+                    console.log("StartSynchro");console.log(joueur_lite);
+                    setInterval(function(){
+                        sock.socket.emit('synchronisation',joueur_lite.id);
+                    }, 1000);
+                                    
+                });
+                    
+                     
+                /*
+                    pour gérer la fin d'une partie
+                */
+                sock.socket.on('finDePartie', function (idJoueurGagne) {
+                   
+                    main.stop();
+                    main = null;
+                    if(idJoueurGagne == joueur_lite.id){
+                        console.log("Bravo, vous avez Gagnez!");
+                    }else{
+                        console.log("Dommage, vous avez Perdu!");            
+                    }
+                    firstReceive = 0;
                 });
                 
-                        
-                socket.on('MiseAJour', function (objet) {
-
-                    console.log("detected client side with ");
-                    //socket.emit('changeTour');
+                /*
+                    Si l'un des deux joueurs quitte la partie ( problème de connexion )
+                */                
+                sock.socket.on('Interruption', function () {
+                    main.stop();
+                    main = null;
+                    firstReceive = 0;
+                    console.log("La partie à été interrompu à cause d'un problème de connexion!");
                 });
-
-                socket.on('startSync', function (idClient) {
-                    console.log("detected startS");
-                    if(scheduleCo == null){
-                        idSocketClient = idClient;
-                        scheduleCo = setInterval(function(){
-                            socket.emit('Sync');
-                        }, 5000);
-                    }
-                });
-
-                socket.on("SyncPlayer",function(){
-                    socket.emit('Sync');
-                });
-
-
-                socket.on("majEtatPlayer",function(infoParty){
-
-                    //{'id':tableauP.length,'idPF':idF,'idPS':idS,'room':'room-'+idF+'-'+idS,'active':true,'idPFReady':false,'idPSReady':false}
-                    infoPartyLocal = infoParty;
-
-                    //console.log(infoPartyLocal);
-
-                    if(infoParty.idPF == socket.id){
-                        idJoueur = infoParty.idPF;
-                    }else if(infoParty.idPS == socket.id){
-                        idJoueur = infoParty.idPS;
+                                    
+                /*
+                    avec les informations de la partie on s'identifie avec l'id, on initialise le jeu et on envoie ok au server pour lui prévenir que nous sommes prêt
+                */                 
+                sock.socket.on("majJoueurStatusParty",function(infoParty){
+                    if(infoParty.idPF.id == joueur_lite.id){
+                        joueur = infoParty.idPF;
+                        adversaire = infoParty.idPS;
+                    }else if(infoParty.idPS.id == joueur_lite.id){
+                        joueur = infoParty.idPS;
+                        adversaire = infoParty.idPF;
                     }else{
-                        idJoueur = -1;
+                        console.log('ERROR : supersquare-setting.js => !!majJoueurStatus');
+                        console.log(joueur_lite);
+                        joueur = null;
 
                     }
-
-                    console.log("je suis prêt!!");
-                    //alert("ddd :)");
-                    socket.emit("etatPlayersOk",{'idParty':infoParty.id,'idPlayer':idSocketClient});
-
-
+                    idParty = infoParty.id;
+                        
+                    loadImages(sources, function(images) {
+                        console.log("Start");
+                        main = new Main(images, joueur, adversaire, sock.socket, infoParty.pointPourGagner);
+                        main.remplirPiecePlayer();
+                        main.initBonus();
+                        main.listener();
+                        main.startSoundGame();
+                        sock.socket.emit("etatJoueurOk",infoParty.id,joueur_lite.id);
+                        
+                      });
+                                    
+                    $(".ghost-panel").css({display:"block" });
+                    $("#canvas").css({display:"block",backgroundColor:"#bab8b8"});
+                    
+                    console.log("normalement le canvas devrait apparaitre");
                 });
-
-                console.log(pseudo);
-                socket.emit('newUser',pseudo);
+                                    
+                /* on prévient qu'un nouveau joueur est apparu*/                    
+                sock.socket.emit('nouveauJoueur',pseudo);
                 testClick++;
+                                    
             }else{
-
-                socket.emit('newUser',tamponPseudo);
+                /* on rejoint le matchmaking pour ensuite lancer une partie une fois trouver*/
+                console.log(pseudo+" veut rejoindre le matchmaking");
+                sock.socket.emit('entrerFileAttente',joueur_lite.id);            
             }
-
+                        
 
         })
         .appendTo(".login-form");
-
+        
+                        
+        
         var testClick = 0;
         var tamponPseudo = "";
         // Animations
