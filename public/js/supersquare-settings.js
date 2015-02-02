@@ -561,7 +561,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                         _myStateMulti.plateauOnlineObjet.initialisePlateau(objet);
                         main.initInfo("profil_player","profil_adversaire");
                         firstReceive++;
-                    
+                    }
                     
                     if(objet.isChangeTurn == true){
                         main.desactiveBonus();
