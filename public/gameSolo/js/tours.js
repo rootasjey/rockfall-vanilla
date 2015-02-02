@@ -1,25 +1,23 @@
 /* La fonction tours permet de gérer le jeu entre différents participant */
 
-function Tours(stateGame,nombreActionAdd, nombreActionEffet, toursTime){
+function Tours(stateGame, nombreActionAdd, nombreActionEffet, toursTime){
     this.stateGame = stateGame;
 
-    
     this.nombreActionAdd = nombreActionAdd;
     this.nombreActionEffet = nombreActionEffet;
-    
-    
+
     this.actionAddRock = 0;
     this.actionEffetRock = 0;
-    
+
     this.endTour = false;
-    
+
     this.toursTime = toursTime;
-    
+
     this.cycleTime = toursTime;
     this.intervalVerification = null;
-    
+
     this.time = null;
-    
+
     _myTours = this;
 }
 
@@ -48,7 +46,7 @@ Tours.prototype.canAdd = function(){
     if(this.actionAddRock >= this.nombreActionAdd){
         can = false;
     }
-    
+
     return can;
 }
 
@@ -58,7 +56,7 @@ Tours.prototype.canEffet = function(){
     if(this.actionEffetRock >= this.nombreActionEffet){
         can = false;
     }
-    
+
     return can;
 }
 
@@ -70,12 +68,12 @@ Tours.prototype.endCycle  = function(){
         this.intervalVerification = null;
         this.time.stop();
     }
-    
+
 }
 
 /* fonction qui decrémente le temps d'un tour */
 Tours.prototype.timeCycle = function(callback){
-    
+
         this.time = $.timer(function() {
                 if(_myTours.cycleTime > 0 && _myTours.stateGame.start){
                     _myTours.cycleTime--;
@@ -98,34 +96,34 @@ Tours.prototype.timeCycle = function(callback){
 
 /* fonction qui lance le cycle de jeux */
 Tours.prototype.launchCycle = function(ctx, textColor, idName, idScore){
-    
-    
+
+
     this.cycleTime = this.toursTime;
-    
-    
+
+
     this.intervalVerification = $.timer(function(){//setInterval(function(){
-        
+
         if(_myTours.cycleTime <= 0){
             _myTours.endTour = true;
         }
         if( (!_myTours.canAdd() && !_myTours.canEffet() || _myTours.endTour) && !_myTours.stateGame.endOfForce){
-        
+
             var i = 0,find = false;
             while(i<_myTours.stateGame.players.length && !find){
-               
+
                if(_myTours.stateGame.players[i].identifiant == _myTours.stateGame.activePlayers.identifiant){
-                   
+
                    for(var b = 0;b<_myTours.stateGame.activePlayers.power.length;b++){
                         _myTours.stateGame.activePlayers.power[b].unlisten(_myTours.stateGame);
                     }
                     $("#active-power").html("No power-Up");
-                   
+
                     if(i+1 == _myTours.stateGame.players.length){
                        _myTours.stateGame.activePlayers = _myTours.stateGame.players[0];
                     }else{
                        _myTours.stateGame.activePlayers = _myTours.stateGame.players[i+1];
                     }
-                   
+
                     for(var b = 0;b<_myTours.stateGame.activePlayers.power.length;b++){
                         _myTours.stateGame.activePlayers.power[b].listen(_myTours.stateGame);
                     }
@@ -146,14 +144,14 @@ Tours.prototype.launchCycle = function(ctx, textColor, idName, idScore){
                     _myTours.actionAddRock = 0;
                     _myTours.actionEffetRock = 0;
                     _myTours.stateGame.activePlayers.pieces.changeColor(_myTours.stateGame.activePlayers.colorShape);
-                   
+
                    ChangePlayer(_myTours.stateGame);
                    find = true;
                }
                i++;
            }
         }
-        
+
     });//,300);
     this.intervalVerification.set({ time : 300, autostart : true });
 }

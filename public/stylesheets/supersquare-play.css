@@ -164,7 +164,7 @@
 }
 .square[function='play'] .powers-panel {
   width: 80px;
-  top: 170px;
+  top: 230px;
   right: -10px;
   position: absolute;
 }
@@ -629,48 +629,32 @@
 @-moz-keyframes activeUser {
   from {
     opacity: 0.5;
-    height: 70px;
-    width: 70px;
   }
   to {
     opacity: 1;
-    height: 75px;
-    width: 75px;
   }
 }
 @-webkit-keyframes activeUser {
   from {
     opacity: 0.5;
-    height: 70px;
-    width: 70px;
   }
   to {
     opacity: 1;
-    height: 75px;
-    width: 75px;
   }
 }
 @-o-keyframes activeUser {
   from {
     opacity: 0.5;
-    height: 70px;
-    width: 70px;
   }
   to {
     opacity: 1;
-    height: 75px;
-    width: 75px;
   }
 }
 @keyframes activeUser {
   from {
     opacity: 0.5;
-    height: 70px;
-    width: 70px;
   }
   to {
     opacity: 1;
-    height: 75px;
-    width: 75px;
   }
 }

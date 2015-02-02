@@ -29,7 +29,7 @@ function LoadBoard() {
         "System_Neutre":"./images/rocks/rock-grey.png"
       };
 
-    /* 
+    /*
         appel de la fonction qui permet de charger les images et une fois charger lance le jeux
         function in globals.js l.94
     */
@@ -95,7 +95,6 @@ function CanvasState (players,pointToWin, imageLoad){
         var name = this.players[r].nom;
         this.players[r].image = this.imageLoad[name];
         this.players[r].getPiece();
-
     }
 
     /* initialise le jeux en commencant par choisir le joueur qui commencera, basiquement le premier du tableau */
@@ -512,10 +511,10 @@ CanvasState.prototype.drawPointPlayer = function(){
 
     for(var i = 0;i<this.pointToWin;i++){
       if(this.activePlayers.point>i){
-          (new Shape(initPosX, initPosY-(i*100), 50, 50, 0, "yellow", null)).drawStar(this.ctx, 45, 5, 0.5);
+          (new Shape(initPosX, initPosY-(i*50), 50, 50, 0, "yellow", null)).drawStar(this.ctx, 25, 5, 0.5);
 
       }else{
-          (new Shape(initPosX, initPosY-(i*100), 50, 50, 0, "grey", null)).drawStar(this.ctx, 45, 5, 0.5);
+          (new Shape(initPosX, initPosY-(i*50), 50, 50, 0, "grey", null)).drawStar(this.ctx, 25, 5, 0.5);
       }
     }
 
