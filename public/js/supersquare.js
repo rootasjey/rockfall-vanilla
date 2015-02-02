@@ -172,8 +172,8 @@ SuperSquare.prototype.EventMouseClick = function () {
         // Depending of the Square's function, the size will be different
         if (attr === "connect") {
             ss.Expend('300px', '300px', null, '700');
-        } else{ 
-            ss.Expend(); 
+        } else{
+            ss.Expend();
         };
     });
 };
@@ -249,7 +249,7 @@ SuperSquare.prototype.Expend = function (height, width, hContainer, wContainer) 
         $(this.selector).css({
             textAlign       : "left"
         });
-    } 
+    }
     else if (this.purpose === "leader") {
         $(this.selector).css({
             textAlign       : "left"
@@ -603,7 +603,7 @@ SuperSquare.prototype.MiniIconConnectEvents = function () {
         if (!ssPlay.settings.connected) {
             ss.ConnectFormToggleVisibility(); // if we're connected the form is not visible
         }
-        
+
         ss.Minimize();
     });
 
@@ -698,8 +698,8 @@ SuperSquare.prototype.ConnectFormToggleVisibility = function() {
 
         this.ConnectFormEvents(); // Add events on buttons & inputs
     };
-            
-    if ($(this.selector + " .connect-block").css("display") !== "block") {                                            
+
+    if ($(this.selector + " .connect-block").css("display") !== "block") {
         // Animations
         $(this.selector + " .connect-block").css({
             display: "block"
@@ -744,7 +744,7 @@ SuperSquare.prototype.ConnectFormToggleVisibility = function() {
             // Extend the container
             $(this.selector).animate({ height: "+=300px"});
         }
-    } 
+    }
     else{
         // Animations
         $(this.selector + " .img-input")
@@ -773,7 +773,7 @@ SuperSquare.prototype.ConnectFormToggleVisibility = function() {
         window.setTimeout(function(ss) {
             $(ss.selector + " .connect-block").css({ display: "none" });
         }, 2000, this);
-        
+
     };
 };
 
@@ -896,7 +896,7 @@ SuperSquare.prototype.ConnectFormSignupToggleVisibility = function() {
 
         $(sbclass).css({ display: "block" })
                   .animate({ height: "100px" });
-        
+
 
         $(sbclass + " .img-input")
         .css({ right: "0" })
@@ -906,7 +906,7 @@ SuperSquare.prototype.ConnectFormSignupToggleVisibility = function() {
         // Reduce the container
         $(this.selector).animate({ height: "-=100px"});
 
-        $(sbclass).animate({ 
+        $(sbclass).animate({
             height: "0"
         }, {
             complete: function() {
@@ -921,8 +921,8 @@ SuperSquare.prototype.ConnectSubmitLogin = function() {
     var _url = null;
     var request; // variable to hold request
 
-    
-    
+
+
     // Bind to the submit event of our form
     $(".login-form").submit(function(event) {
         if (request) request.abort(); // abort any pending request
@@ -930,12 +930,12 @@ SuperSquare.prototype.ConnectSubmitLogin = function() {
         var ss = FindSuperSquare("connect");
         // Determine if it's a connection or a signup
         var active = $(ss.selector + " .text-button[stats='active']");
-        
+
         if (active.html() === "login")
             _url  = "/login/";
         else if (active.html() === "signup")
             _url  = "/signup/";
-        
+
 
         // Setup some local variables
         var $form = $(this);
@@ -1011,14 +1011,14 @@ SuperSquare.prototype.NotifyConnected = function(user) {
         html: "<span class='message'> Welcome back, " + user.name + " ! </span>",
     }).css({ opacity: 0 }).appendTo(this.selector + " .user-dashboard");
 
-    
+
     // Animations : Welcome message
     window.setTimeout(function(msg, iconLogout) {
         msg.css({ top: "20px" })
            .animate({ top: "0", opacity: 1 });
 
         iconLogout.css({ height: "0", width: "0"})
-                  .animate({height: "30px", width: "30px", opacity: "0.2" }); 
+                  .animate({height: "30px", width: "30px", opacity: "0.2" });
     }, 2000, msg, iconLogout);
 
     // Minimize the Super Square connect
@@ -1061,14 +1061,14 @@ SuperSquare.prototype.NotifySigned = function(user) {
         html: "<span class='message'> Hello, " + user.name + " ! </span>",
     }).css({ opacity: 0 }).appendTo(this.selector + " .user-dashboard");
 
-    
+
     // Animations : Welcome message
     window.setTimeout(function(msg, iconLogout) {
         msg.css({ top: "20px" })
            .animate({ top: "0", opacity: 1 });
 
         iconLogout.css({ height: "0", width: "0"})
-                  .animate({height: "30px", width: "30px", opacity: "0.2" }); 
+                  .animate({height: "30px", width: "30px", opacity: "0.2" });
     }, 2000, msg, iconLogout);
 };
 
@@ -1077,7 +1077,7 @@ SuperSquare.prototype.ConnectLogout = function() {
     // Get the Super Squares
     var ssPlay = FindSuperSquare("play");
     var ssConnect = FindSuperSquare("connect");
-    
+
 
     // Hide everything in the dashboard
     $(ssConnect.selector + " .user-dashboard").children().animate({
@@ -1215,23 +1215,23 @@ SuperSquare.prototype.PopulateUserDashboard = function() {
 
 // Ajax request to login (old)
 SuperSquare.prototype.ConnectSubmitLoginOld = function() {
-    $('.login-form').submit(function () { 
-        $.ajax({ 
-            type: 'POST', 
-            url: '/login/', 
-            data: $(".login-form").serialize(), 
-            success: function (data) { 
-                if (data !== 'wrong password' && data !== 'wrong login') { 
+    $('.login-form').submit(function () {
+        $.ajax({
+            type: 'POST',
+            url: '/login/',
+            data: $(".login-form").serialize(),
+            success: function (data) {
+                if (data !== 'wrong password' && data !== 'wrong login') {
                     console.log(data);
-                } 
+                }
                 else {
-                } 
-            }, 
+                }
+            },
             error: function (data) {
                 console.log("wrong password");
-            } 
+            }
          });
-        return false; 
+        return false;
      });
 };
 
