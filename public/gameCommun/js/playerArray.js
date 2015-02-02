@@ -115,15 +115,15 @@ Tableau_EnAttente_Affichage.prototype = Object.create(Tableau.prototype);
 
 Tableau_EnAttente_Affichage.prototype.getJoueurById = function(idJoueur){
 
-    var element = null;
+    var elementTrouve = null;
     var i = 0;
-    while(i<this.element.length && element == null){
+    while(i<this.element.length && elementTrouve == null){
         if(this.element[i].id == idJoueur){
-            element = this.element[i];
+            elementTrouve = this.element[i];
         }
         i++;
     }
-    return element;
+    return elementTrouve;
 
 }
 
@@ -144,15 +144,15 @@ Tableau_EnAttente.prototype.timeLifeSynchronisation = function(idJoueur){
 
 Tableau_EnAttente.prototype.getJoueurById = function(idJoueur){
 
-    var element = null;
+    var elementTrouve = null;
     var i = 0;
-    while(i<this.element.length && element == null){
+    while(i<this.element.length && elementTrouve == null){
         if(this.element[i].id == idJoueur){
-            element = this.element[i];
+            elementTrouve = this.element[i];
         }
         i++;
     }
-    return element;
+    return elementTrouve;
 
 }
 

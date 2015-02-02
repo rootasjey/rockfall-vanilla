@@ -298,7 +298,6 @@ function askMatching(joueurUn, joueurDeux){
             if(donneesLocales.idPF.ready == true && donneesLocales.idPS.ready == true){
 
                 if(tableauJeu.getJoueurById(donneesLocales.idPF.id) != null && tableauJeu.getJoueurById(donneesLocales.idPS.id) != null){
-
                     if(!tableauJeu.isBientotHorsConnexion(tableauJeu.getJoueurById(donneesLocales.idPF.id)) && !tableauJeu.isBientotHorsConnexion(tableauJeu.getJoueurById(donneesLocales.idPS.id))){
 
                         if(donneesLocales.pointJoueur == true){
@@ -818,7 +817,6 @@ function traitementPointWin(donneesLocales,tamponPieceWin){
         donneesLocales.idPF.score += parseInt(scorePoint + parseInt(scorePoint * (donneesLocales.hitcombo*0.1)));
         donneesLocales.idPF.point += 1;
         if(donneesLocales.pointPourGagner <= donneesLocales.idPF.point ){
-            console.log("TESTER");
             finDePartie(donneesLocales.id,donneesLocales.idPF.id);
             isFinDePartie = true;
         }
@@ -826,7 +824,6 @@ function traitementPointWin(donneesLocales,tamponPieceWin){
         donneesLocales.idPS.score += parseInt(scorePoint + parseInt(scorePoint * (donneesLocales.hitcombo*0.1)));
         donneesLocales.idPS.point += 1;
         if(donneesLocales.pointPourGagner <= donneesLocales.idPS.point ){
-            //console.log("TESTER");
             finDePartie(donneesLocales.id,donneesLocales.idPS.id);
             isFinDePartie = true;
         }

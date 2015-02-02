@@ -543,7 +543,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                 sock.listener("miseAJourDeLaListeJoueur",function (lobby_client_affichage) {
 
                     var element = lobby_client_affichage.element;
-                    for(var i in element){
+                    for(var i = 0;i< element.length;i++){
                         console.log("  "+i+" => ");console.log(element[i]);
                     }
                 });
@@ -558,12 +558,10 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                     main.valid = false;
                                     
                     if(firstReceive == 0){
-                                    
-                        console.log("premiere data");
                         _myStateMulti.plateauOnlineObjet.initialisePlateau(objet);
                         main.initInfo("profil_player","profil_adversaire");
                         firstReceive++;
-                    }
+                    
                     
                     if(objet.isChangeTurn == true){
                         main.desactiveBonus();
@@ -604,7 +602,6 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                  */
                sock.socket.on('start_synchronisation', function (joueur_info) {
                     joueur_lite = joueur_info;
-                    console.log("StartSynchro");console.log(joueur_lite);
                     setInterval(function(){
                         sock.socket.emit('synchronisation',joueur_lite.id);
                     }, 1000);
@@ -654,14 +651,13 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
 
                     }
                     idParty = infoParty.id;
-                        
                     loadImages(sources, function(images) {
-                        console.log("Start");
                         main = new Main(images, joueur, adversaire, sock.socket, infoParty.pointPourGagner);
                         main.remplirPiecePlayer();
                         main.initBonus();
                         main.listener();
                         main.startSoundGame();
+                                
                         sock.socket.emit("etatJoueurOk",infoParty.id,joueur_lite.id);
                         
                       });
