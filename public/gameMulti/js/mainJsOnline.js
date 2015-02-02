@@ -393,7 +393,7 @@ Main.prototype.startSoundGame = function(){
  
     this.soundInterval = setInterval( (function(){
     
-        if(this.listeSound.length>0){
+        if(this.listeSound.length > 0){
             var player = document.getElementById('sound_game');
             player.setAttribute('src',this.listeSound[0]);
             player.play();
