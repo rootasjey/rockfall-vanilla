@@ -231,7 +231,7 @@ var server = http.createServer(app).listen(app.get('port'), function(){
         addressServer = server.address().address+":"+app.get('port');
     }else{
         addressServer += ":"+app.get('port');
-        
+
     }
     console.log("En attente de connexion sur le port :"+app.get('port'));
 });
@@ -259,22 +259,22 @@ function askMatching(joueurUn, joueurDeux){
 
     var idJoueurUn = joueurUn.id;
     var idJoueurDeux = joueurDeux.id;
-    
+
     this.party = addParty(partyInProgress, joueurUn, joueurDeux);
     justAdd[this.party.id] = false;
     wantToTurn[this.party.id] = false;
-    
+
     if(lobby_server.getJoueurById(idJoueurUn) != null && lobby_server.getJoueurById(idJoueurDeux) != null){
-       
+
         if(!lobby_server.isBientotHorsConnexion(lobby_server.getJoueurById(idJoueurUn)) && !lobby_server.isBientotHorsConnexion(lobby_server.getJoueurById(idJoueurDeux))){
-            
+
             tableauJeu.ajout(lobby_server.supprimer(idJoueurUn));
             tableauJeu.ajout(lobby_server.supprimer(idJoueurDeux));
             tableauJeu.getJoueurById(idJoueurUn).socket.emit("majJoueurStatusParty",this.party);
             tableauJeu.getJoueurById(idJoueurDeux).socket.emit("majJoueurStatusParty",this.party);
         }
     }
-    
+
     this.tamponWin = false;
     this.temponWinSec = 0;
 
@@ -283,24 +283,24 @@ function askMatching(joueurUn, joueurDeux){
     this.countForSeconde = 0;
 
     this.countForPointPlayer = 0;
-    
+
     this.endOfPhysic = true;
-    
+
     this.resetStateBonus = false;
-    
+
     this.isFinDePartie = false;
 
     /*----------------------------------------------------------Attente --------------------------------*/
-        
+
         this.partyTamponInterval = setInterval( (function(){
-        
+
             var donneesLocales = partyInProgress[this.party.id];
             if(donneesLocales.idPF.ready == true && donneesLocales.idPS.ready == true){
 
                 if(tableauJeu.getJoueurById(donneesLocales.idPF.id) != null && tableauJeu.getJoueurById(donneesLocales.idPS.id) != null){
 
                     if(!tableauJeu.isBientotHorsConnexion(tableauJeu.getJoueurById(donneesLocales.idPF.id)) && !tableauJeu.isBientotHorsConnexion(tableauJeu.getJoueurById(donneesLocales.idPS.id))){
-                
+
                         if(donneesLocales.pointJoueur == true){
 
                             donneesLocales.action = false;
@@ -334,7 +334,7 @@ function askMatching(joueurUn, joueurDeux){
 
                             }
 
-                            if(justAdd[this.party.id] == false){   
+                            if(justAdd[this.party.id] == false){
                                 this.endOfPhysic = applyPhysic(donneesLocales);
 
                             }else{
@@ -361,9 +361,9 @@ function askMatching(joueurUn, joueurDeux){
                     if(donneesLocales.pointJoueur == false){
                         this.countForSeconde++;
                     }
-                    
+
                     partyInProgress[this.party.id] = donneesLocales;
-                    
+
                     }else{
                         interruptionDePartie(donneesLocales.id);
                         clearInterval(this.partyTamponInterval);
@@ -384,9 +384,9 @@ function askMatching(joueurUn, joueurDeux){
             if(this.isFinDePartie){
                 clearInterval(this.partyTamponInterval);
             }
-            
+
         }).bind(this), this.intervalTempo);
-    
+
 }
 
 
@@ -400,7 +400,7 @@ function addParty(tableauP, joueurUn, joueurDeux){
     var plateau = createPlateau(sizeX,sizeY);
     var idF = joueurUn.id;
     var idS = joueurDeux.id;
-    
+
     newElement = {
         'id':0,
         'idPF':{'id':idF, 'name':'idPF', 'pseudo':joueurUn.pseudo, 'score':0, 'point':0, 'idPower':"1;20;x2-2;40;/2-3;80;[]", 'piece':"5-10-15",'color':"blue",'ready':null},
@@ -426,18 +426,18 @@ function addParty(tableauP, joueurUn, joueurDeux){
         'soundToPlay':new Array(),
         'finDeParty':{}
     };
-    
+
     if(tableauP.length == 0){
-        
+
         tableauP.push(newElement);
-        
+
     }else{
-        
+
         var noOld = false, i=0;
         while(i<tableauP.length && !noOld){
 
             if(!tableauP[i].active){
-                
+
                 newElement.id = i;
                 tableauP[i] = newElement;
                 idParty = i;
@@ -472,7 +472,7 @@ function applyPhysic(donneesATravailler){
 
 		for(var j = sizeX-1; j >= 0; j--){
 
-            
+
             if(donneesATravailler.plateau[j][i].item != 0){
                 var end = true;
                 var k = j
@@ -493,10 +493,10 @@ function applyPhysic(donneesATravailler){
                     k++;
                 }
             }
-            
+
         }
     }
-    
+
     //-------------------------------Force----------------------
      if(!fini){
 
@@ -509,9 +509,9 @@ function applyPhysic(donneesATravailler){
                     var itemWheight = donneesATravailler.plateau[k][i].item.weight;
                     var somme = 0;
                     var j = k
-                    
+
                     while(j-1 >=0 && donneesATravailler.plateau[j-1][i].item != 0){
-                        
+
                         somme += donneesATravailler.plateau[j-1][i].item.weight;
                         j--;
                     }
@@ -520,7 +520,7 @@ function applyPhysic(donneesATravailler){
 
                         donneesATravailler.hitcombo += 1;
                         donneesATravailler.soundToPlay.push("http://"+addressServer+"/sound/low_hit.mp3");
-                        
+
                         var data = {
                                     'point':donneesATravailler.plateau[k][i].item.weight * 2,
                                     'coordX':k,
@@ -528,13 +528,13 @@ function applyPhysic(donneesATravailler){
                                     'color':donneesATravailler.plateau[k][i].item.fill,
                                     'proprietaire':donneesATravailler.plateau[k][i].item.idProprietaire
                                    };
-                        
+
                         if(donneesATravailler.plateau[k][i].item.idProprietaire == donneesATravailler.currentPlayer){
 
                             data.point = parseInt(data.point *  (donneesATravailler.hitcombo/(donneesATravailler.hitcombo - 0.1 * donneesATravailler.hitcombo)));
 
                         }
-                        
+
                         if(donneesATravailler.plateau[k][i].item.idProprietaire == donneesATravailler.idPF.id){
                             donneesATravailler.idPF.score += data.point;
                         }else if(donneesATravailler.plateau[k][i].item.idProprietaire == donneesATravailler.idPS.id){
@@ -542,48 +542,48 @@ function applyPhysic(donneesATravailler){
                         }else if(donneesATravailler.plateau[k][i].item.idProprietaire == -1){
                             data.color = "#CCCCCC";
                         }
-                        
+
                         donneesATravailler.pointAdd.push(data);
                         donneesATravailler.plateau[k][i].item = 0;
                         finiSuite = true;
-                        
+
                     }
                 }
             }
 
         }
     }
-    
+
 
     //--------------------------------Connect Four Search------------------------------
 
     if(!fini && !finiSuite){
-    
+
         var pointWin = findFour(donneesATravailler);
-        
+
         if(pointWin.find){
             donneesATravailler.pieceGagnante = pointWin;
             donneesATravailler.pointJoueur = true;
             zoomPieceGagnante(donneesATravailler);
         }
-        
-        donneesATravailler.action = true; 
+
+        donneesATravailler.action = true;
         allEnd = true;
     }
-    
+
     return allEnd;
 }
 
 /* Permet d'agrandir la dimension d'un ensemble de pièce en modifiant leurs attributs de largeur et hauteur */
 
 function zoomPieceGagnante(donnees){
-    
+
     var pos = donnees.pieceGagnante.box;
 
     var tamponArray = new Array();
-    
+
     for(var i = 0; i < pos.length; i++){
- 
+
         if(donnees.plateau[pos[i].x][pos[i].y].item != 0){
             donnees.plateau[pos[i].x][pos[i].y].item.width += 10;
             donnees.plateau[pos[i].x][pos[i].y].item.height += 10;
@@ -598,12 +598,12 @@ function verificationD(donneesATravailler,x,y){
     var plateau = donneesATravailler.plateau;
     var find = false;
     var id =-1;
-    
+
     if(plateau[x][y].item != 0){
         id = plateau[x][y].item.idProprietaire;
         var compt = 1;
         var i = 1, j = 1 ;
-        
+
         diagonal.push({"x":x,"y":y,"point":plateau[x][y].item.weight,"color":plateau[x][y].item.fill});
 
         while(x-i >= 0 && y+j < donneesATravailler.sizeY && !find){
@@ -671,7 +671,7 @@ function verificationD(donneesATravailler,x,y){
 
 /* Verification si un joueur à gagner un point en alignant 4 pieces */
 function findFour(donneesATravailler){
-    
+
     var plateau = donneesATravailler.plateau;
 
     var i = 0,j=0;
@@ -683,13 +683,13 @@ function findFour(donneesATravailler){
 
     /* verification horizontale */
     while(i < donneesATravailler.sizeX && !find){
-       
+
         compt = 0;
         var j = 0;
 
         while(j < donneesATravailler.sizeY && compt < 4){
-            
-            
+
+
             if(plateau[i][j].item != 0 && plateau[i][j].item.idProprietaire != -1){
                 if(plateau[i][j].item.idProprietaire == id){
                     compt++;
@@ -707,7 +707,7 @@ function findFour(donneesATravailler){
             }
             j++;
 
-            
+
             if(compt >= 4){
                 find = true;
                 sommePoint = 0;
@@ -762,7 +762,7 @@ function findFour(donneesATravailler){
    }
 
     /* verification diagonale */
-    
+
     if(!find){
         i = 0;
          while(i < donneesATravailler.sizeX && !find){
@@ -797,7 +797,7 @@ function findFour(donneesATravailler){
 
 /*fonction qui est exécuté lorsqu'un joueur à aligné 4 pièces afin de gérer les points gagnés, le score */
 function traitementPointWin(donneesLocales,tamponPieceWin){
-    
+
     var isFinDePartie = false;
     donneesLocales.hitcombo += 4;
 
@@ -814,7 +814,7 @@ function traitementPointWin(donneesLocales,tamponPieceWin){
 
     var scorePoint = parseInt(tamponPieceWin.point);
     if(tamponPieceWin.id == donneesLocales.idPF.id){
-       
+
         donneesLocales.idPF.score += parseInt(scorePoint + parseInt(scorePoint * (donneesLocales.hitcombo*0.1)));
         donneesLocales.idPF.point += 1;
         if(donneesLocales.pointPourGagner <= donneesLocales.idPF.point ){
@@ -858,7 +858,7 @@ function executeBonus(donneesLocales,bonusChoice){
     var success = false;
     var x = bonusChoice.x;
     var y = bonusChoice.y;
-    
+
     if(donneesLocales.plateau[x][y] != 0 && donneesLocales.nbrePowerRealise < donneesLocales.nbrePower){
 
 
@@ -872,7 +872,7 @@ function executeBonus(donneesLocales,bonusChoice){
                             donneesLocales.idPS.score = donneesLocales.idPS.score - bonusChoice.power.prix;
                         }
                         donneesLocales.nbrePowerRealise += 1;
-                        
+
                         success = true;
                     }
                     break;
@@ -888,7 +888,7 @@ function executeBonus(donneesLocales,bonusChoice){
                         success = true;
                     }
                     break;
-                
+
             case 3: if(bonusChoice.power.prix <= bonusChoice.player.score){
                         donneesLocales.plateau[x][y].item.idProprietaire = -1;
                         if(bonusChoice.player.id == donneesLocales.idPF.id){
@@ -901,7 +901,7 @@ function executeBonus(donneesLocales,bonusChoice){
                     }
                     break;
 
-            
+
 
             default:success = false;
         }
@@ -910,7 +910,7 @@ function executeBonus(donneesLocales,bonusChoice){
 
 }
 
-                   
+
 /* fonction qui supprime des informations sur la partie par exemple à chaque envoie d'information, on supprime des informations pour le prochain envoie */
 function clearDonnees(donnees){
     donnees.pointAdd = new Array();
@@ -919,10 +919,10 @@ function clearDonnees(donnees){
 
 /* fonction exécuté pour supprimer la partie et informer les joueurs de la fin d'une partie*/
 function finDePartie (idPartie, idJoueurGagner){
-    
+
     tableauJeu.getJoueurById(partyInProgress[idPartie].idPF.id).socket.emit("finDePartie",idJoueurGagner);
     tableauJeu.getJoueurById(partyInProgress[idPartie].idPS.id).socket.emit("finDePartie",idJoueurGagner);
-    
+
     var nouveau_joueur_un = new Tableau_Joueur.Client(partyInProgress[idPartie].idPF.id, partyInProgress[idPartie].idPF.pseudo, tableauJeu.supprimer(partyInProgress[idPartie].idPF.id).socket, new Date().getTime());
 
     var nouveau_joueur_lite_un = new Tableau_Joueur.Personne(partyInProgress[idPartie].idPF.id, partyInProgress[idPartie].idPF.pseudo);
@@ -930,23 +930,23 @@ function finDePartie (idPartie, idJoueurGagner){
 
     lobby_server.ajout(nouveau_joueur_un);
     lobby_client_affichage.ajout(nouveau_joueur_lite_un);
-    
+
     var nouveau_joueur_deux = new Tableau_Joueur.Client(partyInProgress[idPartie].idPS.id, partyInProgress[idPartie].idPS.pseudo, tableauJeu.supprimer(partyInProgress[idPartie].idPS.id).socket, new Date().getTime());
 
     var nouveau_joueur_lite_deux = new Tableau_Joueur.Personne(partyInProgress[idPartie].idPS.id, partyInProgress[idPartie].idPS.pseudo);
 
     lobby_server.ajout(nouveau_joueur_deux);
     lobby_client_affichage.ajout(nouveau_joueur_lite_deux);
-    
+
     partyInProgress[idPartie].active = false;
-    
+
 }
 
-/* 
+/*
     fonction qui permet d'avertir le joueur restant que son adversaire à interrompue la partie (problème de connexion ) et procède à l'initialisation     des éléments d'une partie
 */
 function interruptionDePartie(idPartie){
-    
+
     if(tableauJeu.getJoueurById(partyInProgress[idPartie].idPF.id) != null){
         tableauJeu.getJoueurById(partyInProgress[idPartie].idPF.id).socket.emit("Interruption");
         var nouveau_joueur_un = new Tableau_Joueur.Client(partyInProgress[idPartie].idPF.id, partyInProgress[idPartie].idPF.pseudo, tableauJeu.supprimer(partyInProgress[idPartie].idPF.id).socket, new Date().getTime());
@@ -957,7 +957,7 @@ function interruptionDePartie(idPartie){
         lobby_server.ajout(nouveau_joueur_un);
         lobby_client_affichage.ajout(nouveau_joueur_lite_un);
     }
-    
+
     if(tableauJeu.getJoueurById(partyInProgress[idPartie].idPS.id) != null){
         tableauJeu.getJoueurById(partyInProgress[idPartie].idPS.id).socket.emit("Interruption");
         var nouveau_joueur_deux = new Tableau_Joueur.Client(partyInProgress[idPartie].idPS.id, partyInProgress[idPartie].idPS.pseudo, tableauJeu.supprimer(partyInProgress[idPartie].idPS.id).socket, new Date().getTime());
@@ -968,9 +968,9 @@ function interruptionDePartie(idPartie){
         lobby_server.ajout(nouveau_joueur_deux);
         lobby_client_affichage.ajout(nouveau_joueur_lite_deux);
     }
-        
+
     partyInProgress[idPartie].active = false;
-    
+
 }
 
 /* fonction lors du changement de tour d'une partie entre deux joueurs */
@@ -1032,29 +1032,29 @@ var io = require('socket.io').listen(server);
 
 /* Et enfin on déclare les listeners qui serviront au serveur pour coordonner les différentes requêtes */
 io.sockets.on('connection', function (socket) {
-	
+
     /* lorsqu'un nouveau joueur apparait on informe l'ensemble des joueurs*/
     socket.on('nouveauJoueur', function (pseudoJoueur) {
-        
+
         var nouveau_joueur = new Tableau_Joueur.Client(socket.id, pseudoJoueur, socket, new Date().getTime());
         var nouveau_joueur_lite = new Tableau_Joueur.Personne(socket.id, pseudoJoueur);
-        
+
         lobby_server.ajout(nouveau_joueur);
         lobby_client_affichage.ajout(nouveau_joueur_lite);
-        
-        socket.emit('start_synchronisation',nouveau_joueur_lite);  
+
+        socket.emit('start_synchronisation',nouveau_joueur_lite);
         io.sockets.emit('miseAJourDeLaListeJoueur',lobby_client_affichage);
     });
 
     /* permet d'obtenir la liste de tous les joueurs connectés*/
     socket.on('ListeJoueur', function () {
-        
+
         socket.emit('miseAJourDeLaListeJoueur',lobby_client_affichage);
     });
-    
+
     /* permet d'entrer dans la file d'attente du matchmaking pour trouver une partie */
     socket.on('entrerFileAttente', function (idUtilisateur) {
-        
+
         if(lobby_client_affichage.getJoueurById(idUtilisateur) != null){
             console.log("Ajouter au matchMaking");
             mymatch.push(lobby_server.getJoueurById(idUtilisateur));
@@ -1062,11 +1062,11 @@ io.sockets.on('connection', function (socket) {
             io.sockets.emit('miseAJourDeLaListeJoueur',lobby_client_affichage);
         }
     });
-    
+
 
     /* mise à jour l'information du joueur sur le timestamp de la synchronisation */
     socket.on('synchronisation',function(idJoueur){
-        
+
         if(!lobby_server.timeLifeSynchronisation(idJoueur)){
             tableauJeu.timeLifeSynchronisation(idJoueur);
         }
@@ -1082,19 +1082,19 @@ io.sockets.on('connection', function (socket) {
             partyInProgress[idParty].idPS.ready = true;
         }
     });
-    
+
     /* le refus d'un joueur concernant une partie */
     socket.on('etatJoueurNo', function (idParty, idJoueur) {
 
         var partie = partyInProgress[idParty];
-        
+
         if(idJoueur == partie.idPF.id){
             partyInProgress[idParty].idPF.ready = false;
         }else if(idJoueur == partie.idPS.id){
             partyInProgress[idParty].idPS.ready = false;
         }
     });
-    
+
     /* déconnection sur le serveur*/
     socket.on('deconnection', function (idJoueur) {
         lobby_server.supprimer(idJoueur);
@@ -1112,7 +1112,7 @@ io.sockets.on('connection', function (socket) {
 
     /* le joueur ajoute une pièce au plateau de jeu */
     socket.on('addPiece',function(objet){
-        
+
         if(partyInProgress[objet.id].currentPlayer == objet.idPlayer){
             addItemtoPlateau(partyInProgress[objet.id],objet.x,objet.y,objet.item);
             justAdd[objet.id] = true;
@@ -1121,20 +1121,20 @@ io.sockets.on('connection', function (socket) {
 
     /* le joueur ajoute un effet sur une pièce */
     socket.on('addEffet',function(objet){
-       
+
         if(partyInProgress[objet.id].currentPlayer == objet.player.id){
             executeBonus(partyInProgress[objet.id],objet);
         }
         justAdd[objet.id] = true;
     });
-    
+
 });
 
 /* vérification de la synchronisation des joueurs avec le serveur afin de gérer les coupures de comminucation */
 var verification_Enligne = setInterval(function(){
-    
+
     for(var i = 0; i < lobby_server.element.length;i++){
-        
+
         if(new Date().getTime() - lobby_server.element[i].timeLife > 6000){
             var id = lobby_server.element[i].id;
             lobby_server.supprimer(id);
@@ -1144,7 +1144,7 @@ var verification_Enligne = setInterval(function(){
             lobby_server.element[i].almostLeave = true;
         }
     }
-    
+
     for(var i = 0; i < tableauJeu.element.length;i++){
 
         if(new Date().getTime() - tableauJeu.element[i].timeLife > 6000){
@@ -1154,5 +1154,5 @@ var verification_Enligne = setInterval(function(){
             tableauJeu.element[i].almostLeave = true;
         }
     }
-    
+
 }, 2000);
