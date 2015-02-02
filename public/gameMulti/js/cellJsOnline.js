@@ -15,7 +15,7 @@ ses dimensions et sa localisation x et y dans la matrice de jeu.
 
 */
 
-function Cell(x, y, w, h, dimension, matriceX, matriceY, ctx) {
+function CellMulti(x, y, w, h, dimension, matriceX, matriceY, ctx) {
 
     this.x = x;
     this.y = y;
@@ -42,7 +42,7 @@ function Cell(x, y, w, h, dimension, matriceX, matriceY, ctx) {
     @Method : affichage
 */
 
-Cell.prototype.draw = function(){
+CellMulti.prototype.draw = function(){
 
     var wide = this.dimension;
 
@@ -74,7 +74,7 @@ Cell.prototype.draw = function(){
 
 
 /* contains permet de savoir si la position mx,my fait partie de la cellule*/
-Cell.prototype.contains = function(mx, my) {
+CellMulti.prototype.contains = function(mx, my) {
   /* All we have to do is make sure the Mouse X,Y fall in the area between
    the shape's X and (X + Height) and its Y and (Y + Height)*/
     

@@ -122,7 +122,7 @@ Plateau.prototype.initialisePlateau = function(fluxPlateau){
                  
                  /* un "@item" égal à 0 représente la case vide, donc lorsque l'on rencontre ce cas on rajoute dans le tableau la cellule
                  qui correspond graphiquement. */
-                 this.tabPiece.push(new Cell(this.startX + j *(this.width+this.space), this.startY /*- 420*/ + i *(this.height+this.space), this.width, this.height, this.dimension, i, j, this.ctx));
+                 this.tabPiece.push(new CellMulti(this.startX + j *(this.width+this.space), this.startY /*- 420*/ + i *(this.height+this.space), this.width, this.height, this.dimension, i, j, this.ctx));
              }
              
          }
@@ -173,7 +173,6 @@ Plateau.prototype.drawPlateau = function(){
 Plateau.prototype.drawPointRe = function (){
         
     for(var i = 0; i<this.pointToShow.length;i++){
-        //console.log("taille du tableau de point ");console.log(this.pointToShow[i]);
         /* pour chaque point on vérifie si il a parcouru une distance suffisante, 
             ici 1/10 de la hauteur du canvas avant de la rendre inactive et donc de ne plus l'afficher
         */
@@ -188,8 +187,6 @@ Plateau.prototype.drawPointRe = function (){
                 this.ctx.shadowColor = "black";
                 this.pointToShow[i].highEff += 5;
                 /* "@WriteMessage" function ligne 68 du fichier globals.js  */
-                //console.log("Affiche "+this.pointToShow[i].point);
-                //console.log("x : "+(this.startX + this.pointToShow[i].x *(this.width+this.space))+" & y : "+(parseInt($(this.canvas).height()) - this.startY + (parseInt(this.pointToShow[i].y) * parseInt(this.height)+parseInt(this.space))));
                 writeMessage(this.ctx, "+"+this.pointToShow[i].point, this.pointToShow[i].color, this.startX + this.pointToShow[i].y *(this.width+this.space),this.startY /*- 420*/ + this.pointToShow[i].x*(this.height+this.space)-this.pointToShow[i].highEff,1);
             }
         }
@@ -242,13 +239,10 @@ Plateau.prototype.drawInfo = function(timeSecondGame){
 
 Plateau.prototype.drawCombo = function(combo){
 
-    //console.log("Dessine combo");
     var hitMessage = "";
     var sizeCombo = 40;
     var hitColor = "black";
 
-    //var combo = this.hitCombo;
-    console.log("nbre combo :"+combo);
     if(combo == 1){
 
         hitMessage = " 1 Hit";
@@ -282,8 +276,6 @@ Plateau.prototype.drawCombo = function(combo){
 
     this.ctx.font = "italic "+sizeCombo+"pt Calibri";
     writeMessage(this.ctx, hitMessage, hitColor, 0, 0, 3);
-    //this.ctx.fillText(hitMessage+" tt", 60, 460);
-    //console.log("write");
     this.ctx.restore();
 
     this.ctx.shadowColor = "black";

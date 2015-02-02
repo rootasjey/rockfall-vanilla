@@ -211,7 +211,7 @@ Main.prototype.listener = function(){
                             'idPlayer':_myStateMulti.player.id,
                             'item':itemItem
                     };
-                    
+
                     _myStateMulti.socket.emit("addPiece",addPiece);
                     _myStateMulti.canContinue = false;
                 }
