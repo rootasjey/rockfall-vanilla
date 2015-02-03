@@ -478,36 +478,36 @@ SuperSquare.prototype.MiniIconPlayEvents = function () {
 
 // Automatically hide some icons (Super Square Play)
 SuperSquare.prototype.MiniIconPlayAutoHide = function () {
-    // Auto hide messages & setings icons
-    $(this.selector + " .mini-icon[function='messages']").animate({
-        top: '-10px',
-        opacity: '0',
-    });
-    $(this.selector + " .mini-icon[function='settings']").animate({
-        top: '-10px',
-        opacity: '0',
-    }, {
-        duration: 500,
-    });
+    // // Auto hide messages & setings icons
+    // $(this.selector + " .mini-icon[function='messages']").animate({
+    //     top: '-10px',
+    //     opacity: '0',
+    // });
+    // $(this.selector + " .mini-icon[function='settings']").animate({
+    //     top: '-10px',
+    //     opacity: '0',
+    // }, {
+    //     duration: 500,
+    // });
 };
 
 // Animate with a slide down/fade in (Super Square Play)
 SuperSquare.prototype.MiniIconPlaySlideDownHidden = function () {
-    $(this.selector + " .mini-icon[function='settings']").css({
-        display: 'inline-block',
-    }).animate({
-        top: '0',
-        opacity: '0.2',
-    });
-
-    $(this.selector + " .mini-icon[function='messages']").css({
-        display: 'inline-block',
-    }).animate({
-        top: '0',
-        opacity: '0.2',
-    }, {
-        duration: 500,
-    });
+    // $(this.selector + " .mini-icon[function='settings']").css({
+    //     display: 'inline-block',
+    // }).animate({
+    //     top: '0',
+    //     opacity: '0.2',
+    // });
+    //
+    // $(this.selector + " .mini-icon[function='messages']").css({
+    //     display: 'inline-block',
+    // }).animate({
+    //     top: '0',
+    //     opacity: '0.2',
+    // }, {
+    //     duration: 500,
+    // });
 };
 
 SuperSquare.prototype.Reduce = function (height) {

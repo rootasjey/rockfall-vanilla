@@ -3,6 +3,7 @@
 // Globals variables
 // ------------------
 
+// A simple socket object
 var socket = null;
 var scheduleCo = null;
 

@@ -78,8 +78,16 @@ var accountKey = nconf.get("STORAGE_KEY");
 var Table = require('./public/database/table');
 // var usersTable = new Table(azure.createTableService(accountName, accountKey), tableName, partitionKey);
 
+// Variable spécifiant le chemin relatif du serveur
+var addressServer = "localhost";
 
 app.get('/', function(req, res) {
+	if (addressServer.indexOf("::") != -1) {
+		// Variable redéfinissant le chemin relatif du serveur sous io.js
+		// var fullUrl = req.protocol + "://" + req.get('host') + req.originalUrl;
+		addressServer = req.get('host');
+	}
+
 	res.render('index', {title: 'Home'});
 })
 
@@ -224,16 +232,13 @@ app.get('/', function(req, res) {
 
 // listen port => server start
 // ---------------------------
-var addressServer = "localhost";
-
 var server = http.createServer(app).listen(app.get('port'), function(){
     if(server.address().address != "0.0.0.0"){
-        addressServer = server.address().address+":"+app.get('port');
+        addressServer = server.address().address + ":" + app.get('port');
     }else{
         addressServer += ":"+app.get('port');
-
     }
-    console.log("En attente de connexion sur le port :"+app.get('port'));
+    console.log("En attente de connexion sur le port :" + app.get('port'));
 });
 
 var Tableau_Joueur = require('./public/gameCommun/js/playerArray.js');

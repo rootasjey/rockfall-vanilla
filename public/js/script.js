@@ -28,6 +28,7 @@ function ReloadSuperSquares () {
 // ------------------------------
 // PROTOTYPES & GLOBALS FUNCTIONS
 // ------------------------------
+
 // Return true if the string ends with the suffix
 String.prototype.endsWith = function (suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
