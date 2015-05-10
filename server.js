@@ -90,14 +90,14 @@ app.get('/', function(req, res) {
 
 	res.render('index', {title: 'Home'});
 })
-
+/*
 .get('/getPort', function (req, res) {
 
 	var resultat = {};
 	resultat.port = process.env.PORT;
 
 	res.send(200, resultat);
-})
+})*/
 .post('/login/', function (req, res) {
 	// get variables from the form
 	var user 	= req.param('login');

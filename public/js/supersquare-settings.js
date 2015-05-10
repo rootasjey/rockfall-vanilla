@@ -1,7 +1,7 @@
 // -----------------------
 // SUPERSQUARE-SETTINGS.JS
 // -----------------------
-_ServerPort = null;
+
 SuperSquare.prototype.SettingsToggleVisibility = function () {
     var scp = ".second-panel";
     var stp = ".settings-panel";
@@ -534,7 +534,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                 var adversaire = null;
 
                 /* on lance la connexion sur le serveur */
-                sock = new Connexion(_ServerPort, "rockfall.azurewebsites.net");
+                sock = new Connexion(80, "rockfall.azurewebsites.net");
                 sock.start();
                 sock.listenToStartSession();
 
@@ -765,7 +765,7 @@ SuperSquare.prototype.SettingsRemoveCloseRectangle = function () {
     $(".close-rectangle-text").remove();
     $(".close-rectangle").remove();
 };
-
+/*
 function getPort(){
 
   var xhr = new XMLHttpRequest();
@@ -780,7 +780,7 @@ function getPort(){
   // Launch the request
   xhr.send();
 }
-
+*/
 // Click event on preferences
 SuperSquare.prototype.SettingsClickPreferencesSection = function () {
     // Get off the initial click event
