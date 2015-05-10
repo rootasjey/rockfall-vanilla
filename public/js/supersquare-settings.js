@@ -675,10 +675,13 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
               //  console.log("test");
                 testClick++;
 
-            }else{
+            }else if(testClick>0){
                 /* on rejoint le matchmaking pour ensuite lancer une partie une fois trouver*/
                 console.log(pseudo+" veut rejoindre le matchmaking");
                 sock.socket.emit('entrerFileAttente',joueur_lite.id);
+            }else{
+              this.getPort();
+              console.log("récupère port serveur");
             }
 
 
