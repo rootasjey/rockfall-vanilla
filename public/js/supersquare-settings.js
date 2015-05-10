@@ -406,6 +406,8 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
     var pseudo = "";
     var joueur_lite = null;
 
+    var testClick = 0;
+    var tamponPseudo = "";
 
     var lfClass = ".second-panel" + " .login-form";
     var lbClass = ".second-panel" + " .login-block";
@@ -512,7 +514,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
         }).click(function(){
 
 
-            if(testClick==0){
+            if(testClick == 0){
 
                 pseudo = $("input[name='login']" ).val();
 
@@ -671,6 +673,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
 
                 /* on prévient qu'un nouveau joueur est apparu*/
                 sock.socket.emit('nouveauJoueur',pseudo);
+                console.log("test");
                 testClick++;
 
             }else{
@@ -687,8 +690,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
 
         .appendTo(lfClass);
 
-        var testClick = 0;
-        var tamponPseudo = "";
+
 
 
         // Animations
