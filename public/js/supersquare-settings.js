@@ -673,7 +673,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
 
                 /* on prévient qu'un nouveau joueur est apparu*/
                 sock.socket.emit('nouveauJoueur',pseudo);
-                console.log("test");
+              //  console.log("test");
                 testClick++;
 
             }else{
