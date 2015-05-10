@@ -533,7 +533,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                 var adversaire = null;
 
                 /* on lance la connexion sur le serveur */
-                sock = new Connexion("3000", "127.0.0.1");
+                sock = new Connexion("3000", "rockfall.azurewebsites.net");
                 sock.start();
                 sock.listenToStartSession();
 
