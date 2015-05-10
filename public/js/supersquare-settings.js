@@ -230,7 +230,7 @@ SuperSquare.prototype.SettingsClickConnection = function () {
             class: "side-content",
         }).css({
             width: "300px",
-        }).appendTo(conn)
+        }).appendTo(conn);
 
         window.setTimeout(function () {
             var ss = FindSuperSquare("play");
@@ -601,6 +601,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                     prévenir qu'on est toujours présent
                  */
                sock.socket.on('start_synchronisation', function (joueur_info) {
+                 console.log(joueur_lite+" verification");
                     joueur_lite = joueur_info;
                     setInterval(function(){
                         sock.socket.emit('synchronisation',joueur_lite.id);
