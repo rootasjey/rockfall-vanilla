@@ -93,7 +93,7 @@ app.get('/', function(req, res) {
 
 .get('/getPort', function (req, res) {
 
-	jsonArray = [];
+	var jsonArray = [];
 
 	jsonArray.push(JSON.parse('{port:'+process.env.PORT+'}'));
 
