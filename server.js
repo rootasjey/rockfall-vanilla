@@ -93,12 +93,10 @@ app.get('/', function(req, res) {
 
 .get('/getPort', function (req, res) {
 
-	var jsonArray = [];
+	var resultat = {};
+	resultat.port = process.env.PORT;
 
-	jsonArray.push(JSON.parse('{port:'+process.env.PORT+'}'));
-
-	res.json(200, jsonArray);
-	//res.send();
+	res.send(200, resultat);
 })
 .post('/login/', function (req, res) {
 	// get variables from the form
@@ -251,7 +249,7 @@ var Tableau_Joueur = require('./public/gameCommun/js/playerArray.js');
 var mymatch = new Matchmaker;
 
 mymatch.policy = function(a,b) {
-    return 100
+    return 100;
 };
 
 mymatch.on('match', function(result) {
