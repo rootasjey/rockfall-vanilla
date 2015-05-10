@@ -773,8 +773,8 @@ function getPort(){
 
   xhr.onreadystatechange = function () {
       if (xhr.readyState == 4 && xhr.status == 200) {
-        _ServerPort = xhr.response;
-        console.log(_ServerPort);
+        _ServerPort = JSON.parse(xhr.response);
+        console.log(_ServerPort.port);
       }
   };
   // Launch the request
