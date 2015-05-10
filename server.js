@@ -91,9 +91,14 @@ app.get('/', function(req, res) {
 	res.render('index', {title: 'Home'});
 })
 
-.get('/new', function (req, res) {
-	// new design
-	res.render('index2', {title: 'Home'});
+.get('/getPort', function (req, res) {
+
+	jsonArray = [];
+
+	jsonArray.push(JSON.parse('{port:'+process.env.PORT+'}'));
+
+	res.json(200, jsonArray);
+	//res.send();
 })
 .post('/login/', function (req, res) {
 	// get variables from the form
