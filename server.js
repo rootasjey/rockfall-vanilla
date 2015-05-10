@@ -38,8 +38,8 @@ function compile(str, path) {
 // set the default views folder
 // containing templates
 // and the static folder
-// ---------------------------------------process.env.PORT ||
-app.set('port', 3000);
+// ---------------------------------------
+app.set('port', process.env.PORT);
 app.set('views', __dirname + '/views');	// folder templates
 app.set('view engine', 'jade');			// template engine
 app.use(morgan('dev'));					// logging output (will log incoming requests to the console)
