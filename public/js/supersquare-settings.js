@@ -513,7 +513,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
             });
         }).click(function(){
 
-            if(_ServerPort != null && testClick == 0){
+            if(testClick == 0){
 
                 pseudo = $("input[name='login']" ).val();
 
@@ -679,10 +679,10 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                 /* on rejoint le matchmaking pour ensuite lancer une partie une fois trouver*/
                 console.log(pseudo+" veut rejoindre le matchmaking");
                 sock.socket.emit('entrerFileAttente',joueur_lite.id);
-            }else{
+            }/*else{
               getPort();
               console.log("récupère port serveur");
-            }
+            }*/
 
 
         })
