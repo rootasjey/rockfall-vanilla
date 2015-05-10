@@ -37,10 +37,6 @@ function Connexion(port, adresse){
 
 */
 Connexion.prototype.start = function(){
-    io.configure(function () {
-      io.set("transports", ["xhr-polling"]);
-      io.set("polling duration", 10);
-    });
     this.socket = io.connect("http://"+this.address+":"+this.port);
 }
 
