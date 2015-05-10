@@ -680,7 +680,7 @@ SuperSquare.prototype.SettingsShowLoginForm = function () {
                 console.log(pseudo+" veut rejoindre le matchmaking");
                 sock.socket.emit('entrerFileAttente',joueur_lite.id);
             }else{
-              this.getPort();
+              getPort();
               console.log("récupère port serveur");
             }
 
@@ -766,7 +766,7 @@ SuperSquare.prototype.SettingsRemoveCloseRectangle = function () {
     $(".close-rectangle").remove();
 };
 
-SuperSquare.prototype.getPort = function(){
+function getPort(){
 
   var xhr = new XMLHttpRequest();
   xhr.open('GET', '/getPort');
