@@ -1,11 +1,11 @@
 /***************************************************************************************
-	 
-Classe : Plateau 
-	       
-La classe Plateau contient les éléments qui permet l'affiche du plateau sur un 
+
+Classe : Plateau
+
+La classe Plateau contient les éléments qui permet l'affiche du plateau sur un
 élément de type canvas. Elle définie le début en position X et Y de l'affichage
-sur l'élément, l'espacement entre les objets (ici les cases qui composent le tableau).	
-	         
+sur l'élément, l'espacement entre les objets (ici les cases qui composent le tableau).
+
 ***************************************************************************************/
 
 
@@ -27,38 +27,38 @@ function Plateau(space, startX, startY, canvas, player, imageIconPiece, textColo
 
 	this.width = 60;
 	this.height = 60;
-    
-    /* Les cases du plateau sont des hexagones et lors de leurs construction il faut une 
+
+    /* Les cases du plateau sont des hexagones et lors de leurs construction il faut une
         variable ici "@dimension" pour l'affichage */
     this.dimension = 20;
-    
+
     /* "@tabPiece" est le tableau qui regroupe les cases du jeu */
-    this.tabPiece = new Array();
+    this.tabPiece = [];
 
     /* piece en jeu*/
-    this.pieceInGame = new Array();
-    
+    this.pieceInGame = [];
+
     //this.selectionCell = {"x":-1,"y":-1};
-    
+
     this.startX = startX;
     this.startY = startY;
-    
+
 	this.space = space;
-    
+
     /* le tableau des points générés par la destruction de pièce */
-    this.pointToShow = new Array();
+    this.pointToShow = [];
     this.canvas = canvas;
     this.ctx = null;
-    
+
     /* information sur le joueur client */
     this.player = null || player;
-    
+
     /* Les cases du plateau de jeu en cours de partie sont remplie avec les pièces des joueurs,
         ces pièces sont des images que nous avons récupéré sur le serveur et stocké dans une variable */
     this.imgPiece = imageIconPiece;
-    
+
     this.textColor = textColor;
-    
+
     this.selectionCell = null;
 }
 
@@ -69,19 +69,19 @@ function Plateau(space, startX, startY, canvas, player, imageIconPiece, textColo
 */
 Plateau.prototype.setPlayer = function(player){
     this.player = player;
-}
+};
 
 /*
     initCtx initialise le context de dessin du canvas.
-    
+
     @Method : traitement
 */
 
 Plateau.prototype.initCtx = function(){
-    
+
     /* le context qui est nécessaire pour le dessin */
     this.ctx = this.canvas.getContext("2d");
-}
+};
 
 /*
     initialisePlateau initialise les cellules du plateau
@@ -89,47 +89,47 @@ Plateau.prototype.initCtx = function(){
     @Method : traitement
 */
 Plateau.prototype.initialisePlateau = function(fluxPlateau){
-    
+
      /* on réinitialise le tableau de pièce contenant les cases pour pouvoir
         ajouter les nouvelles cases après réception des données*/
-    this.tabPiece = new Array();
-    
-    this.pieceInGame = new Array();
-    
+    this.tabPiece = [];
+
+    this.pieceInGame = [];
+
     /* Dans l'information reçu du server on récupère l'élément que l'on souhaite ici c'est le plateau */
     var plateau = fluxPlateau.plateau;
-    
-    
-    /* On parcours les éléments du plateau qui sont représentés dans un tableau en 2 dimensions et donc les 
-       variables "@sizeX" et "@sizeY" représentent le nombre d'éléments sur l'axe des X et Y 
-  
+
+
+    /* On parcours les éléments du plateau qui sont représentés dans un tableau en 2 dimensions et donc les
+       variables "@sizeX" et "@sizeY" représentent le nombre d'éléments sur l'axe des X et Y
+
           Indice       0            1              2            3           4           5
               0  [[{"item":0}],[{"item":0}],[{"item":0}],[{"item":0}],[{"item":0}],[{"item":0}]]
-              
+
               1  [[{"item":0}],[{"item":0}],[{"item":0}],[{"item":0}],[{"item":0}],[{"item":0}]]
-              
+
               2  [[{"item":0}],[{"item":0}],[{"item":0}],[{"item":0}],[{"item":0}],[{"item":0}]]
-              
+
               3  [[{"item":0}],[{"item":0}],[{"item":0}],[{"item":0}],[{"item":0}],[{"item":0}]]
-      
+
      */
-    
+
     for(var i = 0; i < fluxPlateau.sizeX;i++){
-        
+
 		 for(var j = 0;j < fluxPlateau.sizeY;j++){
-            
-             if(plateau[i][j].item == 0){
-                 
+
+             if(plateau[i][j].item === 0){
+
                  /* un "@item" égal à 0 représente la case vide, donc lorsque l'on rencontre ce cas on rajoute dans le tableau la cellule
                  qui correspond graphiquement. */
                  this.tabPiece.push(new CellMulti(this.startX + j *(this.width+this.space), this.startY /*- 420*/ + i *(this.height+this.space), this.width, this.height, this.dimension, i, j, this.ctx));
              }
-             
+
          }
 
 	}
-    
-}
+
+};
 
 
 /*
@@ -137,30 +137,30 @@ Plateau.prototype.initialisePlateau = function(fluxPlateau){
     le plateau avec les cases de celui-ci.
     Etant en mode Online les éléments du plateau sont émisent par le server
      et la variable "@flucPlateau" est un élément de cet envoi qui contient
-     le plateau de jeux codifié et permet une fois le traitement fini d'avoir 
+     le plateau de jeux codifié et permet une fois le traitement fini d'avoir
      un plateau graphique sur le canvas.
-     
+
      @Method : traitement & affichage
-    
+
 */
 Plateau.prototype.drawPlateau = function(){
-    
-    /* Une fois les cases initialisées dans le tableau  on les dessine sur le canvas, on appel la fonction draw de la "Classe" Cell 
+
+    /* Une fois les cases initialisées dans le tableau  on les dessine sur le canvas, on appel la fonction draw de la "Classe" Cell
         en passant en paramètre la context du canvas */
-    
+
     this.ctx.shadowColor = "black";
     this.ctx.shadowBlur = 4;
-    
+
     for(var i = 0;i < this.tabPiece.length;i++){
             this.tabPiece[i].draw(this.ctx);
     }
-    
+
     for(var j = 0;j < this.pieceInGame.length;j++){
         if(typeof(this.pieceInGame[j]) != "undefined"){
             this.pieceInGame[j].draw(this.ctx);
         }
     }
-}
+};
 
 /*
     La "methode" DrawPointRe affiche les points obtenus à la destruction d'une pièce,
@@ -171,13 +171,13 @@ Plateau.prototype.drawPlateau = function(){
 */
 
 Plateau.prototype.drawPointRe = function (){
-        
+
     for(var i = 0; i<this.pointToShow.length;i++){
-        /* pour chaque point on vérifie si il a parcouru une distance suffisante, 
+        /* pour chaque point on vérifie si il a parcouru une distance suffisante,
             ici 1/10 de la hauteur du canvas avant de la rendre inactive et donc de ne plus l'afficher
         */
         if(parseInt(this.pointToShow[i].highEff) >= parseInt($(this.canvas).height())/10){
-            
+
             this.pointToShow[i].active = false;
             this.pointToShow.splice(i,1);
         }else{
@@ -192,11 +192,11 @@ Plateau.prototype.drawPointRe = function (){
         }
 
     }
-    
-}
+
+};
 
 
-/* 
+/*
     fonction qui efface tout les éléments du canvas
     @Method : affichage
 */
@@ -204,10 +204,10 @@ Plateau.prototype.drawPointRe = function (){
 Plateau.prototype.clear = function(){
 
     this.ctx.clearRect(0,0,this.canvasWidth,this.canvasHeight);
-}
+};
 
-/* 
-    La fonction drawInfo permet d'afficher les informations sur la partie comme le nombre de temps restant 
+/*
+    La fonction drawInfo permet d'afficher les informations sur la partie comme le nombre de temps restant
     @Method : affichage
 */
 
@@ -227,10 +227,10 @@ Plateau.prototype.drawInfo = function(timeSecondGame){
     this.ctx.fillStyle = this.textColor;
     this.ctx.fillText(timeSecondGame, 60, 460);
 
-}
+};
 
 
-/* 
+/*
 
     Fonction qui prend en charge l'affichage d'hit et de combo
     @Method : affichage
@@ -264,13 +264,13 @@ Plateau.prototype.drawCombo = function(combo){
         hitColor = "red";
     }
 
-    
+
     this.ctx.shadowColor = "#8888e8";
     this.ctx.shadowBlur = 8;
 
     this.ctx.save();
     this.ctx.translate(700, 100);
-    
+
     this.ctx.textAlign = "center";
     this.ctx.rotate(Math.PI/4);
 
@@ -280,4 +280,4 @@ Plateau.prototype.drawCombo = function(combo){
 
     this.ctx.shadowColor = "black";
     this.ctx.shadowBlur = 8;
-}
+};

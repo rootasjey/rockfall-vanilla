@@ -21,7 +21,7 @@ function ReloadSuperSquares () {
     $("#container .title").click(function() {
         for (var i = 0; i < _SSBOX.length; i++) {
             _SSBOX[i].ReloadWithANewColor();
-        };
+        }
     });
 }
 
@@ -43,7 +43,7 @@ String.prototype.toggleStr = function (str1, str2) {
     else {
         return this.replace(str2, str1);
     }
-}
+};
 
 // Returns a random integer between min (included) and max (excluded)
 // Using Math.round() will give you a non-uniform distribution!
@@ -53,7 +53,7 @@ function getRandomInt(min, max) {
 
 // Starts a function with a delay
 function Delay(func, delay, arg) {
-    var _delay = delay
+    var _delay = delay;
     if (_delay === 'undefined' || _delay === null)
         _delay = 500;
 

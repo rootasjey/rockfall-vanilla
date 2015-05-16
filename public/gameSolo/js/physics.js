@@ -2,7 +2,7 @@
 
 function GravityLaunch(stateGame){
 
-    if(stateGame.launchGravity == null){
+    if(stateGame.launchGravity === null){
 
         stateGame.launchGravity = $.timer(function(){
                 if(!stateGame.plateau.gravity()){
@@ -21,10 +21,10 @@ function GravityLaunch(stateGame){
 
 function FallEffectAndForce(stateGame){
 
-    if(stateGame.evenementEffetFall == null){
+    if(stateGame.evenementEffetFall === null){
 
          stateGame.evenementEffetFall = $.timer(function(){
-             if(stateGame.plateau.verificationGravity == true){
+             if(stateGame.plateau.verificationGravity === true){
 
                  for(var e = 0;e<stateGame.plateau.graphique.length;e++){
                      stateGame.plateau.graphique[e].y += 2;
@@ -33,7 +33,7 @@ function FallEffectAndForce(stateGame){
                  for(var g = 0;g < stateGame.plateau.sizeX;g++){
 
                     for(var h = 0;h < stateGame.plateau.sizeY;h++){
-                         if(stateGame.plateau.matrice[g][h] != 0){
+                         if(stateGame.plateau.matrice[g][h] !== 0){
                             stateGame.plateau.matrice[g][h].y += 2;
                          }
                     }
@@ -51,7 +51,7 @@ function FallEffectAndForce(stateGame){
                      for(var g = 0;g < stateGame.plateau.sizeX;g++){
 
                         for(var h = 0;h < stateGame.plateau.sizeY;h++){
-                             if(stateGame.plateau.matrice[g][h] != 0){
+                             if(stateGame.plateau.matrice[g][h] !== 0){
                                 stateGame.plateau.matrice[g][h].y -= 2;
                              }
                         }
@@ -61,15 +61,15 @@ function FallEffectAndForce(stateGame){
                      if(stateGame.activeForce){
                          stateGame.endOfForce = stateGame.plateau.force(stateGame).end;
                          //console.log(" gravity "+stateGame.plateau.gravity());
-                        if(stateGame.endOfForce == false && !stateGame.plateau.gravity()){
+                        if(stateGame.endOfForce === false && !stateGame.plateau.gravity()){
                             var findOrNot = stateGame.plateau.findFour();
 
-                            
+
                             if(findOrNot.find && stateGame.timeEndAnimation){
-                                
-                                
+
+
                                 stateGame.timeEndAnimation = false;
-                                
+
 
 
                                 for(var k = 0;k<findOrNot.box.length;k++){
@@ -111,17 +111,17 @@ function FallEffectAndForce(stateGame){
                         }
                      }
 
-                    if(stateGame.verificationEndGame == null){
+                    if(stateGame.verificationEndGame === null){
 
                         stateGame.verificationEndGame = $.timer(function(){
-                            var playersWin = new Array();
+                            var playersWin = [];
                             var playersPoint = -1;
 
                             for(var p = 0;p<stateGame.players.length;p++){
 
                                 var plyrs = stateGame.players[p];
                                 if(plyrs.point>playersPoint){
-                                    playersWin = new Array();
+                                    playersWin = [];
                                     playersWin.push(plyrs);
                                     playersPoint = plyrs.point;
                                 }else if(plyrs.point == playersPoint){

@@ -12,7 +12,7 @@ function Table(storageClient, tableName, partitionKey) {
       throw error;
     }
   });
-};
+}
 
 Table.prototype = {
   find: function(query, callback) {
@@ -54,4 +54,4 @@ Table.prototype = {
       });
     });
   }
-}
+};

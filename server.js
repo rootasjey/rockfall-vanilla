@@ -31,7 +31,7 @@ function compile(str, path) {
 	return stylus(str)
 		.set('filename', path)
 		.use(nib());
-};
+}
 
 
 // ---------------------------------------
@@ -39,7 +39,7 @@ function compile(str, path) {
 // containing templates
 // and the static folder
 // ---------------------------------------
-app.set('port', process.env.PORT);
+app.set('port', process.env.PORT ||3000);
 app.set('views', __dirname + '/views');	// folder templates
 app.set('view engine', 'jade');			// template engine
 app.use(morgan('dev'));					// logging output (will log incoming requests to the console)
@@ -76,7 +76,7 @@ var accountKey = nconf.get("STORAGE_KEY");
 // An object (Table) for table access storage
 // --------------------------------------------
 var Table = require('./public/database/table');
-// var usersTable = new Table(azure.createTableService(accountName, accountKey), tableName, partitionKey);
+var usersTable = new Table(azure.createTableService(accountName, accountKey), tableName, partitionKey);
 
 // Variable spécifiant le chemin relatif du serveur
 var addressServer = "localhost";
@@ -90,14 +90,7 @@ app.get('/', function(req, res) {
 
 	res.render('index', {title: 'Home'});
 })
-/*
-.get('/getPort', function (req, res) {
 
-	var resultat = {};
-	resultat.port = process.env.PORT;
-
-	res.send(200, resultat);
-})*/
 .post('/login/', function (req, res) {
 	// get variables from the form
 	var user 	= req.param('login');
@@ -118,18 +111,18 @@ app.get('/', function(req, res) {
 			// check if password is correct
 			if(result.entries.length > 0) {
 				// get the user password
-				var pass = result.entries[0].password['_'];
+				var pass = result.entries[0].password._;
 
 				// verify the validity of the password entered
 				if(pass === password) {
 					// login success!
 					// console.log('login success');
 					var user = {};
-					user.name = result.entries[0].user['_'];
-					user.pass = result.entries[0].password['_'];
-					user.email = result.entries[0].email['_'];
-					user.rock = result.entries[0].rock['_'];
-					user.credit = result.entries[0].credit['_'];
+					user.name = result.entries[0].user._;
+					user.pass = result.entries[0].password._;
+					user.email = result.entries[0].email._;
+					user.rock = result.entries[0].rock._;
+					user.credit = result.entries[0].credit._;
 
 					res.send(200, user);
 				}
@@ -182,29 +175,29 @@ app.get('/', function(req, res) {
 
 	// Insert a new user (create the query)
 	var tesk = {
-		PartitionKey: entGen.String('game')
-		, RowKey 	: entGen.String(uuid())
-		, user 		: entGen.String(user)
-		, password  : entGen.String(password)
-		, email 	: entGen.String(email)
-        , credit    : entGen.String(credit)
-        , rock      : entGen.String(rock)
+		PartitionKey: entGen.String('game'),
+		RowKey 	: entGen.String(uuid()),
+		user 		: entGen.String(user),
+		password  : entGen.String(password),
+		email 	: entGen.String(email),
+        credit    : entGen.String(credit),
+        rock      : entGen.String(rock)
 	};
 
 	// Add a new entity
 	usersTable.storageClient.insertOrReplaceEntity(
-		"users"
-		, tesk
-		, function (error, result, response) {
+		"users",
+		tesk,
+		function (error, result, response) {
 			if(!error) {
 				// Success : Entity inserted
                 // Create a user object to send
                 var userResult = {
-                    "name"      : user
-                    ,"pass"     : password
-                    ,"email"    : email
-                    ,"rock"     : rock
-                    ,"credit"   : credit
+                    "name"     : user,
+                    "pass"     : password,
+                    "email"    : email,
+                    "rock"     : rock,
+                    "credit"   : credit
                 };
 
 				res.send(200, userResult);
@@ -246,7 +239,7 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 var Tableau_Joueur = require('./public/gameCommun/js/playerArray.js');
 
-var mymatch = new Matchmaker;
+var mymatch = new Matchmaker();
 
 mymatch.policy = function(a,b) {
     return 100;
@@ -272,9 +265,11 @@ function askMatching(joueurUn, joueurDeux){
     justAdd[this.party.id] = false;
     wantToTurn[this.party.id] = false;
 
-    if(lobby_server.getJoueurById(idJoueurUn) != null && lobby_server.getJoueurById(idJoueurDeux) != null){
+    if(lobby_server.getJoueurById(idJoueurUn) !== null &&
+		lobby_server.getJoueurById(idJoueurDeux) !== null){
 
-        if(!lobby_server.isBientotHorsConnexion(lobby_server.getJoueurById(idJoueurUn)) && !lobby_server.isBientotHorsConnexion(lobby_server.getJoueurById(idJoueurDeux))){
+        if(!lobby_server.isBientotHorsConnexion(lobby_server.getJoueurById(idJoueurUn)) &&
+			!lobby_server.isBientotHorsConnexion(lobby_server.getJoueurById(idJoueurDeux))){
 
             tableauJeu.ajout(lobby_server.supprimer(idJoueurUn));
             tableauJeu.ajout(lobby_server.supprimer(idJoueurDeux));
@@ -298,21 +293,23 @@ function askMatching(joueurUn, joueurDeux){
 
     this.isFinDePartie = false;
 
-    /*----------------------------------------------------------Attente --------------------------------*/
-
-        this.partyTamponInterval = setInterval( (function(){
+    /*--------------------------------Attente --------------------------------*/
+	// ------------------------------------------------------------------------
+    this.partyTamponInterval = setInterval( (function(){
 
             var donneesLocales = partyInProgress[this.party.id];
-            if(donneesLocales.idPF.ready == true && donneesLocales.idPS.ready == true){
+            if(donneesLocales.idPF.ready === true && donneesLocales.idPS.ready === true){
 
-                if(tableauJeu.getJoueurById(donneesLocales.idPF.id) != null && tableauJeu.getJoueurById(donneesLocales.idPS.id) != null){
-                    if(!tableauJeu.isBientotHorsConnexion(tableauJeu.getJoueurById(donneesLocales.idPF.id)) && !tableauJeu.isBientotHorsConnexion(tableauJeu.getJoueurById(donneesLocales.idPS.id))){
+                if(tableauJeu.getJoueurById(donneesLocales.idPF.id) !== null &&
+					tableauJeu.getJoueurById(donneesLocales.idPS.id) !== null){
+                    if(!tableauJeu.isBientotHorsConnexion(tableauJeu.getJoueurById(donneesLocales.idPF.id)) &&
+						!tableauJeu.isBientotHorsConnexion(tableauJeu.getJoueurById(donneesLocales.idPS.id))){
 
-                        if(donneesLocales.pointJoueur == true){
+                        if(donneesLocales.pointJoueur === true){
 
                             donneesLocales.action = false;
                             if(this.countForPointPlayer == 4){
-                                this.isFinDePartie = traitementPointWin(donneesLocales,donneesLocales.pieceGagnante);
+                                this.isFinDePartie = traitementPointWin(donneesLocales, donneesLocales.pieceGagnante);
                                 donneesLocales.pointJoueur = false;
                                 this.countForPointPlayer = 0;
                                 donneesLocales.action = true;
@@ -326,7 +323,7 @@ function askMatching(joueurUn, joueurDeux){
                             /* 4 * 250 = 1000 milliseconde */
                             if(this.countForSeconde == 4){
 
-                                if((donneesLocales.time == 0 || wantToTurn[this.party.id]) && this.endOfPhysic ){
+                                if((donneesLocales.time === 0 || wantToTurn[this.party.id]) && this.endOfPhysic ){
                                     changeTurn(donneesLocales);
                                     wantToTurn[this.party.id] = false;
                                     donneesLocales.time = timeTurn;
@@ -341,7 +338,7 @@ function askMatching(joueurUn, joueurDeux){
 
                             }
 
-                            if(justAdd[this.party.id] == false){
+                            if(justAdd[this.party.id] === false){
                                 this.endOfPhysic = applyPhysic(donneesLocales);
 
                             }else{
@@ -350,22 +347,22 @@ function askMatching(joueurUn, joueurDeux){
                             }
                     }
 
-                    if(this.resetStateBonus == true){
+                    if(this.resetStateBonus === true){
                         donneesLocales.isChangeTurn = false;
                         this.resetStateBonus = false;
                     }
-                    if(donneesLocales.isChangeTurn == true){
+                    if(donneesLocales.isChangeTurn === true){
                         this.resetStateBonus = true;
 
                     }
-                    if(tableauJeu.getJoueurById(donneesLocales.idPF.id) != null){
-                        tableauJeu.getJoueurById(donneesLocales.idPF.id).socket.emit("MiseAJour",donneesLocales);
+                    if(tableauJeu.getJoueurById(donneesLocales.idPF.id) !== null){
+                        tableauJeu.getJoueurById(donneesLocales.idPF.id).socket.emit("MiseAJour", donneesLocales);
                     }
-                        if(tableauJeu.getJoueurById(donneesLocales.idPS.id) != null){
-                        tableauJeu.getJoueurById(donneesLocales.idPS.id).socket.emit("MiseAJour",donneesLocales);
+                    if(tableauJeu.getJoueurById(donneesLocales.idPS.id) !== null){
+                    	tableauJeu.getJoueurById(donneesLocales.idPS.id).socket.emit("MiseAJour", donneesLocales);
                     }
                     clearDonnees(donneesLocales);
-                    if(donneesLocales.pointJoueur == false){
+                    if(donneesLocales.pointJoueur === false){
                         this.countForSeconde++;
                     }
 
@@ -380,7 +377,7 @@ function askMatching(joueurUn, joueurDeux){
                     //Deconnexion Effective !!
                     console.log("Deconnexion");
                 }
-            }else if(donneesLocales.idPF.ready == false || donneesLocales.idPS.ready == false){
+            }else if(donneesLocales.idPF.ready === false || donneesLocales.idPS.ready === false){
 
                 lobby_server.ajout(tableauJeu.supprimer(donneesLocales.idPF.id));
                 lobby_server.ajout(tableauJeu.supprimer(donneesLocales.idPS.id));
@@ -400,13 +397,13 @@ function askMatching(joueurUn, joueurDeux){
 /* addParty créé la partie afin de mettre ne relation deux joueur */
 function addParty(tableauP, joueurUn, joueurDeux){
 
-    var idParty = 0;
-    var sizeX = 4;
-    var sizeY = 6;
-    var newElement = {};
-    var plateau = createPlateau(sizeX,sizeY);
-    var idF = joueurUn.id;
-    var idS = joueurDeux.id;
+    var idParty 	= 0;
+    var sizeX 		= 4;
+    var sizeY 		= 6;
+    var newElement 	= {};
+    var plateau 	= createPlateau(sizeX,sizeY);
+    var idF 		= joueurUn.id;
+    var idS 		= joueurDeux.id;
 
     newElement = {
         'id':0,
@@ -416,7 +413,7 @@ function addParty(tableauP, joueurUn, joueurDeux){
         'active':true,
         'start':false,
         'plateau':plateau,
-        'pointAdd':new Array(),
+        'pointAdd': [],
         'nbreAction':1,
         'nbreActionRealise':0,
         'nbrePower':1,
@@ -430,11 +427,11 @@ function addParty(tableauP, joueurUn, joueurDeux){
         'action':false,
         'pointJoueur':false,
         'isChangeTurn':false,
-        'soundToPlay':new Array(),
+        'soundToPlay': [],
         'finDeParty':{}
     };
 
-    if(tableauP.length == 0){
+    if(tableauP.length === 0){
 
         tableauP.push(newElement);
 
@@ -467,32 +464,36 @@ function addParty(tableauP, joueurUn, joueurDeux){
 
 function applyPhysic(donneesATravailler){
 
-    var allEnd = false;
-    var sizeX = donneesATravailler.sizeX;
-    var sizeY = donneesATravailler.sizeY;
+    var allEnd 		= false;
+    var sizeX 		= donneesATravailler.sizeX;
+    var sizeY 		= donneesATravailler.sizeY;
 
-    var fini = false, finiSuite = false;
+    var fini 		= false,
+		finiSuite 	= false;
+
+	var i, j, k;
 
     //---------------------------Gravity-----------------------------
 
-	for(var i = 0; i < sizeY; i++){
+	for(i = 0; i < sizeY; i++){
 
-		for(var j = sizeX-1; j >= 0; j--){
+		for(j = sizeX-1; j >= 0; j--){
 
 
-            if(donneesATravailler.plateau[j][i].item != 0){
+            if(donneesATravailler.plateau[j][i].item !== 0){
                 var end = true;
-                var k = j
+                k = j;
+
                 while(end){
                     if(k == sizeX-1){
                         end = false;
                     }else{
-                        if(donneesATravailler.plateau[k+1][i].item == 0){
+                        if(donneesATravailler.plateau[k+1][i].item === 0){
 
                             donneesATravailler.plateau[k+1][i].item = donneesATravailler.plateau[k][i].item;
 
                             donneesATravailler.plateau[k][i].item = 0;
-                            donneesATravailler.soundToPlay.push("http://"+addressServer+"/sound/chute_pierre.mp3");
+                            donneesATravailler.soundToPlay.push("http://" + addressServer + "/sound/chute_pierre.mp3");
                             fini =  true;
                             end = false;
                         }
@@ -507,17 +508,17 @@ function applyPhysic(donneesATravailler){
     //-------------------------------Force----------------------
      if(!fini){
 
-        for(var i = 0;i < sizeY;i++){
+        for(i = 0;i < sizeY;i++){
 
-            for(var k = sizeX-1; k>=0 ;k--){
+            for(k = sizeX-1; k>=0 ;k--){
 
-                if(donneesATravailler.plateau[k][i].item != 0){
+                if(donneesATravailler.plateau[k][i].item !== 0){
 
                     var itemWheight = donneesATravailler.plateau[k][i].item.weight;
                     var somme = 0;
-                    var j = k
+                    j = k;
 
-                    while(j-1 >=0 && donneesATravailler.plateau[j-1][i].item != 0){
+                    while(j-1 >=0 && donneesATravailler.plateau[j-1][i].item !== 0){
 
                         somme += donneesATravailler.plateau[j-1][i].item.weight;
                         j--;
@@ -568,6 +569,7 @@ function applyPhysic(donneesATravailler){
 
         var pointWin = findFour(donneesATravailler);
 
+		// If the player wins a point
         if(pointWin.find){
             donneesATravailler.pieceGagnante = pointWin;
             donneesATravailler.pointJoueur = true;
@@ -587,11 +589,11 @@ function zoomPieceGagnante(donnees){
 
     var pos = donnees.pieceGagnante.box;
 
-    var tamponArray = new Array();
+    var tamponArray = [];
 
     for(var i = 0; i < pos.length; i++){
 
-        if(donnees.plateau[pos[i].x][pos[i].y].item != 0){
+        if(donnees.plateau[pos[i].x][pos[i].y].item !== 0){
             donnees.plateau[pos[i].x][pos[i].y].item.width += 10;
             donnees.plateau[pos[i].x][pos[i].y].item.height += 10;
         }
@@ -601,12 +603,12 @@ function zoomPieceGagnante(donnees){
 /* fonction qui vérifie l'alignement de 4 pièces en diagonale */
 function verificationD(donneesATravailler,x,y){
 
-    var diagonal = new Array();
+    var diagonal = [];
     var plateau = donneesATravailler.plateau;
     var find = false;
     var id =-1;
 
-    if(plateau[x][y].item != 0){
+    if(plateau[x][y].item !== 0){
         id = plateau[x][y].item.idProprietaire;
         var compt = 1;
         var i = 1, j = 1 ;
@@ -615,22 +617,22 @@ function verificationD(donneesATravailler,x,y){
 
         while(x-i >= 0 && y+j < donneesATravailler.sizeY && !find){
 
-            if(plateau[x-i][y+j] != 0 && id == plateau[x-i][y+j].item.idProprietaire){
+            if(plateau[x-i][y+j] !== 0 && id == plateau[x-i][y+j].item.idProprietaire){
                 compt++;
                 diagonal.push({"x":x-i,"y":y+j,"point":plateau[x-i][y+j].item.weight, "color":plateau[x-i][y+j].item.fill});
 
                 if(compt>=4){
                     find = true;
                 }
-            }else if(plateau[x-i][y+j].item != 0){
+            } else if(plateau[x-i][y+j].item !== 0){
                 id = plateau[x-i][y+j].item.idProprietaire;
-                diagonal = new Array();
+                diagonal = [];
                 diagonal.push({"x":x-i,"y":y+j,"point":plateau[x-i][y+j].item.weight, "color":plateau[x-i][y+j].item.fill});
                 compt = 1;
-            }else{
+            } else{
                 id =-1;
                 compt = 1;
-                diagonal = new Array();
+                diagonal = [];
             }
 
             i++;
@@ -640,29 +642,29 @@ function verificationD(donneesATravailler,x,y){
 
         if(!find){
             id = plateau[x][y].item.idProprietaire;
-            diagonal = new Array();
+            diagonal = [];
             diagonal.push({"x":x,"y":y,"point":plateau[x][y].item.weight, "color":plateau[x][y].item.fill});
             i = 1;
             j = 1;
             compt = 1;
             while(x+i < donneesATravailler.sizeX && y+j < donneesATravailler.sizeY && !find){
 
-                if(plateau[x+i][y+j] != 0 && id == plateau[x+i][y+j].item.idProprietaire){
+                if(plateau[x+i][y+j] !== 0 && id == plateau[x+i][y+j].item.idProprietaire){
                     diagonal.push({"x":x+i,"y":y+j,"point":plateau[x+i][y+j].item.weight, "color":plateau[x+i][y+j].item.fill});
                     compt++;
 
                     if(compt>=4){
                         find = true;
                     }
-                }else if(plateau[x+i][y+j].item != 0){
+                }else if(plateau[x+i][y+j].item !== 0){
                     id = plateau[x+i][y+j].item.idProprietaire;
-                    diagonal = new Array();
+                    diagonal = [];
                     diagonal.push({"x":x+i,"y":y+j,"point":plateau[x+i][y+j].item.weight,"color":plateau[x+i][y+j].item.fill});
                     compt = 1;
                 }else{
                     id = -1;
                     compt = 1;
-                    diagonal = new Array();
+                    diagonal = [];
                 }
 
                 i++;
@@ -681,35 +683,37 @@ function findFour(donneesATravailler){
 
     var plateau = donneesATravailler.plateau;
 
-    var i = 0,j=0;
+    var i = 0,
+		j = 0,
+		k = 0;
     var find = false;
     var id = -1;
     var compt = 0;
     var sommePoint = 0;
-    var aligner = new Array();
+    var aligner = [];
 
     /* verification horizontale */
     while(i < donneesATravailler.sizeX && !find){
 
         compt = 0;
-        var j = 0;
+        j 	  = 0;
 
         while(j < donneesATravailler.sizeY && compt < 4){
 
 
-            if(plateau[i][j].item != 0 && plateau[i][j].item.idProprietaire != -1){
+            if(plateau[i][j].item !== 0 && plateau[i][j].item.idProprietaire != -1){
                 if(plateau[i][j].item.idProprietaire == id){
                     compt++;
                     aligner.push({"x":i,"y":j,"point":plateau[i][j].item.weight, "color":plateau[i][j].item.fill});
                 }else{
-                    aligner = new Array();
+                    aligner = [];
                     aligner.push({"x":i,"y":j,"point":plateau[i][j].item.weight,"color":plateau[i][j].item.fill});
                     compt = 1;
                     id = plateau[i][j].item.idProprietaire;
                 }
             }else{
                 id = -1;
-                aligner = new Array();
+                aligner = [];
                 compt = 1;
             }
             j++;
@@ -718,7 +722,7 @@ function findFour(donneesATravailler){
             if(compt >= 4){
                 find = true;
                 sommePoint = 0;
-                for(var k = 0;k<aligner.length;k++){
+                for(k = 0; k<aligner.length; k++){
                     sommePoint += plateau[aligner[k].x][aligner[k].y].item.weight;
                     sommePoint += plateau[aligner[k].x][aligner[k].y].item.weight;
                 }
@@ -738,19 +742,19 @@ function findFour(donneesATravailler){
 
             while(j < donneesATravailler.sizeX && compt < 4){
 
-                if(plateau[j][i].item != 0){
+                if(plateau[j][i].item !== 0){
 
                     if(plateau[j][i].item.idProprietaire == id){
                         aligner.push({"x":j,"y":i,"point":plateau[j][i].item.weight,"color":plateau[j][i].item.fill});
                         compt++;
                     }else{
-                        aligner = new Array();
+                        aligner = [];
                         aligner.push({"x":j,"y":i,"point":plateau[j][i].item.weight, "color": plateau[j][i].item.fill});
                         compt = 1;
                         id = plateau[j][i].item.idProprietaire;
                     }
                 }else{
-                    aligner = new Array();
+                    aligner = [];
                     id = -1;
                     compt = 1;
                 }
@@ -759,7 +763,7 @@ function findFour(donneesATravailler){
                 if(compt >= 4){
                     find = true;
                     sommePoint = 0;
-                    for(var k = 0;k<aligner.length;k++){
+                    for(k=0; k<aligner.length; k++){
                         sommePoint += plateau[aligner[k].x][aligner[k].y].item.weight;
                     }
                 }
@@ -778,7 +782,7 @@ function findFour(donneesATravailler){
 
             while(j < donneesATravailler.sizeY && !find){
 
-                    if(plateau[i][j].item != 0){
+                    if(plateau[i][j].item !== 0){
                         var test = verificationD(donneesATravailler,i,j);
 
                         if(test.find){
@@ -786,7 +790,7 @@ function findFour(donneesATravailler){
                             find = true;
                             id = test.id;
                             sommePoint = 0;
-                            for(var k = 0;k<test.case.length;k++){
+                            for(k = 0;k<test.case.length;k++){
                                 sommePoint += plateau[test.case[k].x][test.case[k].y].item.weight;
                             }
                             aligner = test.case;
@@ -808,7 +812,9 @@ function traitementPointWin(donneesLocales,tamponPieceWin){
     var isFinDePartie = false;
     donneesLocales.hitcombo += 4;
 
-    for(var i = 0 ;i< tamponPieceWin.box.length;i++){
+	var i = 0;
+
+    for(i = 0 ;i< tamponPieceWin.box.length;i++){
 
     donneesLocales.pointAdd.push({
                             'point':parseInt(tamponPieceWin.box[i].point) * 2,
@@ -837,7 +843,7 @@ function traitementPointWin(donneesLocales,tamponPieceWin){
         }
     }
 
-    for(var i = 0;i< tamponPieceWin.box.length;i++){
+    for(i = 0;i< tamponPieceWin.box.length;i++){
 
         donneesLocales.plateau[tamponPieceWin.box[i].x][tamponPieceWin.box[i].y].item = 0;
     }
@@ -848,7 +854,7 @@ function traitementPointWin(donneesLocales,tamponPieceWin){
 function addItemtoPlateau(donneesLocales,x,y,item){
 
     var success = false;
-    if(donneesLocales.plateau[x][y].item == 0 && donneesLocales.nbreActionRealise < donneesLocales.nbreAction){
+    if(donneesLocales.plateau[x][y].item === 0 && donneesLocales.nbreActionRealise < donneesLocales.nbreAction){
 
         donneesLocales.plateau[x][y].item = item;
         donneesLocales.nbreActionRealise += 1;
@@ -864,7 +870,7 @@ function executeBonus(donneesLocales,bonusChoice){
     var x = bonusChoice.x;
     var y = bonusChoice.y;
 
-    if(donneesLocales.plateau[x][y] != 0 && donneesLocales.nbrePowerRealise < donneesLocales.nbrePower){
+    if(donneesLocales.plateau[x][y] !== 0 && donneesLocales.nbrePowerRealise < donneesLocales.nbrePower){
 
 
         switch(parseInt(bonusChoice.power.id)){
@@ -918,8 +924,8 @@ function executeBonus(donneesLocales,bonusChoice){
 
 /* fonction qui supprime des informations sur la partie par exemple à chaque envoie d'information, on supprime des informations pour le prochain envoie */
 function clearDonnees(donnees){
-    donnees.pointAdd = new Array();
-    donnees.soundToPlay = new Array();
+    donnees.pointAdd = [];
+    donnees.soundToPlay = [];
 }
 
 /* fonction exécuté pour supprimer la partie et informer les joueurs de la fin d'une partie*/
@@ -952,7 +958,7 @@ function finDePartie (idPartie, idJoueurGagner){
 */
 function interruptionDePartie(idPartie){
 
-    if(tableauJeu.getJoueurById(partyInProgress[idPartie].idPF.id) != null){
+    if(tableauJeu.getJoueurById(partyInProgress[idPartie].idPF.id) !== null){
         tableauJeu.getJoueurById(partyInProgress[idPartie].idPF.id).socket.emit("Interruption");
         var nouveau_joueur_un = new Tableau_Joueur.Client(partyInProgress[idPartie].idPF.id, partyInProgress[idPartie].idPF.pseudo, tableauJeu.supprimer(partyInProgress[idPartie].idPF.id).socket, new Date().getTime());
 
@@ -963,7 +969,7 @@ function interruptionDePartie(idPartie){
         lobby_client_affichage.ajout(nouveau_joueur_lite_un);
     }
 
-    if(tableauJeu.getJoueurById(partyInProgress[idPartie].idPS.id) != null){
+    if(tableauJeu.getJoueurById(partyInProgress[idPartie].idPS.id) !== null){
         tableauJeu.getJoueurById(partyInProgress[idPartie].idPS.id).socket.emit("Interruption");
         var nouveau_joueur_deux = new Tableau_Joueur.Client(partyInProgress[idPartie].idPS.id, partyInProgress[idPartie].idPS.pseudo, tableauJeu.supprimer(partyInProgress[idPartie].idPS.id).socket, new Date().getTime());
 
@@ -1002,11 +1008,11 @@ function changeTurn(donnees){
 /* fonction qui créé un plateau de jeu*/
 function createPlateau(nbrePieceHori,nbrePieceVerti){
 
-    var plateau = new Array();
+    var plateau = [];
 
     for(var i = 0 ;i<nbrePieceHori;i++){
 
-        var ligne = new Array();
+        var ligne = [];
 
         for(var j = 0;j<nbrePieceVerti;j++){
 
@@ -1021,7 +1027,7 @@ function createPlateau(nbrePieceHori,nbrePieceVerti){
     return plateau;
 }
 
-/* les variables globales pour la gérer les différents éléments tel que les parties, joueurs.*/
+/* les variables globales pour gérer les différents éléments tels que les parties, joueurs.*/
 var lobby_server = new Tableau_Joueur.Tableau_EnAttente();
 var lobby_client_affichage = new Tableau_Joueur.Tableau_EnAttente_Affichage();
 var tableauJeu = new Tableau_Joueur.Tableau_EnJeu();
@@ -1029,7 +1035,7 @@ var tableauJeu = new Tableau_Joueur.Tableau_EnJeu();
 /* Le temps de jeu d'un tour dan sune partie */
 var timeTurn = 10;
 
-var partyInProgress = new Array();
+var partyInProgress = [];
 var tamponSetInter = null;
 
 /* on lance l'écoute du server */
@@ -1047,8 +1053,8 @@ io.sockets.on('connection', function (socket) {
         lobby_server.ajout(nouveau_joueur);
         lobby_client_affichage.ajout(nouveau_joueur_lite);
 
-        socket.emit('start_synchronisation',nouveau_joueur_lite);
-        io.sockets.emit('miseAJourDeLaListeJoueur',lobby_client_affichage);
+        socket.emit('start_synchronisation', nouveau_joueur_lite);
+        io.sockets.emit('miseAJourDeLaListeJoueur', lobby_client_affichage);
     });
 
     /* permet d'obtenir la liste de tous les joueurs connectés*/
@@ -1060,7 +1066,7 @@ io.sockets.on('connection', function (socket) {
     /* permet d'entrer dans la file d'attente du matchmaking pour trouver une partie */
     socket.on('entrerFileAttente', function (idUtilisateur) {
 
-        if(lobby_client_affichage.getJoueurById(idUtilisateur) != null){
+        if(lobby_client_affichage.getJoueurById(idUtilisateur) !== null){
             console.log("Ajouter au matchMaking");
             mymatch.push(lobby_server.getJoueurById(idUtilisateur));
             lobby_client_affichage.supprimer(idUtilisateur);
@@ -1137,23 +1143,25 @@ io.sockets.on('connection', function (socket) {
 
 /* vérification de la synchronisation des joueurs avec le serveur afin de gérer les coupures de comminucation */
 var verification_Enligne = setInterval(function(){
+	var i  = 0,
+		id = 0;
 
-    for(var i = 0; i < lobby_server.element.length;i++){
+    for(i = 0; i < lobby_server.element.length;i++){
 
         if(new Date().getTime() - lobby_server.element[i].timeLife > 6000){
-            var id = lobby_server.element[i].id;
+            id = lobby_server.element[i].id;
             lobby_server.supprimer(id);
             lobby_client_affichage.supprimer(id);
             io.sockets.emit('miseAJourDeLaListeJoueur',lobby_client_affichage);
-        }else if(new Date().getTime() - lobby_server.element[i].timeLife > 3000){
+        } else if(new Date().getTime() - lobby_server.element[i].timeLife > 3000){
             lobby_server.element[i].almostLeave = true;
         }
     }
 
-    for(var i = 0; i < tableauJeu.element.length;i++){
+    for(i = 0; i < tableauJeu.element.length;i++){
 
         if(new Date().getTime() - tableauJeu.element[i].timeLife > 6000){
-            var id = tableauJeu.element[i].id;
+            id = tableauJeu.element[i].id;
             tableauJeu.supprimer(id);
         }else if(new Date().getTime() - tableauJeu.element[i].timeLife > 3000){
             tableauJeu.element[i].almostLeave = true;

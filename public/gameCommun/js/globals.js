@@ -20,8 +20,8 @@ var idParty = null;
 //-------------------
 
 
-/* 
-    La fonction getMouse retourne la position en x et en y de la souris sur l'élément canvas en fesant attention aux propriétées tel que le border, margin, etc. 
+/*
+    La fonction getMouse retourne la position en x et en y de la souris sur l'élément canvas en fesant attention aux propriétées tel que le border, margin, etc.
 */
 
 function getMouse(e,canvas) {
@@ -66,7 +66,7 @@ function getMouse(e,canvas) {
 }
 
 
-/* 
+/*
     Fonction qui permet d'écrire sur le context d'un canvas, avec comme paramètre
     le context en question "@ctx", le message qu'on souhaite afficher "@message", la couleur
     du message "@color", la position en x et y sur le canvas "@x","@y" ainsi que la profondeur
@@ -93,14 +93,20 @@ function writeMessage (ctx, message, color, x, y, dpth){
 /*la fonction qui charge toutes les images et une fois terminé qui lance la fonction callback*/
 function loadImages(sources, callback) {
 
-    var images = {};
-    var loadedImages = 0;
-    var numImages = 0;
+    // Array of images
+    var images          = {};
+    // Number of images loaded
+    var loadedImages    = 0;
+    // Total images
+    var numImages       = 0;
+    // Images' source
+    var src             = null;
 
-    for(var src in sources) {
+    for(src in sources) {
         numImages++;
     }
-    for(var src in sources) {
+
+    for(src in sources) {
         images[src] = new Image();
         images[src].onload = function() {
             if(++loadedImages >= numImages) {

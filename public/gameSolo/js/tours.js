@@ -24,22 +24,23 @@ function Tours(stateGame, nombreActionAdd, nombreActionEffet, toursTime){
 /* ajoute au nombre d'action (pièce ajouter) réaliser */
 Tours.prototype.addAction = function(){
        this.actionAddRock++;
-}
+};
 
 /* décrémente le nombre d'action réaliser*/
 Tours.prototype.removeAction = function(){
        this.actionAddRock--;
-}
+};
 
 /* ajoute au nombre d'effet réaliser */
 Tours.prototype.addEffet = function(){
        this.actionEffetRock++;
-}
+};
 
 /* décrémente le nombre d'effet réaliser*/
 Tours.prototype.removeEffet = function(){
        this.actionEffetRock--;
-}
+};
+
 /* permet de savoir si l'utilisateur peut ajouter une pièces dans la limite qui lui ai attribué par tour */
 Tours.prototype.canAdd = function(){
     var can = true;
@@ -48,7 +49,7 @@ Tours.prototype.canAdd = function(){
     }
 
     return can;
-}
+};
 
 /* permet de savoir si l'utilisateur peut activer un bonus dans la limite qui lui ai attribué par tour */
 Tours.prototype.canEffet = function(){
@@ -58,18 +59,18 @@ Tours.prototype.canEffet = function(){
     }
 
     return can;
-}
+};
 
 /* fonction mettant fin au cycle de jeu */
 Tours.prototype.endCycle  = function(){
-    if(this.intervalVerification != null){
+    if(this.intervalVerification !== null){
        //clearInterval(this.intervalVerification);
        this.intervalVerification.stop();
         this.intervalVerification = null;
         this.time.stop();
     }
 
-}
+};
 
 /* fonction qui decrémente le temps d'un tour */
 Tours.prototype.timeCycle = function(callback){
@@ -92,7 +93,7 @@ Tours.prototype.timeCycle = function(callback){
         });
 
         this.time.set({ time : 1000, autostart : true });
-}
+};
 
 /* fonction qui lance le cycle de jeux */
 Tours.prototype.launchCycle = function(ctx, textColor, idName, idScore){
@@ -108,12 +109,14 @@ Tours.prototype.launchCycle = function(ctx, textColor, idName, idScore){
         }
         if( (!_myTours.canAdd() && !_myTours.canEffet() || _myTours.endTour) && !_myTours.stateGame.endOfForce){
 
-            var i = 0,find = false;
+            var i = 0;
+            var b = 0;
+            var find = false;
             while(i<_myTours.stateGame.players.length && !find){
 
                if(_myTours.stateGame.players[i].identifiant == _myTours.stateGame.activePlayers.identifiant){
 
-                   for(var b = 0;b<_myTours.stateGame.activePlayers.power.length;b++){
+                   for(b = 0; b < _myTours.stateGame.activePlayers.power.length; b++){
                         _myTours.stateGame.activePlayers.power[b].unlisten(_myTours.stateGame);
                     }
                     $("#active-power").html("No power-Up");
@@ -124,7 +127,7 @@ Tours.prototype.launchCycle = function(ctx, textColor, idName, idScore){
                        _myTours.stateGame.activePlayers = _myTours.stateGame.players[i+1];
                     }
 
-                    for(var b = 0;b<_myTours.stateGame.activePlayers.power.length;b++){
+                    for(b = 0; b < _myTours.stateGame.activePlayers.power.length; b++){
                         _myTours.stateGame.activePlayers.power[b].listen(_myTours.stateGame);
                     }
                     $("#"+idScore).html(_myTours.stateGame.activePlayers.score);
@@ -135,7 +138,7 @@ Tours.prototype.launchCycle = function(ctx, textColor, idName, idScore){
                     _myTours.stateGame.powerToUse = null;
                     _myTours.stateGame.timeLife = _myTours.toursTime;
                     _myTours.stateGame.scoreSignal = false;
-                    if(_myTours.stateGame.selectionPiece != null){
+                    if(_myTours.stateGame.selectionPiece !== null){
                         _myTours.stateGame.selectionPiece.init();
                         _myTours.stateGame.selectionPiece = null;
                     }
@@ -154,4 +157,4 @@ Tours.prototype.launchCycle = function(ctx, textColor, idName, idScore){
 
     });//,300);
     this.intervalVerification.set({ time : 300, autostart : true });
-}
+};

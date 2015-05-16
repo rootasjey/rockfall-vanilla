@@ -2,13 +2,13 @@ function LoadBoard() {
     // InitStyle();
     /* On créé les joueurs du mode solo ici du 1 vs 1, mais qui peut s'étendre,
     chaque joueur jouera de manière alterné */
-    var players = new Array();
+    var players = [];
     players.push(new Players(1,"Joueur_1","black",0,[5,10,15]));
     players.push(new Players(2,"Joueur_2","black",0,[8,10,20]));
 
     /* On définit les pouvoirs qui seront disponible lors de la partie ici
     nous avons définit 3 qui seront les mêmes pour chaque joueur */
-    var powerPlayerUn = new Array();
+    var powerPlayerUn = [];
     powerPlayerUn.push(new powerWeightDouble("power-one",10,'./images/powers/power_double.png'));
     powerPlayerUn.push(new powerNeutralPiece("power-two",10,'./images/powers/power_neutral.png'));
     powerPlayerUn.push(new powerWeightLoseHalf("power-three",20,'./images/powers/power_divide2.png'));
@@ -88,7 +88,7 @@ function CanvasState (players,pointToWin, imageLoad){
     /* contient les images chargées précédement */
     this.imageLoad = imageLoad;
 
-    ImageNeutre = this.imageLoad["System_Neutre"];
+    ImageNeutre = this.imageLoad.System_Neutre;
 
     /* assigne à chaque joueur son image de pièce */
     for(var r = 0;r<this.players.length;r++){
@@ -123,7 +123,7 @@ function CanvasState (players,pointToWin, imageLoad){
     this.dragoffy = 0;
 
     /* Tableau qui enregistre les points gagnés par l'utilisateur qui devront être affiché sur le jeux */
-    this.pointToDraw = new Array();
+    this.pointToDraw = [];
 
     /* le compteur de combo*/
     this.hitCombo = 0;
@@ -210,7 +210,7 @@ function CanvasState (players,pointToWin, imageLoad){
 
 
 	for (var i = 0; i < _myState.plateau.graphique.length; i++) {
-        if(_myState.selectionPiece != null){
+        if(_myState.selectionPiece !== null){
             if (_myState.plateau.graphique[i].contains(mx, my)) {
 
                 _myState.plateau.graphique[i].selected = true;
@@ -225,7 +225,7 @@ function CanvasState (players,pointToWin, imageLoad){
         }
 	}
 
-    if(_myState.selectionPiece != null){
+    if(_myState.selectionPiece !== null){
         _myState.selectionPiece.x = mouse.x - _myState.dragoffx;
         _myState.selectionPiece.y = mouse.y - _myState.dragoffy;
         _myState.valid = false;
@@ -282,19 +282,23 @@ $(canvas).on("mouseup",function(e) {
     // Super Square Object which allows to test the autoEndTurn setting
     var ssplay = FindSuperSquare("play");
 
+    var i = 0;
+
     /* Vérifie si on à une pièce/rock sélectionné(e) */
-    if(_myState.selectionPiece != null){
+    if(_myState.selectionPiece !== null){
+
+
 
         //  Shrink the rock
         _myState.selectionPiece.height  = 90;
         _myState.selectionPiece.width   = 90;
 
        /* pour chaque cellule on vérifie si on relache le rock sur une cellule du plateau libre*/
-	  for (var i = 0; i < _myState.plateau.graphique.length; i++) {
+	  for (i = 0; i < _myState.plateau.graphique.length; i++) {
         if(typeof(_myState.plateau.graphique[i]) != "undefined"){
-            if(_myState.tours.canAdd() == true){
-                if (_myState.plateau.graphique[i].contains(mx, my)
-                    && _myState.plateau.matrice[_myState.plateau.graphique[i].matriceX][_myState.plateau.graphique[i].matriceY] == 0) {
+            if(_myState.tours.canAdd() === true){
+                if (_myState.plateau.graphique[i].contains(mx, my) &&
+                _myState.plateau.matrice[_myState.plateau.graphique[i].matriceX][_myState.plateau.graphique[i].matriceY] === 0) {
 
                      success = true;
                      _myState.comboMaker.nom = _myState.activePlayers.nom;
@@ -334,9 +338,9 @@ $(canvas).on("mouseup",function(e) {
         _myState.selectionPiece = null;
         _myState.valid = false;
 
-	}else{
+	} else{
 
-        for (var i = 0; i < _myState.plateau.graphique.length; i++) {
+        for (i = 0; i < _myState.plateau.graphique.length; i++) {
 
             if(typeof(_myState.plateau.graphique[i]) != "undefined"){
 
@@ -344,7 +348,7 @@ $(canvas).on("mouseup",function(e) {
 
                         var referenceShape = _myState.plateau.matrice[_myState.plateau.graphique[i].matriceX][_myState.plateau.graphique[i].matriceY];
 
-                        if (_myState.plateau.graphique[i].contains(mx, my) && referenceShape != 0) {
+                        if (_myState.plateau.graphique[i].contains(mx, my) && referenceShape !== 0) {
 
                             if(_myState.activePlayers.score >= _myState.powerToUse.price){
 
@@ -366,7 +370,7 @@ $(canvas).on("mouseup",function(e) {
     }
 
     /* on déselectionne graphiquement la cellule du plateau visée */
-    if(_myState.selectionGraphique != null){
+    if(_myState.selectionGraphique !== null){
         _myState.selectionGraphique.selected = false;
          _myState.selectionGraphique = null;
         _myState.valid = false;
@@ -379,14 +383,14 @@ $(canvas).on("mouseup",function(e) {
 /* timeChange  la fonction de callback une fois le tour changé  pour réinitialiser */
 CanvasState.prototype.timeChange = function(time){
     _myState.timeLife = time;
-    if(time<1 && _myState.selectionPiece != null){
+    if(time<1 && _myState.selectionPiece !== null){
         _myState.selectionPiece.init();
         _myState.selectionPiece.select = false;
         _myState.selectionPiece = null;
 
     }
     _myState.valid = false;
-}
+};
 
 /* fonction findPlayerById retourne le profil du player en fonction de l'id fournit */
 CanvasState.prototype.findPlayerById = function(players, idPlayer){
@@ -404,7 +408,7 @@ CanvasState.prototype.findPlayerById = function(players, idPlayer){
     }
 
     return player;
-}
+};
 
 CanvasState.prototype.addDrawPoints = function(message, x, y, color){
 
@@ -423,7 +427,7 @@ CanvasState.prototype.addDrawPoints = function(message, x, y, color){
         this.pointToDraw.push({"active":true,"message":message,"x":x,"y":y,"color":color,"highEff":0});
     }
 
-}
+};
 
 
 CanvasState.prototype.drawPoints = function(){
@@ -453,7 +457,7 @@ CanvasState.prototype.drawPoints = function(){
     }
 
     return pointToDrawVerification;
-}
+};
 
 /* Fonction qui prend en charge l'affichage d'hit et de combo quand il y en a */
 CanvasState.prototype.drawCombo = function(ctx,x,y,dpth){
@@ -501,7 +505,7 @@ CanvasState.prototype.drawCombo = function(ctx,x,y,dpth){
 
     ctx.shadowColor = "black";
     ctx.shadowBlur = 8;
-}
+};
 
 /* Fonction qui prend en charge l'affichage des points des joueurs */
 CanvasState.prototype.drawPointPlayer = function(){
@@ -509,8 +513,8 @@ CanvasState.prototype.drawPointPlayer = function(){
     var initPosX = 55;
     var initPosY = 300;
 
-    for(var i = 0;i<this.pointToWin;i++){
-      if(this.activePlayers.point>i){
+    for(var i = 0; i<this.pointToWin; i++){
+      if(this.activePlayers.point > i){
           (new Shape(initPosX, initPosY-(i*50), 50, 50, 0, "yellow", null)).drawStar(this.ctx, 25, 5, 0.5);
 
       }else{
@@ -518,7 +522,7 @@ CanvasState.prototype.drawPointPlayer = function(){
       }
     }
 
-}
+};
 
 /* Fonction qui permet d'écrire sur canvas */
 function WriteMessage (ctx, message, color, x, y, dpth){

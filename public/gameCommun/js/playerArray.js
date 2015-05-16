@@ -5,7 +5,7 @@ var Personne = function(id, pseudo){
     this.pseudo = pseudo;
     this.propriete = "personne";
     return this;
-}
+};
 
 var Client = function(id, pseudo, socket, time){
 
@@ -14,7 +14,7 @@ var Client = function(id, pseudo, socket, time){
     this.timeLife = time;
     this.almostLeave = false;
     this.propriete = "personne";
-}
+};
 
 Client.prototype = Object.create(Personne.prototype);
 
@@ -24,14 +24,14 @@ module.exports.Client = Client;
 var Tableau = function() {
 
     /*-- Tableau qui contient les informations du joueur --*/
-    this.element = new Array();
+    this.element = [];
 
     /*-- fonction supprimer qui supprime un joueur selon son id --*/
-    (function () { 
+    (function () {
         this.supprimer = function (idJoueur) {
             var element = null;
             var i = 0;
-            while(i<this.element.length && element == null){
+            while(i<this.element.length && element === null){
                 if(this.element[i].id == idJoueur){
                     element = this.element[i];
                     this.element.splice(i,1);
@@ -39,11 +39,11 @@ var Tableau = function() {
                 i++;
             }
             return element;
-        } 
+        };
     }).call(this);
 
     /*-- fonction supprimer qui supprime un joueur selon son id --*/
-    (function () { 
+    (function () {
         this.exist = function (newElement) {
             var is_exist = false;
             for(var i =0; i<this.element.length;i++){
@@ -52,11 +52,11 @@ var Tableau = function() {
                 }
             }
             return is_exist;
-        } 
+        };
     }).call(this);
 
     /*-- fonction ajout qui ajoute une nouvelle élément --*/
-    (function () { 
+    (function () {
         this.ajout = function (newElement) {
             var valide = false;
             if(newElement.propriete == (new Personne()).propriete && !this.exist(newElement)){
@@ -64,45 +64,45 @@ var Tableau = function() {
                 valide = true;
             }
             return valide;
-        } 
+        };
     }).call(this);
 
     /*-- fonction vérifie la validité d'un élément --*/
-    (function () { 
+    (function () {
         this.isBientotHorsConnexion = function (element_a_verifier) {
             var valide = true;
-            if(typeof(element_a_verifier) != undefined ){
-                if(element_a_verifier != null){
+            if(typeof(element_a_verifier) !== undefined ){
+                if(element_a_verifier !== null){
                     if(!element_a_verifier.almostLeave){
                         valide = false;
                     }
                 }
             }
             return valide;
-        } 
+        };
     }).call(this);
 
     return this;
-}
+};
 
 /*-- Spécialisation du tableau pour les joueurs en attente --*/
 
 var Tableau_EnAttente = function() {
     Tableau.call(this);
-}
+};
 
 
 /*-- Spécialisation du tableau pour les joueurs en attente a envoyer--*/
 
 var Tableau_EnAttente_Affichage = function() {
     Tableau.call(this);
-}
+};
 
 /*-- Spécialisation du tableau pour les joueurs en attente --*/
 
 var Tableau_EnJeu = function() {
     Tableau.call(this);
-}
+};
 
 
 
@@ -117,7 +117,7 @@ Tableau_EnAttente_Affichage.prototype.getJoueurById = function(idJoueur){
 
     var elementTrouve = null;
     var i = 0;
-    while(i<this.element.length && elementTrouve == null){
+    while(i < this.element.length && elementTrouve === null){
         if(this.element[i].id == idJoueur){
             elementTrouve = this.element[i];
         }
@@ -125,7 +125,7 @@ Tableau_EnAttente_Affichage.prototype.getJoueurById = function(idJoueur){
     }
     return elementTrouve;
 
-}
+};
 
 Tableau_EnAttente.prototype.timeLifeSynchronisation = function(idJoueur){
 
@@ -140,13 +140,13 @@ Tableau_EnAttente.prototype.timeLifeSynchronisation = function(idJoueur){
     }
     return valide;
 
-}
+};
 
 Tableau_EnAttente.prototype.getJoueurById = function(idJoueur){
 
     var elementTrouve = null;
     var i = 0;
-    while(i<this.element.length && elementTrouve == null){
+    while(i < this.element.length && elementTrouve === null){
         if(this.element[i].id == idJoueur){
             elementTrouve = this.element[i];
         }
@@ -154,7 +154,7 @@ Tableau_EnAttente.prototype.getJoueurById = function(idJoueur){
     }
     return elementTrouve;
 
-}
+};
 
 Tableau_EnJeu.prototype = Object.create(Tableau_EnAttente.prototype);
 

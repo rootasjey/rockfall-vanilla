@@ -8,9 +8,13 @@
 // ~ 2 : If the control is hidden, show it OR if it's displayed, hide it     ~
 // ---------------------------------------------------------------------------
 
-// CONSTRUCTOR --->
-// -selector > #id or .class (html object)
-// -function > the purpose of the SuperSquare (play, connection, ...)
+/**
+ * CONSTRUCTOR: Create a SuperSquare with a selector #id or .class (html object)
+ * and a purpose of the SuperSquare (play, connection, ...)
+ * @param {String} selector
+ * @param {String} purpose
+ * @return {Object} SuperSquare
+ */
 function SuperSquare(selector, purpose) {
     // Attributes
     this.selector       = selector;
@@ -174,7 +178,7 @@ SuperSquare.prototype.EventMouseClick = function () {
             ss.Expend('300px', '300px', null, '700');
         } else{
             ss.Expend();
-        };
+        }
     });
 };
 
@@ -205,7 +209,7 @@ SuperSquare.prototype.Expend = function (height, width, hContainer, wContainer) 
     }
     if (this.NotDefined(_wContainer)) {
         _wContainer = '800px';
-    };
+    }
 
     $(this.superContainer)
     .animate({ width: _wContainer })
@@ -238,11 +242,6 @@ SuperSquare.prototype.Expend = function (height, width, hContainer, wContainer) 
             textAlign       : "left",
             background      : "radial-gradient(circle farthest-side, #3B536A 0%, #12191F 100%)",
             backgroundImage : "radial-gradient(circle farthest-side, #3B536A 0%, #12191F 100%)",
-            backgroundImage : "-o-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
-            backgroundImage : "-ms-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
-            backgroundImage : "-moz-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
-            backgroundImage : "-webkit-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
-            backgroundImage : "-webkit-radial-gradient(center, circle farthest-side, #3B536A 0%, #12191F 100%)",
         });
     }
     else if (this.purpose === "connect") {
@@ -697,7 +696,7 @@ SuperSquare.prototype.ConnectFormToggleVisibility = function() {
         }).appendTo(form);
 
         this.ConnectFormEvents(); // Add events on buttons & inputs
-    };
+    }
 
     if ($(this.selector + " .connect-block").css("display") !== "block") {
         // Animations
@@ -774,7 +773,7 @@ SuperSquare.prototype.ConnectFormToggleVisibility = function() {
             $(ss.selector + " .connect-block").css({ display: "none" });
         }, 2000, this);
 
-    };
+    }
 };
 
 // Events on connection's form
@@ -1314,6 +1313,8 @@ SuperSquare.prototype.SecondPanelToggleVisibility = function (purpose) {
     var mp = ".message-panel";
     var tp = ".settings-panel";
 
+    var ss = null;
+
     if($(sp).length < 1) {
         var secondpanel = $("<div>", {
             class: "second-panel",
@@ -1383,7 +1384,7 @@ SuperSquare.prototype.SecondPanelToggleVisibility = function (purpose) {
         if (purpose === "messages" && $(mp).css("opacity") === "0") {
             this.SettingsToggleVisibility();
 
-            var ss = this;
+            ss = this;
             window.setTimeout(function (ss) {
                 ss.MessageToggleVisibility();
             }, 1000, this);
@@ -1393,7 +1394,7 @@ SuperSquare.prototype.SecondPanelToggleVisibility = function (purpose) {
         else if (purpose === "settings" && $(tp).css("opacity") === "0") {
             this.MessageToggleVisibility();
 
-            var ss = this;
+            ss = this;
             window.setTimeout(function (ss) {
                 ss.SettingsToggleVisibility();
             }, 1000, this);

@@ -1,6 +1,6 @@
 {
-    "STORAGE_NAME": "***",
-    "STORAGE_KEY": "***",
+    "STORAGE_NAME": "rockfallstorage",
+    "STORAGE_KEY": "Xl+57BjOS2v2KUB+EOWCVpJN387Fbl9IrNOfBSNwmxtx6TPthxSq9WqHImC3SPLAOWNPfrHfekmLe02EngBgeg==",
     "PARTITION_KEY": "game",
     "TABLE_NAME": "users"
 }

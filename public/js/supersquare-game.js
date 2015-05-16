@@ -4,6 +4,8 @@
 
 // Show/Hide game's modes
 SuperSquare.prototype.GameModesToggleVisbility = function () {
+    var time = 0;
+
     // If the player was playing previously, so restore the game
     if (this.settings.gameStarted) {
         this.GameShowGameBoard();
@@ -12,11 +14,12 @@ SuperSquare.prototype.GameModesToggleVisbility = function () {
 
     // If game modes panels are non-existent, create them
     if ($(".game-ui").length < 1) {
-        var gameui = $("<div>", {
-                        class: "game-ui",
-                    }).css({
-                        opacity: '1',
-                    }).appendTo($(this.selector));
+        var gameui =
+            $("<div>", {
+                class: "game-ui",
+            }).css({
+                opacity: '1',
+            }).appendTo($(this.selector));
 
         // Create 3 game modes
         // SOLO
@@ -57,7 +60,7 @@ SuperSquare.prototype.GameModesToggleVisbility = function () {
 
     // Hide or Show
     if ($(".vertical-pan").css("display") === "none") {
-        var time = 500;
+        time = 500;
         $(".vertical-pan").each(function () {
             $(this).css({
                 top     : "20px",
@@ -73,7 +76,7 @@ SuperSquare.prototype.GameModesToggleVisbility = function () {
         });
     }
     else {
-        var time = 0;
+        time = 0;
         $(".vertical-pan").each(function () {
             $(this).css({
                 top     : "0",
@@ -88,7 +91,7 @@ SuperSquare.prototype.GameModesToggleVisbility = function () {
 
             window.setTimeout(function (verticalPan) {
                 verticalPan.css({ display : "none" });
-            }, 500, $(this))
+            }, 500, $(this));
         });
     }
 };
@@ -865,7 +868,11 @@ SuperSquare.prototype.GameOnlineMode = function () {
         ss.GameFriendlyOnlineMode();
     });
     unfriendlyButton.click(function () {
+        var parent = $(this).parent();
+        parent.remove();
+
         ss.GameUnfriendlyOnlineMode();
+
     });
     cancelButton.click(function () {
         var parent = $(this).parent();
@@ -886,7 +893,37 @@ SuperSquare.prototype.GameFriendlyOnlineMode = function () {
 
 // Compete against a total stranger
 SuperSquare.prototype.GameUnfriendlyOnlineMode = function () {
+    console.log("toto");
     // Please waiting while matching
+    this.settings.stats = "playing";
+
+    // this.GameModesToggleVisbility();
+    this.ExpendVertically('300');
+    this.GameLoadPowers();
+    this.GameShowGameIcons();
+
+    window.setTimeout(function () {
+        var gameui = $(".game-ui").css({
+            width: "90%",
+            opacity: 1,
+        });
+
+        // Start a 2 local players game
+        var board = $('#canvas');
+        board.appendTo(gameui);
+
+
+        $("#canvas").css({
+            opacity: 0,
+            height: '500px',
+            width: '785px',
+        }).animate({
+            opacity: 1,
+            height: '515px',
+            width: '800px',
+        });
+
+    }, 1000);
 };
 
 // Fight against the CPU

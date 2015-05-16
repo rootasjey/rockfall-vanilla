@@ -21,7 +21,7 @@ function Main(imageLoad, player, adversaire, socket, pointPourGagner) {
 
     this.soundInterval = null;
 
-    this.listeSound = new Array();
+    this.listeSound = [];
 
     this.pointMax = pointPourGagner;
 
@@ -59,14 +59,16 @@ function Main(imageLoad, player, adversaire, socket, pointPourGagner) {
 
     this.frame = $.timer(function() {
 
-        if(!_myStateMulti.valid){
+        if(!(_myStateMulti.valid)){
 
-            _myStateMulti.ctx.clearRect(0,0,_myStateMulti.canvas.width,_myStateMulti.canvas.height);
-            if(_myStateMulti.fluxInfoServer != null){
+            _myStateMulti.ctx.clearRect(0,0, _myStateMulti.canvas.width, _myStateMulti.canvas.height);
+            if(_myStateMulti.fluxInfoServer !== null){
                 _myStateMulti.plateauOnlineObjet.drawPlateau();
                 _myStateMulti.plateauOnlineObjet.drawInfo(_myStateMulti.fluxInfoServer.time);
                 _myStateMulti.plateauOnlineObjet.drawPointRe();
                 _myStateMulti.plateauOnlineObjet.drawCombo(_myStateMulti.fluxInfoServer.hitcombo);
+
+                _myStateMulti.infoPlayer();
             }
              _myStateMulti.piecesPlayer.draw(_myStateMulti.ctx);
             _myStateMulti.valid = true;
@@ -80,10 +82,9 @@ function Main(imageLoad, player, adversaire, socket, pointPourGagner) {
     fonction qui est execute pour stopper le jeu, utilisé lors d'une déconnexion d'un des joueurs, ou à la fin d'une partie
 **/
 Main.prototype.stop = function(){
-
     this.frame.stop();
     clearInterval(this.soundInterval);
-}
+};
 
 /**
     fonction qui initilise les listeners pour gérer les différents évènements indispensable au déroulement du jeu
@@ -131,7 +132,7 @@ Main.prototype.listener = function(){
             var NoOnePiece = false;
 
         for (var i = 0; i < _myStateMulti.plateauOnlineObjet.tabPiece.length; i++) {
-            if(_myStateMulti.selectionPieceMulti != null){
+            if(_myStateMulti.selectionPieceMulti !== null){
                 if (_myStateMulti.plateauOnlineObjet.tabPiece[i].contains(mx, my)) {
 
                     _myStateMulti.plateauOnlineObjet.tabPiece[i].selected = true;
@@ -152,7 +153,7 @@ Main.prototype.listener = function(){
             }
 
 
-            if(_myStateMulti.selectionPieceMulti != null){
+            if(_myStateMulti.selectionPieceMulti !== null){
                 _myStateMulti.selectionPieceMulti.x = mouse.x - dragoffxMulti;
                 _myStateMulti.selectionPieceMulti.y = mouse.y - dragoffyMulti;
                 _myStateMulti.valid = false;
@@ -168,12 +169,16 @@ Main.prototype.listener = function(){
             var my = mouse.y;
 
             /* Vérifie si on à une pièce/rock sélectionné(e) */
-            if(_myStateMulti.selectionPieceMulti != null){
+            if(_myStateMulti.selectionPieceMulti !== null){
 
                 _myStateMulti.selectionPieceMulti.height  = 90;
                 _myStateMulti.selectionPieceMulti.width   = 90;
 
-                if(_myStateMulti.plateauOnlineObjet.selectionCell != null && _myStateMulti.plateauOnlineObjet.selectionCell.type == "Cell" && _myStateMulti.currentPlayer.id == _myStateMulti.player.id && _myStateMulti.fluxInfoServer.nbreActionRealise < _myStateMulti.fluxInfoServer.nbreAction && _myStateMulti.canContinue){
+                if(_myStateMulti.plateauOnlineObjet.selectionCell !== null &&
+                    _myStateMulti.plateauOnlineObjet.selectionCell.type == "Cell" &&
+                    _myStateMulti.currentPlayer.id == _myStateMulti.player.id &&
+                    _myStateMulti.fluxInfoServer.nbreActionRealise < _myStateMulti.fluxInfoServer.nbreAction &&
+                    _myStateMulti.canContinue){
 
                     var idItem = _myStateMulti.fluxInfoServer.id;
                     var xItem = _myStateMulti.plateauOnlineObjet.selectionCell.matriceX;
@@ -244,7 +249,9 @@ Main.prototype.listener = function(){
             var my = mouse.y;
 
             /* Vérifie si on à une pièce/rock sélectionné(e) */
-            if(_myStateMulti.selectionPieceMulti == null && _myStateMulti.bonusState == true){
+            if(_myStateMulti.selectionPieceMulti === null &&
+                _myStateMulti.bonusState === true){
+
                 for (var i = 0; i < _myStateMulti.plateauOnlineObjet.tabPiece.length; i++) {
 
                     if (_myStateMulti.plateauOnlineObjet.tabPiece[i].contains(mx, my)) {
@@ -255,7 +262,7 @@ Main.prototype.listener = function(){
                             'y':_myStateMulti.plateauOnlineObjet.tabPiece[i].matriceY,
                             'power':_myStateMulti.powerInProgress,
                             'player':_myStateMulti.player
-                        }
+                        };
                         _myStateMulti.socket.emit("addEffet",objetEffet);
                         _myStateMulti.canContinue = false;
                         _myStateMulti.bonusState = false;
@@ -265,7 +272,7 @@ Main.prototype.listener = function(){
 
         });
 
-}
+};
 
 
 /* fonction qui récupère les informations du joueur pour récupérer les pièces à afficher */
@@ -279,12 +286,12 @@ Main.prototype.remplirPiecePlayer = function(){
         shapeAdd.idProprietaire = this.player.id;
         this.piecesPlayer.add(shapeAdd);
     }
-}
+};
 
 /* fonction qui permet d'activer un bonus ou pas */
 function clickOnBonus(id,price,sigle){
 
-    if(_myStateMulti.bonusState == false){
+    if(_myStateMulti.bonusState === false){
         _myStateMulti.desactiveBonus();
         _myStateMulti.activeBonus(id, price, sigle);
 
@@ -306,7 +313,7 @@ Main.prototype.initBonus = function(){
         for(var i = 0; i < tableauBonus.length;i++){
 
             var detailbonus = tableauBonus[i].split(";");
-            if(detailbonus.length == 3 && document.getElementById("bonus_"+i) != null){
+            if(detailbonus.length == 3 && document.getElementById("bonus_"+i) !== null){
 
                 document.getElementById("bonus_"+i).innerHTML = detailbonus[2];
                 document.getElementById("bonus_"+i).setAttribute('onclick','clickOnBonus('+detailbonus[0]+','+detailbonus[1]+',\''+detailbonus[2]+'\')');
@@ -314,7 +321,7 @@ Main.prototype.initBonus = function(){
             }
         }
     }
-}
+};
 
 /* Fonction qui permet d'activé le bonus en vérifiant les finances du joueur */
 Main.prototype.activeBonus = function(idBonus, prixBonus, sigleBonus){
@@ -325,7 +332,7 @@ Main.prototype.activeBonus = function(idBonus, prixBonus, sigleBonus){
         this.bonusState = true;
         document.getElementById("etatBonus").innerHTML = "Bonus actif d'id "+idBonus;
     }
-}
+};
 
 /* Fonction qui permet de sortir de l'état de bonus activé */
 Main.prototype.desactiveBonus = function(){
@@ -333,7 +340,7 @@ Main.prototype.desactiveBonus = function(){
     this.powerInProgress = null;
     this.bonusState = false;
     document.getElementById("etatBonus").innerHTML = "Bonus desactivé";
-}
+};
 
 /*
     "@setFluxInfoServer" est le setter de l'attribut fluxInfoServer.
@@ -342,24 +349,34 @@ Main.prototype.desactiveBonus = function(){
 Main.prototype.setFluxInfoServer = function(fluxInfoServer){
 
     this.fluxInfoServer = fluxInfoServer;
-    this.plateauOnlineObjet.pieceInGame = new Array();
+    this.plateauOnlineObjet.pieceInGame = [];
 
     for(var i = 0; i < this.fluxInfoServer.sizeX;i++){
 
         for(var j = 0;j < this.fluxInfoServer.sizeY;j++){
 
-            if(this.fluxInfoServer.plateau[i][j].item != 0){
+            if(this.fluxInfoServer.plateau[i][j].item !== 0){
 
-                if(this.fluxInfoServer.plateau[i][j].item.image == this.piecesImage["idPS"].src){
-                    this.fluxInfoServer.plateau[i][j].item.image = this.piecesImage["idPS"];
-                }else if(this.fluxInfoServer.plateau[i][j].item.image == this.piecesImage["idPF"].src){
-                    this.fluxInfoServer.plateau[i][j].item.image = this.piecesImage["idPF"];
+                if(this.fluxInfoServer.plateau[i][j].item.image == this.piecesImage.idPS.src){
+                    this.fluxInfoServer.plateau[i][j].item.image = this.piecesImage.idPS;
+                }else if(this.fluxInfoServer.plateau[i][j].item.image == this.piecesImage.idPF.src){
+                    this.fluxInfoServer.plateau[i][j].item.image = this.piecesImage.idPF;
                 }
-                if(this.fluxInfoServer.plateau[i][j].item.idProprietaire == -1){
-                    this.fluxInfoServer.plateau[i][j].item.image = this.piecesImage["system_Neutre"];
-                    this.fluxInfoServer.plateau[i][j].item.fill="#CCCCCC";
+
+                if(this.fluxInfoServer.plateau[i][j].item.idProprietaire == -1) {
+                    this.fluxInfoServer.plateau[i][j].item.image = this.piecesImage.system_Neutre;
+                    this.fluxInfoServer.plateau[i][j].item.fill = "#CCCCCC";
                 }
-                var shap = new Shape(_myStateMulti.plateauOnlineObjet.startX + j *(_myStateMulti.plateauOnlineObjet.width+_myStateMulti.plateauOnlineObjet.space)-_myStateMulti.plateauOnlineObjet.dimension*1.5, _myStateMulti.plateauOnlineObjet.startY + i *(_myStateMulti.plateauOnlineObjet.height+_myStateMulti.plateauOnlineObjet.space)-_myStateMulti.plateauOnlineObjet.dimension/2, this.fluxInfoServer.plateau[i][j].item.width, this.fluxInfoServer.plateau[i][j].item.height, parseInt(this.fluxInfoServer.plateau[i][j].item.weight), this.fluxInfoServer.plateau[i][j].item.fill, this.fluxInfoServer.plateau[i][j].item.image);
+
+                var shap =
+                            new Shape(
+                                    _myStateMulti.plateauOnlineObjet.startX + j * (_myStateMulti.plateauOnlineObjet.width + _myStateMulti.plateauOnlineObjet.space)-_myStateMulti.plateauOnlineObjet.dimension*1.5,
+                                    _myStateMulti.plateauOnlineObjet.startY + i *(_myStateMulti.plateauOnlineObjet.height + _myStateMulti.plateauOnlineObjet.space)-_myStateMulti.plateauOnlineObjet.dimension/2,
+                                    this.fluxInfoServer.plateau[i][j].item.width,
+                                    this.fluxInfoServer.plateau[i][j].item.height,
+                                    parseInt(this.fluxInfoServer.plateau[i][j].item.weight),
+                                    this.fluxInfoServer.plateau[i][j].item.fill,
+                                    this.fluxInfoServer.plateau[i][j].item.image);
 
                 this.plateauOnlineObjet.pieceInGame.push(shap);
             }
@@ -369,12 +386,12 @@ Main.prototype.setFluxInfoServer = function(fluxInfoServer){
     }
 
     this.setPointToDraw(this.fluxInfoServer.pointAdd);
-    this.setSoundGame(this.fluxInfoServer.soundToPlay);
+    // this.setSoundGame(this.fluxInfoServer.soundToPlay);
 
-}
+};
 
 /*
-    fonction qui permet d'ajouter à la liste des sons qui doit être joué par le jeu
+    Fonction qui permet d'ajouter à la liste des sons qui doit être joué par le jeu
 */
 Main.prototype.setSoundGame = function(newDataSound){
 
@@ -382,15 +399,15 @@ Main.prototype.setSoundGame = function(newDataSound){
         this.listeSound.push(newDataSound[i]);
     }
 
-}
+};
 
 /*
-    fonction qui permet de lancer le processus de lecture des sons
+    Fonction qui permet de lancer le processus de lecture des sons
 */
 Main.prototype.startSoundGame = function(){
 
     this.soundInterval = setInterval( (function(){
-    
+
         if(this.listeSound.length > 0){
             var player = document.getElementById('sound_game');
             player.setAttribute('src',this.listeSound[0]);
@@ -400,9 +417,9 @@ Main.prototype.startSoundGame = function(){
 
 
     }).bind(this),1000);
-}
+};
 
-/* fonction qui rajoute à la liste des points qui doit être affiché sur le plateau lors par exemple de la destruction des pièces */
+/* Fonction qui rajoute à la liste des points qui doit être affiché sur le plateau lors par exemple de la destruction des pièces */
 Main.prototype.setPointToDraw = function (objetPointAdd){
 
     for(var i = 0;i<objetPointAdd.length;i++){
@@ -426,7 +443,7 @@ Main.prototype.setPointToDraw = function (objetPointAdd){
         };
         this.plateauOnlineObjet.pointToShow.push(pointToPlateau);
     }
-}
+};
 
 
 
@@ -439,33 +456,41 @@ Main.prototype.setPointToDraw = function (objetPointAdd){
 
 Main.prototype.infoPlayer = function(){
 
-    $("#profil_"+this.player.name+"_score").html("score : "+this.player.score);
-    $("#profil_"+this.adversaire.name+"_score").html("score : "+this.adversaire.score);
+    $("#profil_" + this.player.name+"_score").html("score : " + this.player.score);
+    $("#profil_" + this.adversaire.name+"_score").html("score : "+ this.adversaire.score);
 
     var imgPlayer = "";
     var imgAdversaire = "";
 
-    for(var i = 1;i <= this.pointMax ;i++){
+    var initPosX = 55;
+    var initPosY = 300;
 
-        if(i > this.player.point){
-            imgPlayer += "<img src=\""+this.piecesImage["starNA"].src+"\"/>";
+    for(var i = 1; i <= this.pointMax; i++){
+
+        if( i > this.player.point ){
+            // imgPlayer += "<img src=\""+this.piecesImage.starNA.src+"\"/>";
+            (new Shape(initPosX, initPosY-(i*50), 50, 50, 0, "grey", null)).drawStar(this.ctx, 25, 5, 0.5);
         }else{
-            imgPlayer += "<img src=\""+this.piecesImage["starA"].src+"\"/>";
+            // imgPlayer += "<img src=\""+this.piecesImage.starA.src+"\"/>";
+            (new Shape(initPosX, initPosY-(i*50), 50, 50, 0, "yellow", null)).drawStar(this.ctx, 25, 5, 0.5);
+
         }
 
-        if( i > this.adversaire.point){
-            imgAdversaire += "<img src=\""+this.piecesImage["starNA"].src+"\"/>";
+        if( i > this.adversaire.point ){
+            // imgAdversaire += "<img src=\""+this.piecesImage.starNA.src+"\"/>";
+            (new Shape(105, initPosY-(i*50), 50, 50, 0, "grey", null)).drawStar(this.ctx, 25, 5, 0.5);
         }else{
-            imgAdversaire += "<img src=\""+this.piecesImage["starA"].src+"\"/>";
+            // imgAdversaire += "<img src=\""+this.piecesImage.starA.src+"\"/>";
+            (new Shape(105, initPosY-(i*50), 50, 50, 0, "yellow", null)).drawStar(this.ctx, 25, 5, 0.5);
         }
     }
 
     $("#profil_"+this.player.name+"_point").html(imgPlayer);
     $("#profil_"+this.adversaire.name+"_point").html(imgAdversaire);
-}
+};
 
 /*
-    fonction d'initialisation des informations du joueur à afficher
+    Fonction d'initialisation des informations du joueur à afficher
 */
 Main.prototype.initInfo = function( ContainerPlayer, ContainerAdversaire ){
 
@@ -491,11 +516,11 @@ Main.prototype.initInfo = function( ContainerPlayer, ContainerAdversaire ){
     $("#profil_"+this.adversaire.name+"_score").html("score : "+0);
 
 
-    $("#profil_"+this.player.name+"_point").html("<img src=\""+this.piecesImage["starNA"].src+"\"/> <img src=\""+this.piecesImage["starNA"].src+"\"/>");
-    $("#profil_"+this.adversaire.name+"_point").html("<img src=\""+this.piecesImage["starNA"].src+"\"/><img src=\""+this.piecesImage["starNA"].src+"\"/>");
+    $("#profil_"+this.player.name+"_point").html("<img src=\""+this.piecesImage.starNA.src+"\"/> <img src=\""+this.piecesImage.starNA.src+"\"/>");
+    $("#profil_"+this.adversaire.name+"_point").html("<img src=\""+this.piecesImage.starNA.src+"\"/><img src=\""+this.piecesImage.starNA.src+"\"/>");
 
     /* on initialise en même le clique sur le bouton passer son tour */
     document.getElementById("passeTour").onclick = function(){
         _myStateMulti.socket.emit("changeTour",{"id":idParty,"idplayer":_myStateMulti.player.id});
     };
-}
+};

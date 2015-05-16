@@ -4,9 +4,11 @@
 
 // Show/Hide the message panel control
 SuperSquare.prototype.MessageToggleVisibility = function () {
-    var sp = ".second-panel";
-    var mp = ".message-panel";
-    var mc = ".messages-counter";
+    var sp = ".second-panel",
+        mp = ".message-panel",
+        mc = ".messages-counter";
+
+    var time = null;
 
     // If the control doesn't exist
     if($(mp).length < 1) {
@@ -69,7 +71,7 @@ SuperSquare.prototype.MessageToggleVisibility = function () {
         // Show the message counter
         $(mc).css('opacity', '1');
 
-        var time = 500;
+        time = 500;
         $(sp + " .mini-icon").each(
             function () {
                 $(this).css({
@@ -115,7 +117,7 @@ SuperSquare.prototype.MessageToggleVisibility = function () {
             }
         });
 
-        var time = 0;
+        time = 0;
         $(sp + " .mini-icon").each(
             function () {
                 $(this).animate({
@@ -383,7 +385,7 @@ SuperSquare.prototype.MessageHideInboxMessage = function () {
         return;
 
     // Hide all messaes
-    this.MessageHideEachMessage()
+    this.MessageHideEachMessage();
 
     // Hide the messages container
     window.setTimeout(function () {
@@ -605,8 +607,7 @@ SuperSquare.prototype.MessageReceiveNewMessage = function (messageParameter) {
 
     // Test if the message we're going to receive
     // already exists or if we've to generate a new one
-    if (    messageParameter === undefined
-        ||  messageParameter === null      ) {
+    if (messageParameter === undefined ||  messageParameter === null) {
 
         // Create a new message object
         messageObject = this.MessageGenerateRandomMessage();
@@ -761,7 +762,7 @@ SuperSquare.prototype.MessageDisplayFullMessage = function (messageID) {
     closeButton.click(function () {
         var ss = FindSuperSquare("play");
         ss.MessageCloseFullMessage();
-    })
+    });
 };
 
 // Hide the full screen message's content

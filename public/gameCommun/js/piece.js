@@ -1,7 +1,7 @@
 /* La Piece représente l'ensemble des rocks qui seront mis à disposition dans le jeu*/
 function Pieces(){
 
-    this.shapes = new Array();
+    this.shapes = [];
 
 }
 
@@ -13,7 +13,7 @@ Pieces.prototype.draw = function(ctx) {
             this.shapes[i].draw(ctx);
         }
     }
-}
+};
 
 /* La fonction changeColor permet de definir la couleur de l'ensemble des pieces/rocks contenu dans l'objet */
 Pieces.prototype.changeColor = function(color,textColor) {
@@ -24,14 +24,14 @@ Pieces.prototype.changeColor = function(color,textColor) {
             this.shapes[i].textColor = textColor || "rgba(121, 195, 201, 0.81)";
         }
     }
-}
+};
 
 
 /* permet d'ajouter un rock à l'ensemble */
 Pieces.prototype.add = function(shape){
 	//console.log(shape.image);
     this.shapes.push(shape);
-}
+};
 
 /* permet de supprimer un rock en précisant l'indice */
 Pieces.prototype.remove = function(indice){
@@ -39,7 +39,7 @@ Pieces.prototype.remove = function(indice){
     if(indice < this.shapes.length){
         this.shapes.splice(indice,1);
     }
-}
+};
 
 /* permet de supprimer graphiquement l'ensemble des rocks*/
 Pieces.prototype.clear = function(ctx){
@@ -49,7 +49,7 @@ Pieces.prototype.clear = function(ctx){
             this.shapes[i].clear(ctx);
         }
     }
-}
+};
 
 /*
 	La Shape représente la piece qui permettra à l'utilisateur de jouer au jeu.
@@ -75,7 +75,7 @@ function Shape(x, y, w, h, weight, fill, img) {
     this.initialY = y;
 
     this.image = img || null;
-    
+
     this.type="Shape";
 
 }
@@ -85,7 +85,7 @@ Shape.prototype.init = function(){
 
     this.x = this.initialX;
     this.y = this.initialY;
-}
+};
 
 /* draw permet de dessiner une shape */
 Shape.prototype.draw = function(ctx) {
@@ -119,10 +119,10 @@ Shape.prototype.draw = function(ctx) {
     }else{
         writeMessage(ctx, this.weight, this.fill, (this.x + (this.width/3.5)), (this.y + (this.height/1.6)), 1);
     }
-    
+
     ctx.restore();
 
-}
+};
 
 /* contains permet de savoir si la position mx,my fait partie de la shape*/
 Shape.prototype.contains = function(mx, my) {
@@ -130,22 +130,23 @@ Shape.prototype.contains = function(mx, my) {
    the shape's X and (X + Height) and its Y and (Y + Height)*/
   return  (this.x <= mx) && (this.x + this.width >= mx) &&
           (this.y <= my) && (this.y + this.height >= my);
-}
+};
 
 /* clear supprime graphique l'élément shape*/
 Shape.prototype.clear = function(ctx){
 	ctx.clearRect(this.x-this.lineWidth,this.y-this.lineWidth,this.width+(this.lineWidth*2),this.height+(this.lineWidth*2));
-}
+};
 
 
-/* clear supprime graphique l'élément shape*/
+/* Draw a star */
 Shape.prototype.drawStar = function(ctx, r, p, m){
     ctx.save();
     ctx.strokeStyle = "#e74c3c";
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.translate(this.x, this.y);
-    ctx.moveTo(0,0-r);
+    ctx.moveTo(0, 0 - r);
+
     for (var i = 0; i < p; i++)
     {
         ctx.rotate(Math.PI / p);
@@ -153,7 +154,8 @@ Shape.prototype.drawStar = function(ctx, r, p, m){
         ctx.rotate(Math.PI / p);
         ctx.lineTo(0, 0 - r);
     }
+
     ctx.fillStyle = this.fill;
     ctx.fill();
     ctx.restore();
-}
+};
