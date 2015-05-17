@@ -31,7 +31,10 @@ function Main(imageLoad, player, adversaire, socket, pointPourGagner) {
 
     this.powerInProgress = null;
 
-    /* la variable canContinue permet de réalisé un bloquage sur les actions réalisées par l'utilisateur en attendant une mise a jour du server */
+    /* la variable canContinue permet de réaliser
+     * un bloquage sur les actions réalisées
+     * par l'utilisateur en attendant une mise a jour du server
+     */
     this.canContinue = true;
 
     /* contient les images chargées précédement */
@@ -46,27 +49,37 @@ function Main(imageLoad, player, adversaire, socket, pointPourGagner) {
 
     this.selectionPieceMulti = null;
 
-    this.plateauOnlineObjet = new Plateau(10, 250, 80, this.canvas, player, "#2955e3");
+    this.plateauOnlineObjet =
+                new Plateau(10, 250, 80, this.canvas, player, "#2955e3");
+
     this.plateauOnlineObjet.initCtx();
 
-    /* une fois avoir ajouter tous ses éléments, on force la mise a jour du canvas en mettant valid à false */
+    /* Une fois avoir ajouter tous ses éléments,
+     * on force la mise a jour du canvas en mettant valid à false
+     */
     this.valid = false;
 
     _myStateMulti = this;
 
-    /* fonction qui permet de redessiner le canvas si besoin avec une fréquence de 30 millisecondes*/
+    /* Fonction qui permet de redessiner le canvas
+     * si besoin avec une fréquence de 30 millisecondes
+     */
     var interval = 30;
 
     this.frame = $.timer(function() {
 
         if(!(_myStateMulti.valid)){
+            _myStateMulti.ctx.clearRect(0, 0, _myStateMulti.canvas.width,
+                                              _myStateMulti.canvas.height);
 
-            _myStateMulti.ctx.clearRect(0,0, _myStateMulti.canvas.width, _myStateMulti.canvas.height);
             if(_myStateMulti.fluxInfoServer !== null){
                 _myStateMulti.plateauOnlineObjet.drawPlateau();
-                _myStateMulti.plateauOnlineObjet.drawInfo(_myStateMulti.fluxInfoServer.time);
+                _myStateMulti.plateauOnlineObjet.drawInfo(
+                                    _myStateMulti.fluxInfoServer.time);
+
                 _myStateMulti.plateauOnlineObjet.drawPointRe();
-                _myStateMulti.plateauOnlineObjet.drawCombo(_myStateMulti.fluxInfoServer.hitcombo);
+                _myStateMulti.plateauOnlineObjet.drawCombo(
+                                    _myStateMulti.fluxInfoServer.hitcombo);
 
                 _myStateMulti.infoPlayer();
             }
@@ -275,14 +288,19 @@ Main.prototype.listener = function(){
 };
 
 
-/* fonction qui récupère les informations du joueur pour récupérer les pièces à afficher */
-
+/* fonction qui récupère les informations du joueur
+ * pour récupérer les pièces à afficher
+ */
 Main.prototype.remplirPiecePlayer = function(){
-
     var tabPiece = this.player.piece.split("-");
 
     for(var i = 0;i<tabPiece.length;i++){
-        var shapeAdd = new Shape(i*(90+20)+270, 410, 90, 90, parseInt(tabPiece[i]), this.player.color, this.piecesImage[this.player.name]);
+        var shapeAdd =
+            new Shape(i*(90+20) + 270, 410, 90, 90,
+                      parseInt(tabPiece[i]),
+                      this.player.color,
+                      this.piecesImage[this.player.name]);
+
         shapeAdd.idProprietaire = this.player.id;
         this.piecesPlayer.add(shapeAdd);
     }
@@ -304,7 +322,8 @@ function clickOnBonus(id,price,sigle){
 
 }
 
-/* fonction qui récupère les informations du joueur pour récupérer les pièces à afficher */
+/* fonction qui récupère les informations du joueur
+ * pour récupérer les pièces à afficher */
 
 Main.prototype.initBonus = function(){
 
@@ -357,21 +376,36 @@ Main.prototype.setFluxInfoServer = function(fluxInfoServer){
 
             if(this.fluxInfoServer.plateau[i][j].item !== 0){
 
-                if(this.fluxInfoServer.plateau[i][j].item.image == this.piecesImage.idPS.src){
-                    this.fluxInfoServer.plateau[i][j].item.image = this.piecesImage.idPS;
-                }else if(this.fluxInfoServer.plateau[i][j].item.image == this.piecesImage.idPF.src){
-                    this.fluxInfoServer.plateau[i][j].item.image = this.piecesImage.idPF;
+                if(this.fluxInfoServer.plateau[i][j].item.image ==
+                        this.piecesImage.idPS.src){
+                    this.fluxInfoServer.plateau[i][j].item.image =
+                                            this.piecesImage.idPS;
+
+                }else if(this.fluxInfoServer.plateau[i][j].item.image ==
+                        this.piecesImage.idPF.src){
+                    this.fluxInfoServer.plateau[i][j].item.image =
+                                            this.piecesImage.idPF;
                 }
 
                 if(this.fluxInfoServer.plateau[i][j].item.idProprietaire == -1) {
-                    this.fluxInfoServer.plateau[i][j].item.image = this.piecesImage.system_Neutre;
+                    this.fluxInfoServer.plateau[i][j].item.image =
+                                            this.piecesImage.system_Neutre;
+
                     this.fluxInfoServer.plateau[i][j].item.fill = "#CCCCCC";
                 }
 
                 var shap =
                             new Shape(
-                                    _myStateMulti.plateauOnlineObjet.startX + j * (_myStateMulti.plateauOnlineObjet.width + _myStateMulti.plateauOnlineObjet.space)-_myStateMulti.plateauOnlineObjet.dimension*1.5,
-                                    _myStateMulti.plateauOnlineObjet.startY + i *(_myStateMulti.plateauOnlineObjet.height + _myStateMulti.plateauOnlineObjet.space)-_myStateMulti.plateauOnlineObjet.dimension/2,
+                                    _myStateMulti.plateauOnlineObjet.startX + j *
+                                        (_myStateMulti.plateauOnlineObjet.width +
+                                            _myStateMulti.plateauOnlineObjet.space)-
+                                        _myStateMulti.plateauOnlineObjet.dimension * 1.5,
+
+                                    _myStateMulti.plateauOnlineObjet.startY + i *
+                                        (_myStateMulti.plateauOnlineObjet.height +
+                                            _myStateMulti.plateauOnlineObjet.space)-
+                                        _myStateMulti.plateauOnlineObjet.dimension / 2,
+
                                     this.fluxInfoServer.plateau[i][j].item.width,
                                     this.fluxInfoServer.plateau[i][j].item.height,
                                     parseInt(this.fluxInfoServer.plateau[i][j].item.weight),
@@ -391,7 +425,8 @@ Main.prototype.setFluxInfoServer = function(fluxInfoServer){
 };
 
 /*
-    Fonction qui permet d'ajouter à la liste des sons qui doit être joué par le jeu
+ * Fonction qui permet d'ajouter à la liste des sons
+ * qui doivent être joués par le jeu
 */
 Main.prototype.setSoundGame = function(newDataSound){
 
@@ -402,7 +437,7 @@ Main.prototype.setSoundGame = function(newDataSound){
 };
 
 /*
-    Fonction qui permet de lancer le processus de lecture des sons
+ * Fonction qui permet de lancer le processus de lecture des sons
 */
 Main.prototype.startSoundGame = function(){
 
@@ -419,7 +454,9 @@ Main.prototype.startSoundGame = function(){
     }).bind(this),1000);
 };
 
-/* Fonction qui rajoute à la liste des points qui doit être affiché sur le plateau lors par exemple de la destruction des pièces */
+/* Fonction qui rajoute à la liste des points
+ * qui doivent être affichés sur le plateau
+ * lors par exemple de la destruction des pièces */
 Main.prototype.setPointToDraw = function (objetPointAdd){
 
     for(var i = 0;i<objetPointAdd.length;i++){
@@ -448,40 +485,40 @@ Main.prototype.setPointToDraw = function (objetPointAdd){
 
 
 /*
-    Fonction qui prend en charge l'affichage des points du joueur.
-
-    @Method : affichage
-
-*/
-
+ * Fonction qui prend en charge l'affichage des points du joueur.
+ * @Method : affichage
+ */
 Main.prototype.infoPlayer = function(){
-
     $("#profil_" + this.player.name+"_score").html("score : " + this.player.score);
     $("#profil_" + this.adversaire.name+"_score").html("score : "+ this.adversaire.score);
 
     var imgPlayer = "";
     var imgAdversaire = "";
 
+    // Position en abcisse de la forme (shape) du joueur
     var initPosX = 55;
+    // Position en ordonnée de la forme (shape) du joueur
     var initPosY = 300;
 
-    for(var i = 1; i <= this.pointMax; i++){
+    // Position en ordonnée de la forme (shape) de l'ennemi
+    var initPosYEnemy = 200;
 
+
+    // How many points have won players?
+    // On the totalpoints needed to win the game
+    for(var i = 1; i <= this.pointMax; i++){
+        // This part is about the player
         if( i > this.player.point ){
-            // imgPlayer += "<img src=\""+this.piecesImage.starNA.src+"\"/>";
             (new Shape(initPosX, initPosY-(i*50), 50, 50, 0, "grey", null)).drawStar(this.ctx, 25, 5, 0.5);
         }else{
-            // imgPlayer += "<img src=\""+this.piecesImage.starA.src+"\"/>";
             (new Shape(initPosX, initPosY-(i*50), 50, 50, 0, "yellow", null)).drawStar(this.ctx, 25, 5, 0.5);
 
         }
-
+        // This part is about the enemy
         if( i > this.adversaire.point ){
-            // imgAdversaire += "<img src=\""+this.piecesImage.starNA.src+"\"/>";
-            (new Shape(105, initPosY-(i*50), 50, 50, 0, "grey", null)).drawStar(this.ctx, 25, 5, 0.5);
+            (new Shape(initPosX, initPosYEnemy-(i*25), 50, 50, 0, "grey", null)).drawStar(this.ctx, 15, 5, 0.5);
         }else{
-            // imgAdversaire += "<img src=\""+this.piecesImage.starA.src+"\"/>";
-            (new Shape(105, initPosY-(i*50), 50, 50, 0, "yellow", null)).drawStar(this.ctx, 25, 5, 0.5);
+            (new Shape(initPosX, initPosYEnemy-(i*25), 50, 50, 0, "yellow", null)).drawStar(this.ctx, 15, 5, 0.5);
         }
     }
 
@@ -490,34 +527,63 @@ Main.prototype.infoPlayer = function(){
 };
 
 /*
-    Fonction d'initialisation des informations du joueur à afficher
-*/
+ * Initialization function
+ * Set the game parameters : players' names, pictures, scores, points
+ * Set the buttons functions also
+ * @param {Object} ContainerPlayer
+ * @param {Object} ContainerAdversaire
+ */
 Main.prototype.initInfo = function( ContainerPlayer, ContainerAdversaire ){
+    // PLAYER
+    // ------
+    // Set the name in the id attribute value
+    $("."+ ContainerPlayer).attr("id", "profil_" + this.player.name);
 
-    $("."+ContainerPlayer).attr("id","profil_"+this.player.name);
-      $("."+ContainerPlayer+" .profil_img").attr("id","profil_"+this.player.name+"_img");
-      $("."+ContainerPlayer+" .profil_name").attr("id","profil_"+this.player.name+"_name");
-      $("."+ContainerPlayer+" .profil_score").attr("id","profil_"+this.player.name+"_score");
-      $("."+ContainerPlayer+" .profil_point").attr("id","profil_"+this.player.name+"_point");
+    // Set the img in the id attribute value
+    $("."+ ContainerPlayer +" .profil_img").attr("id", "profil_" + this.player.name + "_img");
 
-    $("."+ContainerAdversaire).attr("id","profil_"+this.adversaire.name);
-    $("."+ContainerAdversaire+" .profil_img").attr("id","profil_"+this.adversaire.name+"_img");
-      $("."+ContainerAdversaire+" .profil_name").attr("id","profil_"+this.adversaire.name+"_name");
-      $("."+ContainerAdversaire+" .profil_score").attr("id","profil_"+this.adversaire.name+"_score");
-      $("."+ContainerAdversaire+" .profil_point").attr("id","profil_"+this.adversaire.name+"_point");
+    // Set the name in the in the id attribute value
+    $("."+ ContainerPlayer +" .profil_name").attr("id", "profil_" + this.player.name + "_name");
 
-    $("#profil_"+this.player.name+"_img").attr("src",this.piecesImage[this.player.name+"_profile"].src);
-    $("#profil_"+this.adversaire.name+"_img").attr("src",this.piecesImage[this.adversaire.name+"_profile"].src);
+    // Set the score in the id attribute value
+    $("."+ ContainerPlayer +" .profil_score").attr("id", "profil_" + this.player.name + "_score");
 
-    $("#profil_"+this.player.name+"_name").html(this.player.pseudo);
-    $("#profil_"+this.adversaire.name+"_name").html(this.adversaire.pseudo);
-
-    $("#profil_"+this.player.name+"_score").html("score : "+0);
-    $("#profil_"+this.adversaire.name+"_score").html("score : "+0);
+    // Set the points already won in the id attribute value
+    $("."+ ContainerPlayer +" .profil_point").attr("id", "profil_" + this.player.name + "_point");
+    // ----------------------------------------------------
 
 
-    $("#profil_"+this.player.name+"_point").html("<img src=\""+this.piecesImage.starNA.src+"\"/> <img src=\""+this.piecesImage.starNA.src+"\"/>");
-    $("#profil_"+this.adversaire.name+"_point").html("<img src=\""+this.piecesImage.starNA.src+"\"/><img src=\""+this.piecesImage.starNA.src+"\"/>");
+    // ENEMY
+    // -----
+    // Set the name in the id attribute value
+    $("." + ContainerAdversaire).attr("id", "profil_" + this.adversaire.name);
+
+    // Set the img in the id attribute value
+    $("." + ContainerAdversaire +" .profil_img").attr("id", "profil_" + this.adversaire.name + "_img");
+
+    // Set the name in the in the id attribute value
+    $("." + ContainerAdversaire +" .profil_name").attr("id", "profil_" + this.adversaire.name + "_name");
+
+    // Set the score in the id attribute value
+    $("." + ContainerAdversaire +" .profil_score").attr("id", "profil_" + this.adversaire.name + "_score");
+
+    // Set the points already won in the id attribute value
+    $("." + ContainerAdversaire +" .profil_point").attr("id", "profil_" + this.adversaire.name + "_point");
+    // ----------------------------------------------------
+
+
+    $("#profil_"+this.player.name + "_img").attr("src", this.piecesImage[this.player.name + "_profile"].src);
+    $("#profil_"+this.adversaire.name + "_img").attr("src", this.piecesImage[this.adversaire.name + "_profile"].src);
+
+    $("#profil_"+this.player.name + "_name").html(this.player.pseudo);
+    $("#profil_"+this.adversaire.name + "_name").html(this.adversaire.pseudo);
+
+    $("#profil_"+this.player.name + "_score").html("score : "+0);
+    $("#profil_"+this.adversaire.name + "_score").html("score : "+0);
+
+
+    $("#profil_" + this.player.name + "_point").html("<img src=\"" + this.piecesImage.starNA.src+"\"/> <img src=\"" + this.piecesImage.starNA.src + "\"/>");
+    $("#profil_" + this.adversaire.name + "_point").html("<img src=\"" + this.piecesImage.starNA.src+"\"/><img src=\"" + this.piecesImage.starNA.src + "\"/>");
 
     /* on initialise en même le clique sur le bouton passer son tour */
     document.getElementById("passeTour").onclick = function(){

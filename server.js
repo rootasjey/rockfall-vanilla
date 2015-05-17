@@ -20,7 +20,7 @@ var express = require('express'),  // web dev framework
 var fs = require('fs');		// file stream
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
-
+// var browserSync = require('browser-sync').create();
 
 // ----------------
 // APP - CREATION
@@ -39,10 +39,10 @@ function compile(str, path) {
 // containing templates
 // and the static folder
 // ---------------------------------------
-app.set('port', process.env.PORT ||3000);
+app.set('port', process.env.PORT || 3003);
 app.set('views', __dirname + '/views');	// folder templates
 app.set('view engine', 'jade');			// template engine
-app.use(morgan('dev'));					// logging output (will log incoming requests to the console)
+app.use(morgan('dev'));					// logging output
 app.use(bodyParser());
 app.use(methodOverride());
 app.use(stylus.middleware({
@@ -76,7 +76,9 @@ var accountKey = nconf.get("STORAGE_KEY");
 // An object (Table) for table access storage
 // --------------------------------------------
 var Table = require('./public/database/table');
-var usersTable = new Table(azure.createTableService(accountName, accountKey), tableName, partitionKey);
+var usersTable = new Table(
+	azure.createTableService(accountName, accountKey),
+	tableName, partitionKey);
 
 // Variable spécifiant le chemin relatif du serveur
 var addressServer = "localhost";
@@ -228,14 +230,23 @@ app.get('/', function(req, res) {
 
 // listen port => server start
 // ---------------------------
-var server = http.createServer(app).listen(app.get('port'), function(){
-    if(server.address().address != "0.0.0.0"){
+var server = http.createServer(app).listen(app.get('port'), function() {
+    if(server.address().address != "0.0.0.0") {
         addressServer = server.address().address + ":" + app.get('port');
-    }else{
-        addressServer += ":"+app.get('port');
+    } else{
+        addressServer += ":" + app.get('port');
     }
+
+	// // This piece of code allows to sync browsers
+	// browserSync.init({
+	// 	proxy: 'localhost:' + app.get('port'),
+	// 	files: ['public/*.{js, css}']
+	// });
+
+
     console.log("En attente de connexion sur le port :" + app.get('port'));
 });
+
 
 var Tableau_Joueur = require('./public/gameCommun/js/playerArray.js');
 
@@ -255,7 +266,7 @@ var justAdd = [];
 var wantToTurn = [];
 
 
-/* Fonction qui permet d'initier une partie entre 2 joueurs */
+// Fonction qui permet d'initier une partie entre 2 joueurs
 function askMatching(joueurUn, joueurDeux){
 
     var idJoueurUn = joueurUn.id;
@@ -394,7 +405,9 @@ function askMatching(joueurUn, joueurDeux){
 }
 
 
-/* addParty créé la partie afin de mettre ne relation deux joueur */
+/*
+ * AddParty créé la partie afin de mettre ne relation deux joueur
+ */
 function addParty(tableauP, joueurUn, joueurDeux){
 
     var idParty 	= 0;
@@ -460,8 +473,11 @@ function addParty(tableauP, joueurUn, joueurDeux){
 }
 
 
-/* Le traitement sur le plateau de jeu qui définie les règles qui y sont appliqué comme la gravité ou la destruction d'une pièce */
-
+/* Le traitement sur le plateau de jeu qui définie
+ * les règles qui y sont appliqué comme la gravité
+ * ou la destruction d'une pièce
+ * @param {Object} donneesATravailler
+ */
 function applyPhysic(donneesATravailler){
 
     var allEnd 		= false;
@@ -583,8 +599,9 @@ function applyPhysic(donneesATravailler){
     return allEnd;
 }
 
-/* Permet d'agrandir la dimension d'un ensemble de pièce en modifiant leurs attributs de largeur et hauteur */
-
+/* Permet d'agrandir la dimension d'un ensemble
+ * de pièces en modifiant leurs attributs de largeur et hauteur
+ */
 function zoomPieceGagnante(donnees){
 
     var pos = donnees.pieceGagnante.box;
@@ -600,8 +617,13 @@ function zoomPieceGagnante(donnees){
     }
 }
 
-/* fonction qui vérifie l'alignement de 4 pièces en diagonale */
-function verificationD(donneesATravailler,x,y){
+/*
+ * Fonction qui vérifie l'alignement de 4 pièces en diagonale
+ * @param {Object} donneesATravailler
+ * @param {float} x
+ * @param {float} y
+ */
+function verificationD(donneesATravailler, x, y){
 
     var diagonal = [];
     var plateau = donneesATravailler.plateau;
@@ -678,7 +700,10 @@ function verificationD(donneesATravailler,x,y){
 
 
 
-/* Verification si un joueur à gagner un point en alignant 4 pieces */
+/*
+ * Verification si un joueur à gagner un point en alignant 4 pieces
+ * @param {Object} donneesATravailler
+ */
 function findFour(donneesATravailler){
 
     var plateau = donneesATravailler.plateau;
@@ -806,7 +831,10 @@ function findFour(donneesATravailler){
 }
 
 
-/*fonction qui est exécuté lorsqu'un joueur à aligné 4 pièces afin de gérer les points gagnés, le score */
+/* Fonction qui est exécutée
+ * lorsqu'un joueur à aligné 4 pièces
+ * afin de gérer les points gagnés, le score
+ */
 function traitementPointWin(donneesLocales,tamponPieceWin){
 
     var isFinDePartie = false;
@@ -863,7 +891,9 @@ function addItemtoPlateau(donneesLocales,x,y,item){
 
 }
 
-/* fonction qui exécute un bonus sur une partie donnée et une pièce précise */
+/* Fonction qui exécute un bonus sur une partie donnée
+ * et une pièce précise
+ */
 function executeBonus(donneesLocales,bonusChoice){
 
     var success = false;
@@ -922,13 +952,18 @@ function executeBonus(donneesLocales,bonusChoice){
 }
 
 
-/* fonction qui supprime des informations sur la partie par exemple à chaque envoie d'information, on supprime des informations pour le prochain envoie */
+/* Fonction qui supprime des informations sur la partie
+ * par exemple à chaque envoie d'information,
+ * on supprime des informations pour le prochain envoie
+ */
 function clearDonnees(donnees){
     donnees.pointAdd = [];
     donnees.soundToPlay = [];
 }
 
-/* fonction exécuté pour supprimer la partie et informer les joueurs de la fin d'une partie*/
+/* Fonction exécutée pour supprimer la partie
+ * et informer les joueurs de la fin d'une partie
+ */
 function finDePartie (idPartie, idJoueurGagner){
 
     tableauJeu.getJoueurById(partyInProgress[idPartie].idPF.id).socket.emit("finDePartie",idJoueurGagner);
@@ -1027,7 +1062,9 @@ function createPlateau(nbrePieceHori,nbrePieceVerti){
     return plateau;
 }
 
-/* les variables globales pour gérer les différents éléments tels que les parties, joueurs.*/
+/* Les variables globales
+ * pour gérer les différents éléments tels que les parties, joueurs.
+ */
 var lobby_server = new Tableau_Joueur.Tableau_EnAttente();
 var lobby_client_affichage = new Tableau_Joueur.Tableau_EnAttente_Affichage();
 var tableauJeu = new Tableau_Joueur.Tableau_EnJeu();
@@ -1041,7 +1078,9 @@ var tamponSetInter = null;
 /* on lance l'écoute du server */
 var io = require('socket.io').listen(server);
 
-/* Et enfin on déclare les listeners qui serviront au serveur pour coordonner les différentes requêtes */
+/* Et enfin on déclare les listeners
+ * qui serviront au serveur pour coordonner
+ * les différentes requêtes */
 io.sockets.on('connection', function (socket) {
 
     /* lorsqu'un nouveau joueur apparait on informe l'ensemble des joueurs*/
@@ -1141,7 +1180,8 @@ io.sockets.on('connection', function (socket) {
 
 });
 
-/* vérification de la synchronisation des joueurs avec le serveur afin de gérer les coupures de comminucation */
+/* Vérification de la synchronisation des joueurs
+ * avec le serveur afin de gérer les coupures de comminucation */
 var verification_Enligne = setInterval(function(){
 	var i  = 0,
 		id = 0;

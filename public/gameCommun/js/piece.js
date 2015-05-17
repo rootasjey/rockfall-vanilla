@@ -1,11 +1,13 @@
-/* La Piece représente l'ensemble des rocks qui seront mis à disposition dans le jeu*/
+/* La Piece représente l'ensemble des rocks
+ * qui seront mis à disposition dans le jeu
+ */
 function Pieces(){
-
     this.shapes = [];
-
 }
 
-/* La fonction permet de dessiner l'ensemble des pieces/rocks contenu dans l'objet */
+/* La fonction permet de dessiner
+ * l'ensemble des pieces/rocks contenu dans l'objet
+ */
 Pieces.prototype.draw = function(ctx) {
 
     for(var i =0;i<this.shapes.length;i++){
@@ -15,7 +17,9 @@ Pieces.prototype.draw = function(ctx) {
     }
 };
 
-/* La fonction changeColor permet de definir la couleur de l'ensemble des pieces/rocks contenu dans l'objet */
+/* La fonction changeColor permet de definir
+ * la couleur de l'ensemble des pieces/rocks contenu dans l'objet
+ */
 Pieces.prototype.changeColor = function(color,textColor) {
 
     for(var i =0;i<this.shapes.length;i++){
@@ -80,7 +84,9 @@ function Shape(x, y, w, h, weight, fill, img) {
 
 }
 
-/* init est la fonction qui permet de remettre la position d'une shape à l'endroit de sa création */
+/* init est la fonction qui permet de remettre
+ * la position d'une shape à l'endroit de sa création
+ */
 Shape.prototype.init = function(){
 
     this.x = this.initialX;
@@ -115,9 +121,11 @@ Shape.prototype.draw = function(ctx) {
 
     ctx.font = this.width/2.8+"pt "+fontScore;
     if(parseInt(this.weight)<10){
-        writeMessage(ctx, this.weight, this.fill, (this.x + (this.width/2.8)), (this.y + (this.height/1.6)), 1);
+        writeMessage(ctx, this.weight, this.fill, (this.x + (this.width/2.8)),
+                (this.y + (this.height/1.6)), 1);
     }else{
-        writeMessage(ctx, this.weight, this.fill, (this.x + (this.width/3.5)), (this.y + (this.height/1.6)), 1);
+        writeMessage(ctx, this.weight, this.fill, (this.x + (this.width/3.5)),
+                (this.y + (this.height/1.6)), 1);
     }
 
     ctx.restore();
@@ -134,7 +142,11 @@ Shape.prototype.contains = function(mx, my) {
 
 /* clear supprime graphique l'élément shape*/
 Shape.prototype.clear = function(ctx){
-	ctx.clearRect(this.x-this.lineWidth,this.y-this.lineWidth,this.width+(this.lineWidth*2),this.height+(this.lineWidth*2));
+
+	ctx.clearRect(this.x-this.lineWidth,
+        this.y-this.lineWidth,
+        this.width+(this.lineWidth*2),
+        this.height+(this.lineWidth*2));
 };
 
 
