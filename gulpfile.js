@@ -25,7 +25,5 @@ gulp.task('nodemon', function (cb) {
     	}).on('start', function () {
           cb();
         });
-
     }
-
 });

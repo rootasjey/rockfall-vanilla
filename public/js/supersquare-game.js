@@ -893,7 +893,6 @@ SuperSquare.prototype.GameFriendlyOnlineMode = function () {
 
 // Compete against a total stranger
 SuperSquare.prototype.GameUnfriendlyOnlineMode = function () {
-    console.log("toto");
     // Please waiting while matching
     this.settings.stats = "playing";
 

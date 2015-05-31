@@ -8,15 +8,14 @@ A Web Game built with [io.js](https://iojs.org/), HTML5, JavaScript and with <3
 ## run
 
 1. install [node.js](https://nodejs.org) or [io.js](https://iojs.org/)
-2. install dependencies with: `npm install`
-3. run the server with: `node server.js` or `iojs server.js`
+2. go to the folder : `cd /myp-path/rockfall-master/`
+3. install dependencies with: `npm install`
+4. run the server with: `node server.js` or `iojs server.js`
 
 or if you want tu use live reload
 
 * install [gulp](http://gulpjs.com) (after _2._) with : `npm install -g gulp`
-* run the gulfile in _"/scripts/gulfile.js"_ :
-    * first go to the directory: `cd scripts/`
-    * then you go with: `gulp`
+* run the gulfile  _"gulfile.js"_ with: `gulp`
 
 
 ## todo
@@ -41,7 +40,7 @@ is a one-command git push which executes these git commands in order:
 
 ## live-reload
 
-The gulfile located at '_/scripts/gulfile.js'_
+The gulfile located at '_/myp-path/rockfall-master/gulfile.js'_
 is a script to start and watch for file changes.
 
 If there's a change, the default browser will automatically reload.

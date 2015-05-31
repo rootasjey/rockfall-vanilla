@@ -7,7 +7,7 @@
 var socket = null;
 // A simple connection socket object
 var scheduleCo = null;
-console.log("3DE");
+
 // An array containing all SuperSquare object
 var _SSBOX = [];
 

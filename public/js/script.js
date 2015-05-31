@@ -7,6 +7,8 @@
 window.onload = function () {
     GetSuper();
     ReloadSuperSquares();
+
+    // testMultilpayers();
 };
 
 // Transform square to Super Square

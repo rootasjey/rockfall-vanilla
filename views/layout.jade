@@ -14,6 +14,7 @@ html(lang='en')
     script(type='text/javascript' src='/js/script.js')
     script(type='text/javascript' src='/js/jquery.timer.js')
     script(type='text/javascript' src='/js/jquery.qtip.min.js')
+    script(src="/socket.io/socket.io.js")
     
     script(type='text/javascript' src='/gameCommun/js/globals.js')
     script(type='text/javascript' src='/gameCommun/js/piece.js')
@@ -23,7 +24,8 @@ html(lang='en')
     script(type='text/javascript' src='/js/supersquare-settings.js')
     script(type='text/javascript' src='/js/supersquare-message.js')
     script(type='text/javascript' src='/js/message.js')
-    script(src="/socket.io/socket.io.js")
+    script(type='text/javascript' src='/js/multi-connection.js')
+    
 
     //- JAVASCRIPT FILES - GAME
     script(type='text/javascript' src='/gameMulti/js/plateauJsOnline.js')
@@ -41,7 +43,9 @@ html(lang='en')
     script(type='text/javascript' src='/gameSolo/js/style.js')
     script(type='text/javascript' src='/gameSolo/js/eventGame.js')
     script(type='text/javascript' src='/gameSolo/js/main.js')
-
+    
+    //- JAVASCRIPT FILES - TESTS
+    script(type='text/javascript' src='/js/tests/test-multiplayer.js')
 
   body
     div#body

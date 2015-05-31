@@ -38,7 +38,7 @@ function Connexion(port, adresse){
 */
 Connexion.prototype.start = function(){
     this.socket = io.connect("http://"+this.address+":"+this.port);
-}
+};
 
 /*
     on rajoute les listeners nécessaires au déroulement du jeu
@@ -46,7 +46,7 @@ Connexion.prototype.start = function(){
 Connexion.prototype.listener = function(name, callback){
 
     this.socket.on(name,callback);
-}
+};
 
 
 /*
@@ -54,7 +54,7 @@ Connexion.prototype.listener = function(name, callback){
 */
 Connexion.prototype.listenToStartSession = function (){
 
-    if(this.liaison == null && this.socket != null){
+    if(this.liaison === null && this.socket !== null){
          this.socket.on('startSync', function (idSocketOnServer) {
                         _myConnexion.idSocketOnServer = idSocketOnServer;
                         this.liaison = setInterval(function(){
@@ -62,4 +62,4 @@ Connexion.prototype.listenToStartSession = function (){
                         }, _myConnexion.frequence);
         });
     }
-}
+};

@@ -23,7 +23,7 @@ function SuperSquare(selector, purpose) {
     this.color = this.GetAFlatColor();
 
     // Fire up initial functions
-    this.SquareEffect();
+    // this.SquareEffect();
     this.DefaultEvents();
     this.AddSettingsToSuperSquare();
 
