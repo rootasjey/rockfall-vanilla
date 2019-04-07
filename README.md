@@ -1,6 +1,8 @@
 RockFall
 ========
 
+:warning: This repository is now archived and read-only (and its depencies are highly outdated).
+
 A Web Game built with [io.js](https://iojs.org/), HTML5, JavaScript and with <3
 
 ![Rockfall](rockfall_screen.jpg "Rockfall")
